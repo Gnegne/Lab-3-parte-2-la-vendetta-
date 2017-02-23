@@ -650,7 +650,15 @@ _util_mm_esr_data = dict(
             perc = [1]*11,
             div = [0]*11
         ),
-        generic=dict(
+        generic = dict(
+            scales = [1e9],
+            perc = [0],
+            div = [0.0005]
+        ),
+        noerror = dict(
+            scales = [1e9],
+            perc = [1e-100],
+            div = [0]
         )
     )
 )
@@ -1137,7 +1145,7 @@ def _XYfunction(a): # default for the x-y columns from the file entries
 def load_data(directory,file_):
     # load the data matrix from the data file 
     
-    data = loadtxt(directory+"data/"+file_+".txt", unpack = True)    
+    data = loadtxt(directory + "data/" + file_ + ".txt", unpack = True)    
     if type(data[0]) is np.float64:    # check if the first column is a column 
         data=array(transpose(matrix(data)))
 
@@ -1273,8 +1281,8 @@ def plot_fit(directory, file_, title_, units, f, par, X, Y, dX, dY,
             _residuals(fig, gne, gs, ax1, f, par, out, X, dX, Xlab, Xscale, Y, dY, X_ol, Y_ol, dY_ol)
         _residuals(fig, gne, gs, ax1, f, par, out, X, dX, Xlab, Xscale, Y, dY)
             
-    savefig(directory+"grafici/fit_"+fig+".pdf")
-    savefig(directory+"grafici/fit_"+fig+".png")
+    savefig(directory+"pictures/fit_"+fig+".pdf")
+    savefig(directory+"pictures/fit_"+fig+".png")
 
 def chi2_calc(f, par, X, Y, dY, dX, cov):
     """
@@ -1329,7 +1337,7 @@ def latex_table(directory, file_, data, data_err, tab, out, data_ol=[], data_err
     """
 
 
-    with open(directory+"tabelle/tab_"+file_+".txt", "w") as text_file:
+    with open(directory+"tables/tab_"+file_+".txt", "w") as text_file:
         text_file.write("\\begin{tabular}{c")
         for z in range (1,len(data)):
             text_file.write("|c")

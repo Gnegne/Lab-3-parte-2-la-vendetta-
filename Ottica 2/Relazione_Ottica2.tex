@@ -13,20 +13,21 @@
 \usepackage{float}
 \usepackage{caption}
 \usepackage{tikz}
-\usepackage[nomargin,inline,marginclue,draft]{fixme}
-\usepackage[left=1.5cm,right=1.5cm,top=1.5cm,bottom=1.5cm]{geometry}
-\newcommand{\rem}[1]{[\emph{#1}]}
+\usepackage[cdot, thickqspace, squaren]{SIunits}
+%\usepackage[nomargin,inline,marginclue,draft]{fixme}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+%\newcommand{\rem}[1]{[\emph{#1}]}
 
 %Intestazione
 \usepackage{fancyhdr}
 \pagestyle{fancy}
-\lhead{Esercitazione N.9}
-\chead{Ottica }
+\lhead{Esperienza N.1}
+\chead{Ottica 2}
 \rhead{Gruppo BF}
 
 %Dichiarazione di operatori necessari per scrivere formule e unità di misura
 \DeclareMathOperator{\uV}{\mu V}
-\DeclareMathOperator{\ohm}{\Omega}
+%\DeclareMathOperator{\ohm}{\Omega}
 \DeclareMathOperator{\kohm}{k\Omega}
 \DeclareMathOperator{\Mohm}{M\Omega}
 \DeclareMathOperator{\uA}{\mu A}
@@ -40,19 +41,18 @@
 
 
 \author{Gruppo BF \\ \smallskip Thomas Giannoni, Valerio Lomanto, Roberto Ribatti}
-\title{Esercitazione N.9 \\ \smallskip Ottica 2}
+\title{Esperienza N.1 \\Ottica 2}
 \date{17 febbraio 2017}
 \begin{document}
 \maketitle
 
 \begin{abstract}
-In quest'esperienza si è impiegato il fenomeno dell'interferenza luminosa;
-per mezzo del quale abbiamo determinato le caratteristiche dello spetro emesso dalle sorgenti in esame.
+In quest'esperienza si è sfruttato il fenomeno dell'interferenza per determinare la frequenza di emissione di diverse sorgenti luminose.
 \\L'esperienza si suddivide in due parti: nella prima si vuole stimare
-la lunghezza d'onda di una sorgente laser He-Ne sfruttando il fenomeno di diffrazione sulla scala
-graduata di un calibro; nella seconda,per stimare la lunghezza d'onda della riga verde dello
-spettro di una lampada al mercurio, viene impiegato un interferometro di
-Michelson.
+la lunghezza d'onda di una laser He-Ne sfruttando la diffrazione sulla scala
+graduata di un calibro; nella seconda viene impiegato un interferometro di
+Michelson per stimare la lunghezza d'onda della riga verde dello
+spettro di una lampada al mercurio.
 \end{abstract}
 
 %\newpage
@@ -64,6 +64,7 @@ Michelson.
 \input{./tex/1b_strumentazione.tex}
 \input{./tex/1b_taratura.tex}
 \input{./tex/note_b.tex}
+\input{./tables/1a_tabella.tex}
 \end{document}
 
 
