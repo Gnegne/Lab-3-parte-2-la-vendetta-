@@ -9,17 +9,15 @@ La relazione che lega le grandezze in gioco è:
 $$ sin (\theta_m) =-\frac{\lambda}{d}m+sin (\theta_i)$$
 Dove $m$ indica il numero della frangia di diffrazione, $d$ è il passo reticolare, $\theta_i$ e $\theta_m$ sono rispettivamente l'angolo di incidenza e l'angolo della frangia $m$-esima, $D$ è la distanza dello schermo dal reticolo.
 
-Si è proceduto alla misura della distanza $D$ tra il punto \textbf{zero} prima determinato e il reticolo di diffrazione, la dimensione del fascio laser che incide radente sulla scala del calibro non è trascurabile, ha infatti un'estensione di $\sim \unit{10}{\centi\meter}$, bisogna tenerne conto nella stima dell'incertezza.
-
-Il risultato della misura è stato $D = \unit{209 \pm 3}{\centi\meter}$.
+Si è proceduto alla misura della distanza $D$ tra il punto \textbf{zero} prima determinato e il reticolo di diffrazione, la dimensione del fascio laser che incide radente sulla scala del calibro non è trascurabile, ha infatti un'estensione di $\sim \unit{10}{\centi\meter}$, bisogna tenerne conto nella stima dell'incertezza. Il risultato della misura è $D = \unit{209 \pm 3}{\centi\meter}$. Per altre considerazioni su questa misura si rimanda alla sezione 3.
 
 Conoscendo $D$ e dalla misura delle distanze delle frange di diffrazione dal punto zero è possibile determinare i $\theta_m$ e procedere ad un fit lineare di $sin(\theta_m)$ in funzione di $m$ con coefficiente angolare $-\lambda/d$ e intercetta pari a $sin(\theta_i$.)
 
-Le misure effettuate sono riportate in \tablename{ \ref{\{data}} Il fit eseguito fornisce i seguenti risulati;
+Le misure effettuate sono riportate in \tablename{ \ref{data}}. Il fit eseguito fornisce i seguenti risulati:
 \begin{figure}[H]
 	\begin{minipage}{0.25\textwidth}
 		\begin{tabular}{l}
-			$\lambda/d = \unit{63.38 \pm 0.07}{\micro\meter}$ \\
+			$\lambda/d = \unit{63.34 \pm 0.07}{\micro\meter}$ \\
 			$\theta_i = (89.56 \pm 0.03) $\\
 			$corr(\lambda/d,\theta) = -0.77$\\
 			$\chi^2 /\text{ndof} = 21.3 / 17 $\\
@@ -28,8 +26,8 @@ Le misure effettuate sono riportate in \tablename{ \ref{\{data}} Il fit eseguito
 	\end{minipage}
 	\begin{minipage}{0.8\textwidth}
 		\centering
-		\includegraphics[width=\textwidth]{./pictures/fit_He-ne.pdf}
+		\includegraphics[width=\textwidth]{./pictures/fit_He-ne.png}
 	\end{minipage}
 \end{figure}
 
-dal quale segue $\lambda = \unit{633.8 \pm 0.7}{\nano\meter}$.
+Posto un passo reticolare di $\unit{1}{\milli\meter}$, segue $\lambda = \unit{633.4 \pm 0.7}{\nano\meter}$, che è compatibile entro $1 \sigma$ con il valore riportato di $\unit{632.8}{\nano\meter}$.

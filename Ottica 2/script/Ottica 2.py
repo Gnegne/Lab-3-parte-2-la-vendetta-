@@ -24,7 +24,7 @@ dir= path + "Ottica 2/"
 
 file="He-ne"
 
-D = ufloat(2.09,0)
+D = ufloat(2.09,0.001)
 d = ufloat(0.001,0)
 rif = ufloat(0.138,0.0005)
 dritto = ufloat(0,0.0005)
@@ -41,10 +41,10 @@ def XYfun(a):
 unit = [("noerror","osc"),("generic", "osc"),("generic","osc")]
 
 titolo = "Fit lunghezza d'onda laser He-Ne"
-Xlab = "m"
-Ylab = "sin"
+Xlab = "# Numero di frangia $m$"
+Ylab = '$sen(\\theta _m)$'
 xlimp = [50, 105]
 
-tab = ["frequency [Hz]", "$V_A$ [V]", "$\\varphi$ [s]", "$V_A$ [V]"]
+tab = ["m", "distanza [cm]", "fg6"]
 
-fit(dir, file, unit, f, p0, titolo, Xlab, Ylab, XYfun, xlimp=xlimp)
+fit(dir, file, unit, f, p0, titolo, Xlab, Ylab, XYfun, xlimp=xlimp, table=True, tab=tab)
