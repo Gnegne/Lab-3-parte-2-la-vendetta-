@@ -2,6 +2,10 @@
 from itertools import count as itercount
 import numpy as np
 import scipy.stats.distributions as dists
+import matplotlib.pyplot as plt
+import matplotlib as mpl
+import inspect
+from lab import *
 
 # *********************** UTILITIES *************************
 
@@ -52,11 +56,11 @@ def tell_chi2(resd, dofs, style='normal'):
 	chi2 = np.sum(resd**2)
 	pval = dists.chi2.sf(chi2, dofs)
 	if style == 'normal':
-		chiname = r"ChiSquare"
-		dofname = r"DoFs,"
+		chiname = R"ChiSquare"
+		dofname = R"DoFs,"
 	elif style == 'latex':
-		chiname = r"\chi^2"
-		dofname = r"\dof , \ "
+		chiname = R"\chi^2"
+		dofname = R"\dof , \ "
 	chi2msg = "{0} = {1:.2f} ({2} {3} p = {4:.4f})"
 	return chi2msg.format(chiname, chi2, dofs, dofname, pval)
 
@@ -101,12 +105,12 @@ def maketab(*columns, errors='all', precision=3):
 	if errors == 'none':
 		errors = []
 	beginning = (
-		r"\begin{table}" "\n\t"
-		r"\begin{tabular}{*{"
+		R"\begin{table}" "\n\t"
+		R"\begin{tabular}{*{"
 		+ str(cols - len(errors)) +
-		r"}{S}}"
+		R"}{S}}"
 		"\n\t\t"
-		r"\midrule" "\n"
+		R"\midrule" "\n"
 	)
 	inner = ""
 	for i, row in enumerate(vals):
@@ -127,10 +131,10 @@ def maketab(*columns, errors='all', precision=3):
 				num = round(num, int(-prec))
 			inner += "\t{0:.{digits:.0f}f} {1}\t{2}".format(num, err, space, digits=max(0, -prec))
 	ending = (
-		"\t" r"\end{tabular}" "\n"
-		"\t" r"\caption{some caption}" "\n"
-		r"\label{t:somelabel}" "\n"
-		r"\end{table}"
+		"\t" R"\end{tabular}" "\n"
+		"\t" R"\caption{some caption}" "\n"
+		R"\label{t:somelabel}" "\n"
+		R"\end{table}"
 	)
 	return beginning + inner + ending
 
@@ -173,9 +177,11 @@ def createline(type='linear', name=""):
 		line.deriv = _dline
 		func = line
 	elif type == 'const':
+		_h = np.vectorize(lambda x, q: q)
+
 		def flatline(x, q):
 			"""f: (x, q) --> q ."""
-			return q*np.ones(len(x))
+			return _h(x, q)
 		flatline.deriv = _nullfunc
 		func = flatline
 	if name:
@@ -185,12 +191,173 @@ def createline(type='linear', name=""):
 # *********************** OBJECTS *************************
 
 
-class NakedObject(object):
-	"""Simple container of stuff."""
-	pass
+class MeasureObj(object):
+
+	def __init__(self, val, err=0):
+		self.val = np.array(val)
+		self.err = np.array(err) * np.ones(len(self.val))
 
 
 class DataHolder(object):
 
-	def __init__(self, name=None):
-		pass
+	_holdercount = itercount(1)
+
+	def __init__(self, x, y, dx=0, dy=0, name=None):
+		self.num = next(self._holdercount)
+		self.fig = plt.figure(self.num)
+		self.datakw = dict(fmt='none', ecolor='black', label='data')
+		self.pts = None
+		self.title = ""
+		if name:
+			self.name = name
+		else:
+			self.name = "dataset #{}".format(self.num)
+
+		self.x = MeasureObj(x, dx)
+		self.x.edge_padding = 1/20
+		self.y = MeasureObj(y, dy)
+		self.y.edge_padding = 3/20
+
+		for z in (self.x, self.y):
+			z.lims = None
+			z.type = 'linear'
+			z.re = 1
+			z.label = ""
+
+	def fit_generic(self, *funcs, verbose=True, **kwargs):
+
+		if verbose:
+			print("Lavoro su {}\n".format(self.name))
+			fitmsg = "Il fit di {funname} su {dataname} ha dato i seguenti parametri:"
+		for f in funcs:
+			mask = getattr(f, 'mask', np.ones(len(self.x.val), dtype=bool))
+			x = self.x.val[mask]
+			y = self.y.val[mask]
+			dx = self.x.err[mask]
+			dy = self.y.err[mask]
+			p0 = getattr(f, 'pars', None)
+			df = getattr(f, 'deriv', _nullfunc)
+			pars, pcov = fit_generic(f, x, y, dx, dy, p0=p0, **kwargs)
+			f.pars = pars
+			f.cov = pcov
+			f.sigmas = np.sqrt(np.diag(pcov))
+			f.resd = (y - f(x, *pars)) / np.sqrt(dy**2 + dx**2 * df(x, *pars)**2)
+			if verbose:
+				print(fitmsg.format(dataname=self.name, funname=f.__name__))
+				argnames = inspect.getargspec(f).args[1:]
+				for name, par, err in zip(argnames, pars, f.sigmas):
+					print("{0} = {1:.4f} \pm {2:.4f}".format(name, par, err))
+				print(tell_chi2(f.resd, np.alen(x) - len(pars), style='latex'))
+				print("")
+			if verbose:
+				print("{} completo\n\n".format(self.name))
+
+	def _set_edges(self, var, type=None):
+		if var == 'x':
+			z = self.x
+		elif var == 'y':
+			z = self.y
+		if not type:
+			type = z.type
+		top = np.amax(z.val)
+		bot = np.amin(z.val)
+		if type == 'log':
+			top = np.log10(top)
+			bot = np.log10(bot)
+		width = top - bot
+		high = top + width * z.edge_padding
+		low = bot - width * z.edge_padding
+		if type == 'log':
+			high = 10**high
+			low = 10**low
+		z.lims = np.array([low, high])
+
+	def _getpts(self, type=None):
+		if not type:
+			type = self.x.type
+		low = self.x.lims[0]
+		high = self.x.lims[1]
+		if type == 'log':
+			self.pts = np.logspace(np.log10(low), np.log10(high), num=max(len(self.x.val)*10, 200))
+		elif type == 'linear':
+			self.pts = np.linspace(low, high, num=max(len(self.x.val)*10, 200))
+
+	def _graph_setup(self, resid=False):
+		if self.x.lims is None:
+			self._set_edges('x')
+		if self.y.lims is None:
+			self._set_edges('y')
+		if self.pts is None:
+			self._getpts()
+		if not resid:
+			main_ax = self.fig.add_subplot(1, 1, 1)
+			main_ax.set_xlabel(self.x.label)
+			resid = ()
+		else:
+			sub_gs = mpl.gridspec.GridSpec(5, 1)		# TODO: make better
+			main_ax = self.fig.add_subplot(sub_gs[:4])
+			resd_ax = self.fig.add_subplot(sub_gs[4:])
+			resd_ax.axhline(y=0, color='black')
+			resd_ax.set_xlabel(self.x.label)
+			resd_ax.set_xscale(self.x.type)
+			resd_ax.set_xlim(*(self.x.lims * self.x.re))
+			self.resd_ax = resd_ax
+
+		main_ax.set_xlim(*(self.x.lims * self.x.re))
+		main_ax.set_ylim(*(self.y.lims * self.y.re))
+		main_ax.set_ylabel(self.y.label)
+		main_ax.set_title(self.title)
+		main_ax.set_xscale(self.x.type)
+		main_ax.set_yscale(self.y.type)
+		self.main_ax = main_ax
+
+	def draw(self, *funcs, resid=False, data=True, legend=True):
+		self._graph_setup(resid)
+		main_ax = self.main_ax
+		if not resid:
+			resid = ()
+		else:
+			resd_ax = self.resd_ax
+			if resid is True:
+				resid = funcs
+
+		x = self.x.val * self.x.re
+		y = self.y.val * self.y.re
+		dx = self.x.err * self.x.re
+		dy = self.y.err * self.y.re
+		if data:
+			main_ax.errorbar(x, y, dy, dx, **self.datakw)
+
+		for fun in funcs:
+			if callable(fun):
+				mask = np.zeros(len(self.pts), dtype=bool)
+				for lowest, highest in getattr(fun, 'bounds', [(-np.inf, np.inf)]):
+					mask |= (self.pts > lowest) & (self.pts < highest)
+				points = self.pts[mask]
+				try:
+					linekw = fun.linekw
+				except AttributeError:
+					linekw = fun.linekw = {}
+				g, = main_ax.plot(points * self.x.re, fun(points, *fun.pars)*self.y.re, **linekw)
+				if 'color' not in linekw:
+					linekw['color'] = g.get_color()
+			else:
+				pass
+
+		if legend:
+			main_ax.legend(loc='best')
+
+		for fun in resid:
+			mask = getattr(fun, 'mask', np.ones(len(x), dtype=bool))
+			resdkw = dict(marker='o')
+			if hasattr(fun, 'linekw'):
+				resdkw.update(fun.linekw)
+			resdkw.update(ls='none')
+			if hasattr(fun, 'resd'):
+				res = fun.resd
+			else:
+				df = getattr(fun, 'deriv', _nullfunc)
+				delta = self.y.val - fun(self.x.val, *fun.pars)
+				variance = self.y.err**2 + self.x.err**2 * df(self.x.val, *fun.pars)**2
+				fun.resd = res = delta / np.sqrt(variance)
+			resd_ax.plot(x[mask], res, **resdkw)
