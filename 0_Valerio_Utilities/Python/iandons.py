@@ -299,6 +299,7 @@ class DataHolder(object):
 			resd_ax = self.fig.add_subplot(sub_gs[4:])
 			resd_ax.axhline(y=0, color='black')
 			resd_ax.set_xlabel(self.x.label)
+			resd_ax.set_ylabel("Norm. res.")
 			resd_ax.set_xscale(self.x.type)
 			resd_ax.set_xlim(*(self.x.lims * self.x.re))
 			self.resd_ax = resd_ax
