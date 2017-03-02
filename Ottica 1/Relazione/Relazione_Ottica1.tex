@@ -106,10 +106,14 @@
 \newcommand{\paral}{\mathbin{\|}} % impedance parallel
 \DeclareSIUnit\deca{decade} % decade unit definition for use in siunitx
 
-\newcommand{\insertpart}[2]{\input{#1}}
+% temporary, for this thing only
 \newcommand{\angerr}[2]{%
 	\ang{#1}{\SI[multi-part-units = repeat]{#2}{\arcminute}}
 }
+\newcommand{\sezione}[1]{\textsf{Sezione \ref{#1}}}
+\newcommand{\figura}[1]{\textsf{Figura \ref{#1}}}
+\newcommand{\tabella}[1]{\textsf{Tabella \ref{#1}}}
+\newcommand{\equazione}[1]{\textsf{Equazione \ref{#1}}}
 
 \sisetup{%
 	separate-uncertainty = true,
