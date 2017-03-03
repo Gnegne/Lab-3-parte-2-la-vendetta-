@@ -14,32 +14,33 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsfonts}
-\usepackage{mathtools} % (!! PLACE BEFORE hyperref !!)
-\usepackage{xfrac} % \sfrac
-\usepackage{cancel} % \cancel \cancelto
-\usepackage{hyperref} % interactive links in TOC, URLs and references
+\usepackage{float}
+%\usepackage{mathtools} % (!! PLACE BEFORE hyperref !!)
+%\usepackage{xfrac} % \sfrac
+%\usepackage{cancel} % \cancel \cancelto
+%\usepackage{hyperref} % interactive links in TOC, URLs and references
 % unneded \usepackage{fixltx2e} % provides \textsubscript and makes some fixes
-\usepackage[version=3]{mhchem} % \ce (chemical formula)
+%\usepackage[version=3]{mhchem} % \ce (chemical formula)
 \usepackage{siunitx} % \num \si \SI
-\usepackage{alltt} % {alltt} (like verbatim but with commands)
-\usepackage{moreverb} % {listing}
+%\usepackage{alltt} % {alltt} (like verbatim but with commands)
+%\usepackage{moreverb} % {listing}
 \usepackage{listings} % {lstlisting}
-\usepackage[overload]{textcase} % fixes \MakeUppercase and \MakeLowercase
-\usepackage[normalem]{ulem} % \uline \uwave \sout \xout
-\usepackage{enumerate} % adds options for {enumerate}
-\usepackage{paralist} % inline lists with {inparaenum}
-\usepackage[official]{eurosym} % \euro
-\usepackage{tabu} % {tabu} (like {tabular} with improvements)
-\usepackage{layout} % layout description
-\usepackage{multicol} % {multicols}
-\usepackage{lipsum} % filling text generator with \lipsum
-\usepackage[section]{placeins} % inhibits float figures from trepassing a section boundary
+%\usepackage[overload]{textcase} % fixes \MakeUppercase and \MakeLowercase
+%\usepackage[normalem]{ulem} % \uline \uwave \sout \xout
+%\usepackage{enumerate} % adds options for {enumerate}
+%\usepackage{paralist} % inline lists with {inparaenum}
+%\usepackage[official]{eurosym} % \euro
+%\usepackage{tabu} % {tabu} (like {tabular} with improvements)
+%\usepackage{layout} % layout description
+%\usepackage{multicol} % {multicols}
+%\usepackage{lipsum} % filling text generator with \lipsum
+%\usepackage[section]{placeins} % inhibits float figures from trepassing a section boundary
 \usepackage{subfig} % \subfloat to be used inside {figure}
-\usepackage{wrapfig} % {wrapfigure} (like {figure} but allows text to flow on its sides)
-\usepackage{ifthen} % \ifthenelse
-\usepackage{calc}
-\usepackage{array}
-\usepackage{multirow}
+%\usepackage{wrapfig} % {wrapfigure} (like {figure} but allows text to flow on its sides)
+%\usepackage{ifthen} % \ifthenelse
+%\usepackage{calc}
+%\usepackage{array}
+%\usepackage{multirow}
 \usepackage{booktabs} % \toprule, \midrule, \bottomrule
 
 \graphicspath{ {../Figs-Tabs/} } % graphics search directories
@@ -82,22 +83,22 @@
 
 \newcommand{\inv}[1]{\frac{1}{#1}}
 \newcommand{\dd}{\mathrm{d}}
-\newcommand{\deriv}[2][x]{\frac{\dd #2}{\dd #1}}
-\newcommand{\derivn}[3][x]{\frac{\dd^{#2}#3}{\dd{#1}^{#2}}}
-\newcommand{\pardv}[2][x]{\frac{\partial #2}{\partial #1}}
-\newcommand{\pardvn}[3][x]{\frac{\partial^{#2}#3}{\partial{#1}^{#2}}}
-\newcommand{\integ}[2][x]{\int #2\,\dd #1}
-\newcommand{\invinteg}[2][x]{\int\frac{\dd #1}{#2}}
-\newcommand{\dinteg}[4]{\int_{#1}^{#2}#3\,\dd #4}
+%\newcommand{\deriv}[2][x]{\frac{\dd #2}{\dd #1}}
+%\newcommand{\derivn}[3][x]{\frac{\dd^{#2}#3}{\dd{#1}^{#2}}}
+%\newcommand{\pardv}[2][x]{\frac{\partial #2}{\partial #1}}
+%\newcommand{\pardvn}[3][x]{\frac{\partial^{#2}#3}{\partial{#1}^{#2}}}
+%\newcommand{\integ}[2][x]{\int #2\,\dd #1}
+%\newcommand{\invinteg}[2][x]{\int\frac{\dd #1}{#2}}
+%\newcommand{\dinteg}[4]{\int_{#1}^{#2}#3\,\dd #4}
 %\renewcommand{\arcsin}{\operatorname{asin}}
 %\renewcommand{\arccos}{\operatorname{acos}}
 %\renewcommand{\arctan}{\operatorname{atan}}
-\DeclareMathOperator{\arccot}{arccot}
-\newcommand{\vel}{\vee}
-\newcommand{\et}{\wedge}
+%\DeclareMathOperator{\arccot}{arccot}
+%\newcommand{\vel}{\vee}
+%\newcommand{\et}{\wedge}
 
-\newcommand{\fwhm}{\text{FWHM}}
-\newcommand{\hwhm}{\text{HWHM}}
+%\newcommand{\fwhm}{\text{FWHM}}
+%\newcommand{\hwhm}{\text{HWHM}}
 
 \newcommand{\ndr}[1]{\footnote{#1 (n.d.r.)}}
 \newcommand{\fig}[1]{figura (\ref{fig:#1})} %inserting reference to figures
@@ -147,19 +148,13 @@
 \maketitle
 
 \begin{abstract}
-In quest'esperienza si è impiegato il fenomeno della diffrazione.
-
-Nella prima sezione per mezzo di uno
-spettroscopio a prisma
-siamo andati a misurare la
-lunghezza d'onda di una riga spettrale
+L'esperienza è divisa in due parti, l'obiettivo della prima è la misura, per mezzo di uno 
+spettroscopio a prisma, della lunghezza d'onda di una riga spettrale
 emessa da una lampada al sodio.
 
-Nella seconda parte dell'esperienza abbiamo misurato
-la risoluzione dello spettroscopio a reticolo di diffrazione
-in dotazione; dopodiché dall'osservazione delle righe di
-emissione di una lampada all'idrogeno
-si è determinata la costante di Rydberg.
+Nella seconda parte si è calcolata la costante di Rydberg a partire dalla misura della lunghezza d'onda di alcune righe spettrali di emissione di una lampada all'idrogeno,m stavolta con l'uso di uno spettroscopio a reticolo. 
+
+Si è quindi valutata la risoluzione dello strumento attraverso la misura della separazione del doppietto giallo nell'emissione della lampada al sodio.
 
 \end{abstract}
 

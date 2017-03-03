@@ -15,12 +15,12 @@
 
 	Per misurare il passo del reticolo si è misurato l'angolo di riflessione (ordine zero) della della sorgente sul reticolo e successivamente la riga di emissione principale del mercurio (verde) al 
 	primo e secondo ordine di diffrazione. La lunghezza d'onda è nota essere $\lambda = \SI{546.074}{\nano\meter}$,
-	ottenendo rispettivamente $\alpha_0=\ang{58;24;} \pm 6'$, $\alpha_1=\ang{105;55}\pm 6"$ e $\alpha_1=\ang{144;32}\pm 6"$.
+	ottenendo rispettivamente $\alpha_0=\ang{58;24;} \pm 6'$, $\alpha_1=\ang{105;55;}\pm 6"$ e $\alpha_1=\ang{144;32;}\pm 6"$.
 	
 	Essendo nota la relazione:
 	\smallskip
 	\begin{equation*}
-	d(sin (\alpha_i) - sin (\alpha_d) = m \lambda\qquad \text{con}\qquad \theta_i=\frac{1}{2}(\pi- \alpha_0)\qquad \alpha_i=(\pi- \theta_1-\alpha_m)
+	d\bigl(sin (\alpha_i) - sin (\alpha_d)\bigr) = m \lambda\qquad \text{con}\qquad \theta_i=\frac{1}{2}(\pi- \alpha_0)\qquad \alpha_i=(\pi- \theta_1-\alpha_m)
 	\end{equation*}
 	Dove per gli angoli si è seguita la notazione usata in \figurename{ \ref{fig:angoli}}.
 	\bigskip
@@ -63,15 +63,17 @@
 	\smallskip
 	\begin{equation*}\label{eq:ryd}
 	\frac{1}{\lambda}=R\;\biggl(\frac{1}{{n_1}^2}-\frac{1}{{n_2}^2}\biggr)
+		\smallskip
 	\end{equation*}
-	\smallskip
-si può eseguire un fit lineare per la costante di Rydberg, ottenendo un valore di $R= \SI{1.0979\pm0.0008e7}{\meter^{-1}}$ che è in ottimo accordo con il valore noto di $R= \SI{1.0974e7}{\meter^{-1}}$.
+
+si può eseguire un fit per la costante di Rydberg, ottenendo:
+$$R= \SI{1.0979\pm0.0008e7}{\meter^{-1}} \qquad \chi^2/ndof = 19/4$$ che è in ottimo accordo con il valore noto $R= \SI{1.0974e7}{\meter^{-1}}$. 
 
 Di seguito è riportato il grafico del fit eseguito.
 
 	\begin{figure} [H]
 		\centering
-		\includegraphics[width=0.7\textwidth]{../FIgs-tabs/fit_R.png}
+		\includegraphics[width=0.8\textwidth]{../FIgs-tabs/fit_R.png}
 		\caption{Fit della costante di Rydberg}
 	\end{figure}
 
@@ -79,7 +81,7 @@ Di seguito è riportato il grafico del fit eseguito.
 	Per effettuare una stima della sensibilità dello
 	spettroscopio si è montata come sorgente la 
 	lampada al sodio e si è misurata la posizione angolare delle righe del doppietto giallo
-	del sodio, ottenendo $$\alpha_0= \ang{57;57;} \pm 6'}
+	del sodio, ottenendo $$\alpha_0= \ang{57;57;} \pm 6'
 	\text{, }\alpha_1=	\ang{108;56;}\pm 6' \text{ e } \Delta\alpha=2' \pm 1'$$
 rispettivamente l'angolo di riflessione, l'angolo della prima riga del doppietto e la distanza angolare dalla seconda.
 Per la lunghezza d'onda delle due righe si ottiene:

@@ -1,23 +1,18 @@
-\section{Svolgimento delle misure}
-	La nostra misurazione si compone di due diverse
-	fasi: una fase di calibrazione
-	dell'apparato ed una fase in cui vengono
-	effettuate la misure per determinare $\lambda_{\text{Na}}$.
-\subsection{Calibrazione con lampada al cadmio}
+\section{Calibrazione}
 	La prima fase consiste nell'azzeramento del dispositivo;
-	per fare ciò abbiamo rimosso il prisma ed allineato la
-	fenditura di uscita della sorgente,la fessura della slitta
+	per fare ciò si è rimosso il prisma ed allineato la
+	fenditura di uscita della sorgente, la fessura della slitta
 	ed il reticolo a croce del telescopio di osservazione.
 	Per effettuare tale allineamento sono state impiegate
 	le viti per effettuare spostamenti fini di cui è dotato il piatto
 	rotante.
 
-	Abbiamo assunto la lettura del goniometro
-	$\alpha_0$ quale zero di riferimento per le successive misure.
+	La lettura del goniometro
+	$\alpha_0$ è assunta quale zero di riferimento per le successive misure.
 	Essendo tale misura basilare per le osservazioni successive
-	abbiamo iterato tale misurazione più volte
+	si è iterata tale misurazione più volte
 	ottenendo $\alpha_0 = \angerr{0}{0(1)}$.
-	Effettuato questo primo step abbiamo reinserito il
+	Si è quindi reinserito il
 	prisma orientandolo in maniera che formi un angolo
 	di circa \ang{60}.
 
@@ -26,17 +21,16 @@
 	cadmio.
 	Ruotando ulteriormente il prisma si osserva che le righe si spostano inizialmente
 	verso destra (verso angoli minori), per poi cambiare direzione e spostarsi verso
-	sinistra (verso angoli maggiori):
-	si è bloccato il prisma all'angolo di inversione della direzione di spostamento
+	sinistra (verso angoli maggiori). Si è bloccato il prisma all'angolo di inversione della direzione di spostamento
 	della riga verde (che corrisponderebbe alla condizione di minima deviazione
-	per quella riga);
-	l'emissione più vicina in lunghezza d'onda a quella che
+	per quella riga). L'emissione più vicina in lunghezza d'onda a quella che
 	intendiamo misurare sarebbe la riga rossa, ma riteniamo che scegliendo una
 	riga meno lontana dalle altre righe del cadmio si ottenga una calibrazione migliore.
+	
 	Si sono dunque misurate le varie posizioni angolari
-	delle righe di emissione della lampada al cadmio.
+	delle righe di emissione della lampada al cadmio:
 
-	\begin{table}[hb]
+	\begin{table}[H]
 		\centering
 		\begin{tabular}{S[%
 			table-figures-decimal = 1,
@@ -52,11 +46,11 @@
 			441.6 & \angerr{50}{18 (2)} \\
 			\bottomrule
 		\end{tabular}
-		\caption{Posizione angolari delle righe di emissione.}
+		\caption{Posizione angolare delle righe di emissione.}
 		\label{tab:disper_angolare}
 	\end{table}
 
-	Nel grafico in \fig{fit_a} si è riportata la posizione angolare contro l'inverso della
+	Nel grafico in \figurename{ \ref{fig:fit_a}} è riportata la posizione angolare contro l'inverso della
 	lunghezza d'onda per poi verificarne l'andamento lineare con un fit a
 	due parametri $\alpha = m \inv{\lambda} + q $.
 
@@ -67,19 +61,17 @@
 		\label{fig:fit_a}
 	\end{figure}
 
-	Il fit ha dato i seguenti valori: \\
-	$m = \SI{0.0596 \pm 0.0011}{\radian\um}$ \\
-	$q = \SI{0.7409 \pm 0.0022}{\radian}$ \\
-	$\chi^2 = 11.8 \ (3 \dof , \  p = 0.0079) $ \\
+	Il fit ha dato i seguenti valori:
+	$$m = \SI{0.0596 \pm 0.0011}{\radian\um} \qquad  q= \SI{0.7409 \pm 0.0022}{\radian} \qquad \chi^2/ndof = 11.8/3 \qquad  p_{val} = 0.0079 $$
+	
 	Con un coefficiente di correlazione di -0.992. L'alto $\chi^2$ è probabilmente
 	dovuto al fatto che, a rigore, la condizione di minima deviazione vale solo
 	per una delle righe spettrali misurate (quella verde), dunque non ci attendiamo
 	che la relazione lineare sia esattamente verificata.
 
-\subsection{Misura con lampada al sodio}
-	Per effettuare le misure vere e proprie abbiamo
-	rimontato la lampada al sodio in luogo di quella al cadmio.
-	Dopo aver aspettato alcuni minuti, ritenuti necessari per la
+\section{Misura della $\lambda$ della riga gialla del sodio}
+	Per effettuare le misure vere e proprie si è montata la lampada al sodio al posto di quella al cadmio.
+	Dopo aver aspettato alcuni minuti per la
 	termalizzazione della sorgente, abbiamo osservato la posizione angolare
 	$\alpha_{\text{Na}} = \angerr{48}{13(2)}$ della riga gialla del sodio.
 	Dalla relazione tra quest'ultima e la lunghezza d'onda, utilizzando i parametri
