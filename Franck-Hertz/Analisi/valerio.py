@@ -40,3 +40,13 @@ def deltas(hold, dist):
 	errx = np.sqrt(hold.x.err[dist-1:]**2 + hold.x.err[:1-dist]**2) / 2
 	erry = np.sqrt(hold.y.err[dist-1:]**2 + hold.y.err[:1-dist]**2) / 2
 	return DataHolder(x, y, errx, erry)
+
+def maximas(hold, splits):
+	ret = []
+	for s in splits:
+		mask = hold.x.val < s
+		x = hold.x.val[mask]
+		y = hold.y.val[mask]
+		i = np.argmax(y)
+		ret.append((x[i], hold.x.err[mask][i]))
+	return ret
