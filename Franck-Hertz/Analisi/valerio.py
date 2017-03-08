@@ -8,20 +8,6 @@ from iandons import *
 plt.close('all')
 # inizio cose
 
-oscilfile = os.path.join(folder, 'oscilloscopio', 'dati001.csv')
-
-a, b = data_from_oscill(oscilfile)
-z = data_from_oscill(oscilfile, mode='xy')
-
-
-def shift(arr, pos):
-	hold.sort()
-	n = np.zeros(np.shape(arr))
-	for i in range(pos):
-		n[i] = arr[0]
-	n[pos:] = arr[:-pos]
-	return n
-
 
 def smoothing(hold, roll):
 	hold.sort()
@@ -41,12 +27,25 @@ def deltas(hold, dist):
 	erry = np.sqrt(hold.y.err[dist-1:]**2 + hold.y.err[:1-dist]**2) / 2
 	return DataHolder(x, y, errx, erry)
 
+
 def maximas(hold, splits):
 	ret = []
-	for s in splits:
-		mask = hold.x.val < s
+	for t, s in ((splits[i], splits[i+1]) for i in range(len(splits) - 1)):
+		mask = (hold.x.val < s) & (hold.x.val > t)
 		x = hold.x.val[mask]
 		y = hold.y.val[mask]
 		i = np.argmax(y)
 		ret.append((x[i], hold.x.err[mask][i]))
 	return ret
+
+datainfo = np.loadtxt(os.path.join(folder, 'oscilloscopio', 'dati_info.txt')).T
+
+for i in range(1, 12):
+	oscilfile = os.path.join(folder, 'oscilloscopio', 'dati{0:03d}.csv'.format(i))
+
+	# a, b = data_from_oscill(oscilfile)
+	z = data_from_oscill(oscilfile, mode='xy')
+
+	q = np.array(maximas(z, (0.5, 2.5, 4.5, 6.5, 200)))*10 - np.array((datainfo[2, i-1], 0))
+
+	print('file {0:03d}, U_E: {1}, deltas:'.format(i, datainfo[1][i-1]), *(xe(*q.T)))
