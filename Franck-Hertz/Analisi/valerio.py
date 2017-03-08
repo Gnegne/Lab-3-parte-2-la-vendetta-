@@ -47,5 +47,12 @@ for i in range(1, 12):
 	z = data_from_oscill(oscilfile, mode='xy')
 
 	q = np.array(maximas(z, (0.5, 2.5, 4.5, 6.5, 200)))*10 - np.array((datainfo[2, i-1], 0))
+	q.x.label = '$U_A$ [V]'
+	q.x.re = 10
+	q.y.label = '$V_{out}$'
+	q.title = '$U_E = {}$ V'.format(datainfo[1, i-1])
+	# q.draw()
 
 	print('file {0:03d}, U_E: {1}, deltas:'.format(i, datainfo[1][i-1]), *(xe(*q.T)))
+
+# plt.show()
