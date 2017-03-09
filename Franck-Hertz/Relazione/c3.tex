@@ -14,31 +14,32 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsfonts}
-\usepackage{mathtools} % (!! PLACE BEFORE hyperref !!)
-\usepackage{xfrac} % \sfrac
-\usepackage{cancel} % \cancel \cancelto
-\usepackage{hyperref} % interactive links in TOC, URLs and references
+\usepackage{float}
+%\usepackage{mathtools} % (!! PLACE BEFORE hyperref !!)
+%\usepackage{xfrac} % \sfrac
+%\usepackage{cancel} % \cancel \cancelto
+%\usepackage{hyperref} % interactive links in TOC, URLs and references
 % unneded \usepackage{fixltx2e} % provides \textsubscript and makes some fixes
-\usepackage[version=3]{mhchem} % \ce (chemical formula)
+%\usepackage[version=3]{mhchem} % \ce (chemical formula)
 \usepackage{siunitx} % \num \si \SI
-\usepackage{alltt} % {alltt} (like verbatim but with commands)
-\usepackage{moreverb} % {listing}
+%\usepackage{alltt} % {alltt} (like verbatim but with commands)
+%\usepackage{moreverb} % {listing}
 \usepackage{listings} % {lstlisting}
-\usepackage[overload]{textcase} % fixes \MakeUppercase and \MakeLowercase
-\usepackage[normalem]{ulem} % \uline \uwave \sout \xout
-\usepackage{enumerate} % adds options for {enumerate}
-\usepackage{paralist} % inline lists with {inparaenum}
-\usepackage[official]{eurosym} % \euro
-\usepackage{tabu} % {tabu} (like {tabular} with improvements)
-\usepackage{layout} % layout description
+%\usepackage[overload]{textcase} % fixes \MakeUppercase and \MakeLowercase
+%\usepackage[normalem]{ulem} % \uline \uwave \sout \xout
+%\usepackage{enumerate} % adds options for {enumerate}
+%\usepackage{paralist} % inline lists with {inparaenum}
+%\usepackage[official]{eurosym} % \euro
+%\usepackage{tabu} % {tabu} (like {tabular} with improvements)
+%\usepackage{layout} % layout description
 \usepackage{multicol} % {multicols}
-\usepackage{lipsum} % filling text generator with \lipsum
-\usepackage[section]{placeins} % inhibits float figures from trepassing a section boundary
+%\usepackage{lipsum} % filling text generator with \lipsum
+%\usepackage[section]{placeins} % inhibits float figures from trepassing a section boundary
 \usepackage{subfig} % \subfloat to be used inside {figure}
-\usepackage{wrapfig} % {wrapfigure} (like {figure} but allows text to flow on its sides)
-\usepackage{ifthen} % \ifthenelse
-\usepackage{calc}
-\usepackage{array}
+%\usepackage{wrapfig} % {wrapfigure} (like {figure} but allows text to flow on its sides)
+%\usepackage{ifthen} % \ifthenelse
+%\usepackage{calc}
+%\usepackage{array}
 \usepackage{multirow}
 \usepackage{booktabs} % \toprule, \midrule, \bottomrule
 
@@ -132,18 +133,16 @@
 % \SI{1.222 \pm 0.034}{\nF}         -> 1.222 +- 0.034 nF
 % use it plz
 
-\author{Gruppo BF \\ Roberto Ribatti, Thomas Giannoni, Valerio Lomanto}
-\title{Esercitazione N.3: Franck-Hertz.}
-\date{24 febbraio 2017}
+\author{Gruppo BF \\ Thomas Giannoni, Valerio Lomanto, Roberto Ribatti}
+\title{Esperienza N.3 Franck-Hertz.}
+\date{2 marzo 2017}
 
 \begin{document}
 	\maketitle
 	\begin{abstract}
-		In quest'esperienza si è analizzato il comportamento quantistico dei 
+		In quest'esperienza si è analizzata la natura quantistica dei 
 		livelli energetici dell'atomo di Neon e si é stimato il gap di energia 
-		tra il livello fondamentale ed il primo di eccitazione.
-		
-		Per effettuare tale studio si sono osservati gli effetti 
+		tra il livello fondamentale ed il primo eccitato. Ai fini di tale studio si sono osservati gli effetti 
 		dissipativi degli urti anelastici tra elettroni e atomi di
 		neon.
 	\end{abstract}
