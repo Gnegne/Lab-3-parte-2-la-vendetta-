@@ -57,17 +57,16 @@
 	In particolare si ottiene $\Delta_{12} = \SI{16.5 \pm 1.4}{\volt}$ e $\Delta_{23} = \SI{21.4 \pm 1.4}{\volt}$, che sono da confrontarsi con la differenze di energia dei primi livelli eccitati del Neon rispetto al fondamentale ($1s^2 2s^2 2p^6$):
 	$$E_1 \simeq \SI{16.7}{\volt} \quad (1s^2 2s^2 2p^5 3s) \qquad \text{ e } \qquad E_2 \simeq \SI{18.6}{\volt} \quad (1s^2 2s^2 2p^5 3p).$$
 
-\subsection{}
+\bigskip
 	Si è settato apparato strumentale in modo che
-	la tensione $U_A$ sia in modalità  ramp: varierà  automaticamente tra $\SI{0}{\volt}$ e il massimo permesso dall'apparato:
-	(\SI{80.0 \pm 0.5}{\volt}). ???La tensione della griglia di controllo è invece lasciata fissa al valore $U_G = \SI{4.0 \pm 0.1}{\volt}$????
+	la tensione $U_A$ sia in modalità  ramp: varierà  automaticamente tra $\SI{0}{\volt}$ e il massimo permesso dall'apparato (\SI{80.0 \pm 0.5}{\volt}). La tensione della griglia di controllo è invece lasciata fissa al valore $U_G = \SI{4.0 \pm 0.1}{\volt}$.
 
 Il collettore è collegato al generatore di tensione mediante un amplificatore a transimpedenza
 	che fornisce in uscita un segnale in tensione proporzionale alla corrente di collettore $I_C$.
 
 	Attraverso la modalità  X-Y dell'oscilloscopio si è quindi
 	osservato l'andamento della curva $I_C \text{ vs } U_A$ al
-	variare di $U_E$, la tensione del collettore.
+	variare di $U_E$.
 
 	L'applicazione di una d.d.p tra griglia d'anodo e collettore ha lo scopo di creare un campo elettrico frenante per gli elettroni che emergono dall'anodo verso il collettore.
 
@@ -87,23 +86,23 @@ Il collettore è collegato al generatore di tensione mediante un amplificatore a
 		\includegraphics[scale=0.6]{../Figs-tabs/ue75.png}
 		\label{f:ue7.5}
 		}
-		\caption{$I_C$ vs $U_A$ al variare di $U_E$ in modalità  X-Y}
+		\caption{$I_C$ vs $U_A$ al variare di $U_E$ in modalità X-Y}
 	\label{fig:ue}
 \end{figure}
-	Come è possibile osservare da \figurename{ \ref{fig:ue1}} e \figurename{ \ref{fig:ue3.4}}
+	Come è possibile osservare da \figurename{ \ref{f:ue1}} e \figurename{ \ref{f:ue3.4}}
 	per valori bassi del campo decelerante $U_E$ la quasi totalità  degli $e^{-}$, anche qualora facciano
 	urti anelastici, raggiunge il collettore.
 	Aumentando $U_E$ si osserva un decremento
 	di $I_C$, ciò risulta compatibile col fatto che gli $e^{-}$
-	dopo aver ceduto energia per eccitare gli atomi di He
+	dopo aver ceduto energia per eccitare gli atomi di Ne
 	non hanno energia sufficiente a superare il campo di decelerazione.
 
-In \figurename{ \ref{fig:ue7.5}} è evidente il classico andamento  : all'aumentare di $U_A$ corrisponde un aumento di $I_C$ fino ad un massimo, che coincide col momento in cui gli $e^-$ iniziano ad avere energia sufficiente per eccitare gli atomi di Neon, a questo evento corrisponde la comparsa della prima banda.
+In \figurename{ \ref{f:ue7.5}} è evidente il classico andamento  : all'aumentare di $U_A$ corrisponde un aumento di $I_C$ fino ad un massimo, che coincide col momento in cui gli $e^-$ iniziano ad avere energia sufficiente per eccitare gli atomi di Neon, a questo evento corrisponde la comparsa della prima banda.
 	Il minimo che segue è nel punto in cui la banda si stacca dalla griglia d'anodo: in questo caso la maggior parte degli elettroni supera la griglia con energia quasi nulla: vengono fermati dal campo frenante, non arrivando quindi sul collettore.
-	All'aumentare della tensione $U_A$ la corrente torna ad aumentare fino a quando gli elettroni non avranno nuovamente l'energia necessaria ad eccitare il Ne.
+	All'aumentare della tensione $U_A$ la corrente torna ad aumentare fino a quando gli elettroni non avranno nuovamente l'energia necessaria ad eccitare il neon.
 
 	Dalla regolazione di $U_E$ si sono settati i minimi della curva
-	$I_C VS U_A$ in corrispondenza dello zero.
+	$I_C \text{ vs } U_A$ in corrispondenza dello zero.
 	Si è regolato il valore di $U_A$ in maniera da osservare il maggior
 	numero di massimi osservabili sullo schermo dell'oscilloscopio,
 	è stato inoltre necessario regolare il guadagno dell'amplificatore
@@ -111,7 +110,7 @@ In \figurename{ \ref{fig:ue7.5}} è evidente il classico andamento  : all'aument
 
 	A seguito si sono acquisite le due tracce di $U_A$ e $\propto I_C$ al variare di
 	$U_E$ da $\SI{9}{\volt}$ a $\SI{0}{\volt}$. Per  tali acquisizioni, qualora non si siano
-	verificati problemi a rilevare i picchi, sono stati
+	verificati problemi a rilevare i picchi, sono state
 	osservate le $U_A$ corrispondenti ai massimi di $I_C$.
 
 \sisetup{table-figures-decimal = 1, table-figures-exponent = 0, table-figures-integer = 2, table-figures-uncertainty = 1}
@@ -136,6 +135,7 @@ In \figurename{ \ref{fig:ue7.5}} è evidente il classico andamento  : all'aument
 		\label{tab:a}
 	\end{table}
 Le caselle vuote corrispondo a massimi non misurabili.
+
 Si è poi proceduto ad un fit lineare, ottenendo i seguenti risultati:
 	\begin{table}[H]
 		\centering
@@ -157,9 +157,7 @@ Si è poi proceduto ad un fit lineare, ottenendo i seguenti risultati:
 
 	Le differenze tra i massimi sono dunque:
 	$$\Delta_{12}=\SI{18.2\pm 0.4}{\volt} \qquad \Delta{23}=\SI{20.5 \pm 0.5}{\volt} \qquad \Delta{34}=\SI{20.1 \pm 0.6}{\volt}$$
-	Si osserva che dati sono in accordo con quelli trovati alla
-	verifica qualitativa della comparsa delle frange.
-	CONCLUSIONI DA SCRIVERE
+	Si osserva che questi risultati sono in accordo con quelli trovati alla verifica qualitativa della comparsa delle frange.
 
 \subsection{Note}
 Nell'acquisizione dei massimi di $I_C$ contro $U_A$ si è preso come errore
@@ -170,3 +168,6 @@ di poter sfruttare il numero di dati raccolti per ridurre l'errore in modo sighi
 Si sono propagati gli errori sistematici (risultanti da differenze rispetto a valori fissi
 o simili operazioni) separatamente rispetto a quelli statistici; in particolare
 nell'eseguire i fit si è considerato solo questi ultimi.
+
+\section{Conclusioni}
+
