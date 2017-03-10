@@ -38,21 +38,45 @@ def maximas(hold, splits):
 		ret.append((x[i], hold.x.err[mask][i]))
 	return ret
 
+def minimas(hold, splits):
+	ret = []
+	for t, s in ((splits[i], splits[i+1]) for i in range(len(splits) - 1)):
+		mask = (hold.x.val < s) & (hold.x.val > t)
+		x = hold.x.val[mask]
+		y = hold.y.val[mask]
+		i = np.argmin(y)
+		ret.append((x[i], hold.x.err[mask][i]))
+	return ret
+
 datainfo = np.loadtxt(os.path.join(folder, 'oscilloscopio', 'dati_info.txt')).T
 
-for i in range(1, 12):
-	oscilfile = os.path.join(folder, 'oscilloscopio', 'dati{0:03d}.csv'.format(i))
-
-	# a, b = data_from_oscill(oscilfile)
-	z = data_from_oscill(oscilfile, mode='xy')
-
-	q = np.array(maximas(z, (0.5, 2.5, 4.5, 6.5, 200)))*10 - np.array((datainfo[2, i-1], 0))
-	q.x.label = '$U_A$ [V]'
-	q.x.re = 10
-	q.y.label = '$V_{out}$'
-	q.title = '$U_E = {}$ V'.format(datainfo[1, i-1])
-	# q.draw()
-
-	print('file {0:03d}, U_E: {1}, deltas:'.format(i, datainfo[1][i-1]), *(xe(*q.T)))
+# for i in range(1, 12):
+# 	oscilfile = os.path.join(folder, 'oscilloscopio', 'dati{0:03d}.csv'.format(i))
+#
+# 	# a, b = data_from_oscill(oscilfile)
+# 	z = data_from_oscill(oscilfile, mode='xy')
+#
+# 	q = np.array(maximas(z, (0.5, 2.5, 4.5, 6.5, 200)))*10 - np.array((datainfo[2, i-1], 0))
+# 	p = np.array(minimas(z, (1.9, 3.7, 5.7, 77)))*10 - np.array((datainfo[2, i-1], 0))
+# 	z.x.label = '$U_A$ [V]'
+# 	z.x.re = 10
+# 	z.y.label = '$V_{out}$'
+# 	z.title = '$U_E = {}$ V'.format(datainfo[1, i-1])
+# 	# z.draw()
+#
+# 	print('file {0:03d}, U_E: {1}, deltas:'.format(i, datainfo[1][i-1]), *(xe(*q.T)))
 
 # plt.show()
+
+d = np.array([[18.2, .3], [20.5, .4], [20.1, .5]]).T
+n = np.array([2, 3, 4])
+
+def majick(m, r, E):
+	return (1 + r * (2*m -1)) * E
+
+pars, pcov = fit_generic(majick, n, d[0], None, d[1], [.1, 16])
+
+print(pars)
+print(np.sqrt(np.diag(pcov)))
+
+print(tell_chi2((d[0] - majick(n, *pars))/d[1], 1))

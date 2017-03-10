@@ -55,12 +55,13 @@
 
 	Ci si aspetta, almeno in prima approssimazione, che le differenze fra le d.d.p $U_A-U_G$ tra due bande successive sia la differenza di energia tra i primi livelli eccitati liberi degli atomi di Neon.
 	In particolare si ottiene $\Delta_{12} = \SI{16.5 \pm 1.4}{\volt}$ e $\Delta_{23} = \SI{21.4 \pm 1.4}{\volt}$, che sono da confrontarsi con la differenze di energia dei primi livelli eccitati del Neon rispetto al fondamentale ($1s^2 2s^2 2p^6$):
-	$$E_1 \simeq \SI{16.7}{\volt} \quad (1s^2 2s^2 2p^5 3s) \qquad \text{ e } \qquad E_2 \simeq \SI{18.6}{\volt} \quad (1s^2 2s^2 2p^5 3p).$$
+	$$E_1 \simeq \SI{16.7}{\eV} \quad (1s^2 2s^2 2p^5 3s) \qquad \text{ e } \qquad E_2 \simeq \SI{18.6}{\eV} \quad (1s^2 2s^2 2p^5 3p).$$
 
 \subsection{}
-	Si è settato apparato strumentale in modo che
-	la tensione $U_A$ sia in modalità  ramp: varierà  automaticamente tra $\SI{0}{\volt}$ e il massimo permesso dall'apparato:
-	(\SI{80.0 \pm 0.5}{\volt}). ???La tensione della griglia di controllo è invece lasciata fissa al valore $U_G = \SI{4.0 \pm 0.1}{\volt}$????
+	Si è settato l'apparato strumentale in modo che
+	la tensione $U_A$ sia in modalità ramp: varierà  automaticamente tra $\SI{0}{\volt}$ e il massimo permesso dall'apparato:
+	(\SI{80.0 \pm 0.5}{\volt}). La tensione della griglia di controllo è invece lasciata fissa al valore
+	$U_G = \SI{3.5 \pm 0.1}{\V}$
 
 Il collettore è collegato al generatore di tensione mediante un amplificatore a transimpedenza
 	che fornisce in uscita un segnale in tensione proporzionale alla corrente di collettore $I_C$.
@@ -77,15 +78,15 @@ Il collettore è collegato al generatore di tensione mediante un amplificatore a
 		\centering
 		 \subfloat[$U_E=\SI{1.0 \pm 0.1}{\volt}$]{
 		\includegraphics[scale=0.6]{../Figs-tabs/ue3.png}
-		\label{f:ue1}
+		\label{fig:ue1}
 		}
 		 \subfloat[$U_E= \SI{3.4 \pm 0.1}{\volt}$]{
 		\includegraphics[scale=0.6]{../Figs-tabs/ue34.png}
-		\label{f:ue3.4}
+		\label{fig:ue3.4}
 		}
 		 \subfloat[$U_E= \SI{7.5 \pm 0.6}{\volt}$]{
 		\includegraphics[scale=0.6]{../Figs-tabs/ue75.png}
-		\label{f:ue7.5}
+		\label{fig:ue7.5}
 		}
 		\caption{$I_C$ vs $U_A$ al variare di $U_E$ in modalità  X-Y}
 	\label{fig:ue}
@@ -99,6 +100,7 @@ Il collettore è collegato al generatore di tensione mediante un amplificatore a
 	non hanno energia sufficiente a superare il campo di decelerazione.
 
 In \figurename{ \ref{fig:ue7.5}} è evidente il classico andamento  : all'aumentare di $U_A$ corrisponde un aumento di $I_C$ fino ad un massimo, che coincide col momento in cui gli $e^-$ iniziano ad avere energia sufficiente per eccitare gli atomi di Neon, a questo evento corrisponde la comparsa della prima banda.
+
 	Il minimo che segue è nel punto in cui la banda si stacca dalla griglia d'anodo: in questo caso la maggior parte degli elettroni supera la griglia con energia quasi nulla: vengono fermati dal campo frenante, non arrivando quindi sul collettore.
 	All'aumentare della tensione $U_A$ la corrente torna ad aumentare fino a quando gli elettroni non avranno nuovamente l'energia necessaria ad eccitare il Ne.
 
@@ -133,7 +135,7 @@ In \figurename{ \ref{fig:ue7.5}} è evidente il classico andamento  : all'aument
 			3.0(1) & 13.0(8) & & &\\
 			\bottomrule
 		\end{tabular}
-		\label{tab:a}
+		\label{tab:b}
 	\end{table}
 Le caselle vuote corrispondo a massimi non misurabili.
 Si è poi proceduto ad un fit lineare, ottenendo i seguenti risultati:
@@ -156,10 +158,33 @@ Si è poi proceduto ad un fit lineare, ottenendo i seguenti risultati:
 		\end{figure}
 
 	Le differenze tra i massimi sono dunque:
-	$$\Delta_{12}=\SI{18.2\pm 0.4}{\volt} \qquad \Delta{23}=\SI{20.5 \pm 0.5}{\volt} \qquad \Delta{34}=\SI{20.1 \pm 0.6}{\volt}$$
+	$$\Delta_{12}=\SI{18.2\pm 0.4}{\volt} \qquad \Delta_{23}=\SI{20.5 \pm 0.5}{\volt} \qquad \Delta_{34}=\SI{20.1 \pm 0.6}{\volt}$$
 	Si osserva che dati sono in accordo con quelli trovati alla
 	verifica qualitativa della comparsa delle frange.
-	CONCLUSIONI DA SCRIVERE
+
+	Si nota come le corrispondenti differenze in enegia degli elettroni non siano
+	compatibili con eccitazioni al primo livello eccitato;
+	riteniamo che ciò sia dovuto alla non trascurabilità del cammino libero medio
+	degli elettroni rispetto alla distanza tra le griglie: un calcolo approssimativo
+	in cui determiniamo la densità di particelle dalla legge dei gas perfetti
+	(con $T \approx \SI{300}{\K}, p \approx \SI{10}{\milli\bar}$) e utilizziamo
+	\SI{0.5}{\angstrom} come raggio del Neon per il calcolo della sezione d'urto
+	restituisce infatti un cammino libero medio di $\sim \SI{0.5}{\mm}$,
+	ovvero circa un decimo della lunghezza della regione interessata dal campo accelerante.
+	Si è eseguito un fit su questi tre punti della relazione tra cammino libero medio,
+	energia di eccitazione, ordine del massimo e differenza di energia osservata:
+	$$ \Delta E_n = E_n - E_{n-1} = \big(1 + \frac{\lambda}{L}(2n - 1)\big) E_a $$
+	È risultato $\frac{\lambda}{L} = \SI{0.05(4)}, \ E_a = \SI{16(3)}{\eV}$, con un $\chi^2$ di 5 (1 \dof).
+
+	L'energia di eccitazione è compatibile con quella nota, ma
+	il rapporto tra cammino libero medio e lunghezza della regione di accelerazione
+	si conferma non trascurabile, e in particolare sufficiente perché gli elettroni acquisiscano
+	energia sufficiente ad eccitare il Neon a livelli più alti, il che
+	spiegherebbe anche la poca aderenza delle misure alla curva fittata (ovvero
+	l'alto $\chi^2$): staremmo infatti cercando di catalogare quanto osservato
+	come la ripetuta eccitazione del Neon ad un livello energetico fissato
+	mentre quello che starebbe realmente accadendo è la sovrapposizione di
+	eccitazioni a livelli diversi.
 
 \subsection{Note}
 Nell'acquisizione dei massimi di $I_C$ contro $U_A$ si è preso come errore
