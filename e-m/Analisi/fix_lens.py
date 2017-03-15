@@ -12,17 +12,17 @@ bulb_radius = .05
 bulb_thickness = .001
 centre_to_ruler = .11
 
-# contis
+# contis (spero di aver azzeccato i segni)
 
-n = 1.5
+n = 1.5  # che vetro stiamo usando? in realtà non cambia na sega
 d = bulb_thickness
 r1 = -bulb_radius
 r2 = -bulb_radius - d
-p = (n-1) * (1/r1 - 1/r2 + (n-1)*d/(n * r1 * r2))
+p = (n-1) * (1/r1 - 1/r2 + (n-1)*d/(n * r1 * r2))  # lensmaker eq
 f = 1/p
 
 vo = 1/bulb_radius
-vi = p - vo
+vi = p - vo  # optician thin lens eq
 di = 1/vi
 
 M = f/(f - bulb_radius)
