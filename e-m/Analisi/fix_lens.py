@@ -42,11 +42,15 @@ r = rawdata[0]
 v = rawdata[1] / 11.09
 b = v / 5e-3
 
-field = DataHolder(r, b, .05, 1/11.09/10)
+field = DataHolder(r, b, .1, 1/11.09/10)
 
 
 def integrand(x, k):
 	return (1 - k*np.cos(x)) / (5/4 + k**2 - 2*k*np.cos(x))**(3/2)
+
+
+def derint(x, k):
+	return -((1 - k*np.cos(x))*3*(k - np.cos(x)) +  np.cos(x)*(5/4 + k**2 - 2*k*np.cos(x))) / (5/4 + k**2 - 2*k*np.cos(x))**(5/2)
 
 
 @np.vectorize
@@ -56,12 +60,38 @@ def b_z(r, a, ni):
 	return 2e-3 * ni/a * val
 
 
-def bz_wrap(r, zero, a):
-	return b_z((r- zero)/100, a, 130 * 0.95)
+@np.vectorize
+def db(r, zero, a, z):
+	ni = 130 * 0.95 * z
+	r = (r - zero) / 100
+	k = r/a
+	gg, _ = integrate.quad(derint, 0, 2*np.pi, args=(k,))
+	return 2e-3 * ni/a**2 * gg
 
 
-bz_wrap.pars, _, _ = _fit_generic_ev(bz_wrap, lambda x, *pars: 0, field.x.val, field.y.val, field.x.err, field.y.err, np.array([20, .15]), 10)
-field.draw(bz_wrap)
+def bz_wrap(r, zero, a, z):
+	return b_z((r - zero)/100, a, 130 * 0.95 * z)
+
+
+bz_wrap.pars, cov, _ = _fit_generic_ev(bz_wrap, db, field.x.val, field.y.val, field.x.err, field.y.err, np.array([20.1, .15, 1]), 100)
+
+field.x.label = "Posizione orizzontale [cm]"
+field.y.label = "$B_z$ [Gs]"
+field.title = "Mappatura del campo magnetico nella regione centrale"
+bz_wrap.resd = (field.y.val - bz_wrap(field.x.val, *bz_wrap.pars)) / np.sqrt(field.y.err**2 + (field.x.err/100)**2 * db(field.x.val, *bz_wrap.pars) **2)
+
+field.draw(bz_wrap, resid=True)
+field.main_ax.axvline(x=bz_wrap.pars[0], color='black', ls='--')
+
+# plt.figure()
+# plt.plot(field.pts, db(field.pts, *bz_wrap.pars))
+
+
+print(tell_chi2(bz_wrap.resd, len(field.y.val) - 3, style='latex'))
+print(xe(bz_wrap.pars, np.sqrt(np.diag(cov))))
+print(fit_norm_cov(cov))
+
+print(bz_wrap(0, 0, *bz_wrap.pars[1:])/0.95)
+
+
 plt.show()
-
-print(bz_wrap.pars)
