@@ -42,7 +42,7 @@ r = rawdata[0]
 v = rawdata[1] / 11.09
 b = v / 5e-3
 
-field = DataHolder(r, b, .1, 1/11.09/10)
+field = DataHolder(r, b, .05, 1/11.09/10)
 
 
 def integrand(x, k):
@@ -50,7 +50,7 @@ def integrand(x, k):
 
 
 def derint(x, k):
-	return -((1 - k*np.cos(x))*3*(k - np.cos(x)) +  np.cos(x)*(5/4 + k**2 - 2*k*np.cos(x))) / (5/4 + k**2 - 2*k*np.cos(x))**(5/2)
+	return -((1 - k*np.cos(x))*3*(k - np.cos(x)) + np.cos(x)*(5/4 + k**2 - 2*k*np.cos(x))) / (5/4 + k**2 - 2*k*np.cos(x))**(5/2)
 
 
 @np.vectorize
@@ -73,7 +73,7 @@ def bz_wrap(r, zero, a, z):
 	return b_z((r - zero)/100, a, 130 * 0.95 * z)
 
 
-bz_wrap.pars, cov, _ = _fit_generic_ev(bz_wrap, db, field.x.val, field.y.val, field.x.err, field.y.err, np.array([20.1, .15, 1]), 100)
+bz_wrap.pars, cov, _ = _fit_generic_ev(bz_wrap, db, field.x.val, field.y.val, field.x.err, field.y.err, np.array([20.2, .158, 1.05]), 100)
 
 field.x.label = "Posizione orizzontale [cm]"
 field.y.label = "$B_z$ [Gs]"

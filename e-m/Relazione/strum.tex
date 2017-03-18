@@ -1,162 +1,144 @@
 \section{Strumentazione}
-	Per effettuare tale misurazioni abbiamo impiegato 
+	Per effettuare tale misurazioni abbiamo impiegato
 	\begin{itemize}[$\cdot$]
 		\item Un multimetro digitale
-		\item Un righello risoluzione 1 \si{mm}
-		\item Un metro a nastro risoluzione 1 \si{cm}
-		\item Due bobine di Helmotz, di raggio $r=$\SI{15}{cm} e 130 spire, impiegate per generare il campo magnetico
-		\item Un bulbo, fornito di tubo catodico, usato qale cannone elettronico per la 
-			generazione degli \e.
-			Il bulbo risulta riempito con un gas di elio rarefatto 
-			per ottenere una traccia visiva del moto degli \e.
-			
-		\item Alimentatori per regolare le tensioni e le correnti impiegate.
-		\item Una scala gradata, retro illuminata quale riferimento per il moto
-		\item Una macchina fotografica digitare, per effettuare le acqusizioni degli
-			\e
-	\end{itemize}	
-\section{Procedimento}	
-	\subsection{calibrazione strumentale e verifica delle approssimazioni}	
-		Prima di effettare le acqusizioni vere e proprie l'apparato impiegato necessita di una 
+		\item Un righello di risoluzione \SI{1}{\mm}
+		\item Un metro a nastro risoluzione \SI{1}{\cm}
+		\item Due bobine di Helmotz, di raggio $R = \SI{15}{cm}$ e 130 spire, impiegate per generare il campo magnetico
+		\item Un tubo catodico a bulbo contenente elio rarefatto
+		\item Alimentatori per regolare le tensioni e le correnti impiegate
+		\item Una scala graduata retroilluminata quale riferimento per il moto
+		\item Una macchina fotografica digitale, per effettuare le acqusizioni
+		delle tracce degli \e
+	\end{itemize}
+\section{Procedimento}
+	\subsection{calibrazione strumentale e verifica delle approssimazioni}
+		Prima di effettare le acqusizioni vere e proprie l'apparato impiegato necessita di una
 		fase di regolazione.
-		
+
 		Essendo l'aparato sensibile al campo magnetico terrestre
 		con una bussola si è individuata l'orientazione di $B_{terrestre}$
-		e si sono orientate le bobine in modo da minizzare l'inflenza.
-		L' orientazione delle bobine impiegata pone il campo $B_{terrestre}$ e $B_z$
-		prodotto dalle bobine, ortogonali;In tale caso l'influenza
-		di $B_{terrestre}$ sul moto degli elettroni porterebbe una variazione
-		in profondità; pertanto ininfluente sulla successiva analisi dati,
-		che effettua una proiezione sul piano X-Y.
-		
-		Essendo inoltre la sonda ad effetto Hall sensibile in lettura ai
-		campi magnetici residui,  si è andati a modificare gli off-sett del circuito di amplificazione della stessa sonda.
-		Per fare tale calibrazione dello zero strumentale si agisce sl potenziometro del circito sino 
-		a quando ruotando di \ang{180} la sonda,la lettura non sia 
-		uguale in modulo e opposte in segno.
-		
-		Effettuato ciò si sono alimentate le bobine con una tensione $V_{coil}=$\SI{7.5 \pm 0.1}{\volt}\footnote{Tali misure sono state prese dalla lettura del dispositivo di lettura.
-		Si è assunto come errore un digit; a cui eventualmente andrebbero
-		aggiunti errori sistemetici dovuti alla calibrazione dell'apparato
-		di lettura.}
-		attenendo una corrente $I_{coil}=$\SI{0.95 \pm 0.01}{\ampere}\footnote[1]{}
-		;
+		e si sono orientate le bobine in modo da minizzarne l'influenza, ovvero ponendo
+		l'asse delle bobine in direzione ortogonale a $B_{terrestre}$. Così facendo l'influenza
+		di quest'ultimo sul moto circolare degli elettroni si riduce ad una
+		piccola forza in direzione assiale, che introduce una lieve nonplanarità della traiettoria,
+		essenzialmente ininfluente sulla successiva analisi dati, dal momento che
+		piccole differenze di profondità nella traccia dell'elettrone non risultano
+		in un raggio di curvatura diverso.
+
+		La sonda ad effetto Hall necessita inoltre della calibrazione dello zero;
+		si è a tale scopo andati a modificare gli offset del circuito di amplificazione della stessa sonda.
+		Per effettuare tale calibrazione si è agito sul potenziometro del circuito sino
+		a quando non si ottenesse una lettura uguale in modulo (e opposta in segno)
+		in seguito ad una rotazione di \ang{180} della sonda.
+
+		Effettuato ciò si sono alimentate le bobine con una tensione
+		$V_{coil}=$\SI{7.5 \pm 0.1}{\volt} ottenendo una corrente
+		$I_{coil}=$\SI{0.95 \pm 0.01}{\ampere}\footnote{Tali misure sono state prese
+		dalla lettura del generatore di tensione;
+		si è assunto come errore un digit, a cui andrebbe
+		aggiunto l'errore (ignoto) di calibrazione dell'apparato.};
 		dopodichè si è mappato il campo $B_z$ sul
-		piano di moto degli \e, in funzione della distanza dal centro per un intorno \SI{\pm 6}{cm} del centro della spira $centro_{spira}=20$cm. si è ritenuta tale regione come area di interesse poiché si essendo il raggio del bulbo approssimativamente di $5-6$ cm, il moto gli elettroni osservabili si svolge entro tale intervallo.
-		Per effettare tale osservazioni si è impiegata la sonda ad effetto Hall.	
-		La sonda restituisce un segnale in tensione ,che amplificato da un circuito,
-		di guadagno noto $G=11.1 \pm 0.1$ $$controllare$$, viene letta attraverso il multimetro 
-		in dotazione.Si è associata alla lettura un incertezza di 1 digit.
-		La posizione della sonda è stata calcolata impiegando il righello in dotazione.
-		
-		Si riportano i valori ottenuti da tale mappatura in 
+		piano del moto degli \e in funzione della distanza dal centro dell'apparato
+		per un intorno di $\sim $\SI{\pm 6}{\cm}.
+		Si è ritenuta tale regione come area di interesse poiché si essendo il
+		raggio del bulbo approssimativamente di \SIrange{5}{6}{\cm},
+		il moto gli elettroni osservabili si svolge certamente entro tale intervallo.
+		Per effettare tale osservazioni si è impiegata la sonda ad effetto Hall.
+		La sonda restituisce un segnale in tensione che, amplificato
+		di guadagno noto $G = \num{11.090(3)}$, viene letta attraverso il multimetro
+		in dotazione. Si è associata alla lettura un incertezza di mezzo digit.
+		La posizione della sonda è identificata dalla distanza $l$ di un'estremità dell'asta
+		che la contiene dal lato dell'apparato attraverso cui l'asta è infilata;
+		è stato eseguito un fit per determinare la posizione $l_0$ corrispondente al centro.
+
+		Si riportano i valori ottenuti da tale mappatura in \tab{a}.
+
 		\begin{table}[hb]
 			\centering
-			\begin{tabular}{|c|c|c|}
+			\begin{tabular}{ccc}
 				\toprule
-				$r $\SI{\pm 0.1}{cm} & 	$V_{out}$ \SI{\pm 0.001}{ \volt} \\
+				$l$ [\si{cm}] & 	$V_{out}$ [\si{\volt}] \\
 				\midrule
-				14.0 		& 	\SI{ 0.405 \pm 0.001}{\volt} \\
-				14.5		& 	\SI{ 0.407 \pm 0.001}{\volt} \\
-				15.0		& 	\SI{ 0.408 \pm 0.001}{\volt} \\
-				15.5		& 	\SI{ 0.408 \pm 0.001}{\volt} \\
-				16.0		& 	\SI{ 0.408 \pm 0.001}{\volt} \\
-				16.5		& 	\SI{ 0.409 \pm 0.001}{\volt} \\
-				17.0		& 	\SI{ 0.409 \pm 0.001}{\volt} \\
-				17.5		& 	\SI{ 0.409 \pm 0.001}{\volt} \\
-				18.0		& 	\SI{ 0.409 \pm 0.001}{\volt} \\
-				18.5		& 	\SI{ 0.409 \pm 0.001}{\volt} \\
-				19.0		& 	\SI{ 0.409 \pm 0.001}{\volt} \\
-				19.5		& 	\SI{ 0.409 \pm 0.001}{\volt} \\
-				20.0		& 	\SI{ 0.409 \pm 0.001}{\volt} \\
-				20.5		& 	\SI{ 0.410 \pm 0.001}{\volt} \\
-				21.0		& 	\SI{ 0.410 \pm 0.001}{\volt} \\
-				21.5		& 	\SI{ 0.409 \pm 0.001}{\volt} \\
-				22.0		& 	\SI{ 0.410 \pm 0.001}{\volt} \\
-				22.5		& 	\SI{ 0.410 \pm 0.001}{\volt} \\
-				23.0		& 	\SI{ 0.410 \pm 0.001}{\volt} \\
-				23.5		& 	\SI{ 0.409 \pm 0.001}{\volt} \\
-				24.0		& 	\SI{ 0.409 \pm 0.001}{\volt} \\
-				24.5		& 	\SI{ 0.409 \pm 0.001}{\volt} \\
-				25.0		& 	\SI{ 0.408 \pm 0.001}{\volt} \\
-				25.5		& 	\SI{ 0.407 \pm 0.001}{\volt} \\
-				26.0		& 	\SI{ 0.406 \pm 0.001}{\volt} \\
-				
+				14.0 		& 	 0.405 \\
+				14.5		& 	 0.407 \\
+				15.0		& 	 0.408 \\
+				15.5		& 	 0.408 \\
+				16.0		& 	 0.408 \\
+				16.5		& 	 0.409 \\
+				17.0		& 	 0.409 \\
+				17.5		& 	 0.409 \\
+				18.0		& 	 0.409 \\
+				18.5		& 	 0.409 \\
+				19.0		& 	 0.409 \\
+				19.5		& 	 0.409 \\
+				20.0		& 	 0.409 \\
+				20.5		& 	 0.410 \\
+				21.0		& 	 0.410 \\
+				21.5		& 	 0.409 \\
+				22.0		& 	 0.410 \\
+				22.5		& 	 0.410 \\
+				23.0		& 	 0.410 \\
+				23.5		& 	 0.409 \\
+				24.0		& 	 0.409 \\
+				24.5		& 	 0.409 \\
+				25.0		& 	 0.408 \\
+				25.5		& 	 0.407 \\
+				26.0		& 	 0.406 \\
 				\bottomrule
 			\end{tabular}
-			\caption{Si riporta la lettura della sonda ad effetto Hall in funzione
-				della posizione della posizione della stessa.
-				Per effettare una misura comoda delle posizioni si è effettuata una
-				misura dall'esterno ottenedo $r_{centro}=20$ cm}
-				%Si ricorda 
-			%	Dal principio di sovrapposizione e il campo di una bobina sul campo otteniamo un campo atteso
-		%$B_{atteso}=\mu_0\frac{R^2}{{(R^2+z^2)}^{3/2}}I_{coil}=$}
-			\label{t:a}
-		\end{table}	
-	\tab{a}
-	Dai dati tabulati si è effettuato un grafico di $V_{out,z}/V_{out}^{max}$;
-	avendo stabilito una corrispondenza biunivaca $B$ ed $V$ misurato;
-	si è assunto la sostanziale corrispondenza tra il grafico di $V_{out,z}/V_{out}^{max}$ ed un grafico di $B_{out,z}/B_{out}^{max}$.
+			\caption{Mappatura del campo magnetico all'interno della bobina di Helmholtz.}
+			\label{tab:a}
+		\end{table}
+
+	Dai dati tabulati si è ricavato $B_z$, tenendo conto dell'amplificazione e della risposta della sonda
+	(\SI{5.0(1)}{\mV\per\gauss}); i dati sono mostrati in \fig{fit1} insieme all'andamento previsto
+	dato dalla formula (valida lungo il piano equidistante dalle due bobine):
+	\begin{equation} \label{eq:bz}
+		B_z = \frac{\mu_0 N I_{coil}}{4 \pi} \int_0^{2\pi} \frac{2\, R\, (R - r \cos\theta )}{\big(\frac{5}{4} R^2 + r^2 + 2\, R \, r \cos \theta\big) ^ {3/2}} \, \dd \theta
+	\end{equation}
+	Dove $I_{coil}$ è la corrente nelle spire delle bobine, $N$ il numero di avvolgimenti,
+	$\mu_0$ la permeabilità magnetica del vuoto, $R$ il raggio delle bobine
+	ed $r$ la distanza dall'asse delle bobine.
+
 	\begin{figure}[hb]
 		\centering
-		\subfloat[fit di  $V_{out,z}/V_{out}^{max}$]{
-			\includegraphics[scale=0.5]{./fig/figure_1.png}
-			\label{f:1}
-		}\\
-		\subfloat[andamento previsto]{
-			\includegraphics[scale=0.5]{./fig/andamento.pdf}
-			\label{f:andamento} 
-		}
-		\caption{grafico corrispondente ad un grafico di $B_{out,z}/B_{out}^{max}$ VS $r$}
+		\includegraphics[scale=0.4]{mappatura_bz.pdf}
+		\caption{Mappatura e fit.}
 		\label{fig:fit1}
 	\end{figure}
-	
-	
-	
-	Si riporta l'andamento fittato in \figurename{ \ref{f:1}}.
-	
-	Da un confronto tra l'andamento trovato e qello previsto
-	si è osservato un sostanziale accordo.
-	si osserva inoltre che per una regione compresa tra $r_{min}=15$ e $r_{max}=25$ 
-	il campo magnetico $B_z$ può essere considerato uniforme; pertanto in linea con 
-	le esigenze sperimentali.
-	Dalle specifiche della sonda allo stato solido si ottiene $B_{z,max}= $\SI{7.37	\pm 1.6	}{\milli \tesla}
-	$$errore da rivedere$$ ed	$B_{z,atteso}= $\SI{7.41	\pm 0.08	}{\milli \tesla} si ottiene anche un sostanziale accordo tra il valore massimo verificato e quello previsto.
-	
-	Per la trattazione di eventali aberrazioni dovte alla lente della fotocamera
-	si effettata una foto della scala gradata posta dietro la seconda bobina sia a bulbo disinserito che a seguito della sua inserzione.
+
+	Dal fit si sono ricavati la posizione $l_0 = \SI{20.2(2)}{\cm} $, il raggio
+	delle bobine $R = \SI{15.9(8)}{\cm}$ ed un fattore correttivo $k = \num{1.06(5)}$
+	al prodotto $N I_{coil}$ (ovvero un fattore tale che $N I_{coil}$ utilizzato in \eqn{bz}
+	sia pari a $k \cdot  130 \cdot  \SI{0.95}{\A}$, dove questi ultimi sono rispettivamente il valore
+	indicato per il numero di avvolgimenti e la corrente misurata dal generatore);
+	si ottiene $\chi^2 = 19.7 \ (22 \dof , \  p = 0.6)$.
+
+	I valori non sono lontani da quanto atteso, ma potrebbero indicare un'inesattezza
+	nel numero di avvolgimenti oppure un errore di calibrazione dell'amperometro dell'ordine del \%,
+	oltreché un raggio medio delle bobine leggermente diverso da quanto indicato
+	(sebbene quest'ultima discrepanza possa essere data anche dalla distanza dalle bobine, che compare nella
+	formula per $B_z$ anch'essa come $R$ ma che potrebbe essere diversa, ed inoltre avendo le bobine
+	una certa larghezza potrebbe non essere pienamente trascurabile la deviazione
+	dall'approssimazione che le vede come anelli).
+
+	Per il campo magnetico al centro dell'apparato in funzione della corrente si ottiene
+	$B_{z,max} = \SI{7.77(15)}{\gauss\per\A} \ I_{coil}$.
+
+	Per la trattazione di eventali distorsioni
+	si effettata una foto della scala gradata posta dietro la seconda bobina sia
+	a bulbo disinserito che a seguito della sua inserzione.
 	\begin{figure}[hb]
 		\centering
 		\subfloat[assenza bulbo]{
-			\includegraphics[scale=0.35]{./fig/NO.JPG}
-			\label{f:scalano}
+			\includegraphics[scale=0.35]{NO.JPG}
+			\label{fig:scalano}
 		}\\
 		\subfloat[bulbo inserito]{
-			\includegraphics[scale=0.35]{./fig/SI.JPG}
-			\label{f:scalasi} 
+			\includegraphics[scale=0.35]{SI.JPG}
+			\label{fig:scalasi}
 		}
 		\caption{foto della scala gradata posta dietro la seconda bobina sia a bulbo disinserito che a seguito della sua inserzione.}
-		\label{f:scala}
+		\label{fig:scala}
 	\end{figure}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
