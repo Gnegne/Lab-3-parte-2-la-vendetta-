@@ -100,11 +100,13 @@
 \newcommand{\hwhm}{\text{HWHM}}
 
 \newcommand{\ndr}[1]{\footnote{#1 (n.d.r.)}}
-\newcommand{\fig}[1]{figura (\ref{f:#1})} %inserting reference to figures
-\newcommand{\tab}[1]{tabella (\ref{t:#1})} % inserting reference to tables
+\newcommand{\fig}[1]{figura (\ref{fig:#1})} %inserting reference to figures
+\newcommand{\tab}[1]{tabella (\ref{tab:#1})} % inserting reference to tables
+\newcommand{\eqn}[1]{equazione \eqref{eq:#1}} % inserting reference to equation
 \newcommand{\dof}{\text{ dof}} % degrees of freedom
 \newcommand{\paral}{\mathbin{\|}} % impedance parallel
 \DeclareSIUnit\deca{decade} % decade unit definition for use in siunitx
+\DeclareSIUnit\gauss{Gs} % Gauss unit definition for use in siunitx
 
 \newcommand{\insertpart}[2]{\input{#1}}
 \newcommand{\e}{\textbf{$e^{-}$}}
@@ -126,7 +128,7 @@
 %%% --- DOCUMENT --- %%%
 
 
-%%%%% SIunitX example use:
+%%%%% SIunits example use:
 % \si{\kilo\volt\per\meter\squared} -> kV/m^2
 % \SI{1.222 (34)}{\joule\second}    -> 1.222 +- 0.034 Js
 % \SI{1.222 \pm 0.034}{\nF}         -> 1.222 +- 0.034 nF
@@ -148,9 +150,12 @@
 	Per effettuare tale misura si è analizzato il moto degli elettroni,
 	accellerati da un opportuna differenza di potenziale $V_{acc}$,in una regione ove è
 	presente un gas rarefatto ed un campo magnetico uniforme e costante \textbf{B}.Tale campo è stato generato  attraverso l'utilizzo di
-	due bobine in configurazione di Helmotz.
+	due bobine in configurazione di Helmholtz.
 
-	Dalla conoscenza di $B$ e $V_{acc}$ e dalla misura del raggio di curvatura $r$ si ottiene $e/m=$ \SI{0\pm 1000000}{\frac{\coulomb}{\kilogram}}  che risulta compatibile con il valore atteso di ${e/m}_{noto}=$\SI{0\pm 1000000}{\frac{\coulomb}{\kilogram}}
+	Dalla conoscenza di $B$ e $V_{acc}$ e dalla misura del raggio di curvatura $r$ si ottiene
+	$e/m=$ \SI{0\pm 1000000}{\coulomb\per\kg}
+	che risulta compatibile con il valore atteso di
+	${e/m}_{noto}=$\SI{0\pm 1000000}{\coulomb\per\kg}
 
 
 \end{abstract}
