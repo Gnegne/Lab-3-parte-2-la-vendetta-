@@ -94,4 +94,4 @@ print(fit_norm_cov(cov))
 print(bz_wrap(0, 0, *bz_wrap.pars[1:])/0.95)
 
 
-plt.show()
+print(maketab(*rawdata.T, errors='none'))

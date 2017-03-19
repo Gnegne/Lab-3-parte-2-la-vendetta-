@@ -2,9 +2,8 @@
 	Per effettuare tale misurazioni abbiamo impiegato
 	\begin{itemize}[$\cdot$]
 		\item Un multimetro digitale
-		\item Un righello di risoluzione \SI{1}{\mm}
-		\item Un metro a nastro risoluzione \SI{1}{\cm}
-		\item Due bobine di Helmotz, di raggio $R = \SI{15}{cm}$ e 130 spire, impiegate per generare il campo magnetico
+		\item un righello di risoluzione \SI{1}{\mm} e un metro a nastro di risoluzione \SI{1}{\mm}
+		\item Una bobina di Helmotz, con raggio $R = \SI{15}{cm}$ e 130 spire, impiegata per generare il campo magnetico
 		\item Un tubo catodico a bulbo contenente elio rarefatto
 		\item Alimentatori per regolare le tensioni e le correnti impiegate
 		\item Una scala graduata retroilluminata quale riferimento per il moto
@@ -12,7 +11,7 @@
 		delle tracce degli \e
 	\end{itemize}
 \section{Procedimento}
-	\subsection{calibrazione strumentale e verifica delle approssimazioni}
+	\subsection{Calibrazione strumentale e verifica delle approssimazioni}
 		Prima di effettare le acqusizioni vere e proprie l'apparato impiegato necessita di una
 		fase di regolazione.
 
@@ -54,43 +53,6 @@
 
 		Si riportano i valori ottenuti da tale mappatura in \tab{a}.
 
-		\begin{table}[hb]
-			\centering
-			\begin{tabular}{ccc}
-				\toprule
-				$l$ [\si{cm}] & 	$V_{out}$ [\si{\volt}] \\
-				\midrule
-				14.0 		& 	 0.405 \\
-				14.5		& 	 0.407 \\
-				15.0		& 	 0.408 \\
-				15.5		& 	 0.408 \\
-				16.0		& 	 0.408 \\
-				16.5		& 	 0.409 \\
-				17.0		& 	 0.409 \\
-				17.5		& 	 0.409 \\
-				18.0		& 	 0.409 \\
-				18.5		& 	 0.409 \\
-				19.0		& 	 0.409 \\
-				19.5		& 	 0.409 \\
-				20.0		& 	 0.409 \\
-				20.5		& 	 0.410 \\
-				21.0		& 	 0.410 \\
-				21.5		& 	 0.409 \\
-				22.0		& 	 0.410 \\
-				22.5		& 	 0.410 \\
-				23.0		& 	 0.410 \\
-				23.5		& 	 0.409 \\
-				24.0		& 	 0.409 \\
-				24.5		& 	 0.409 \\
-				25.0		& 	 0.408 \\
-				25.5		& 	 0.407 \\
-				26.0		& 	 0.406 \\
-				\bottomrule
-			\end{tabular}
-			\caption{Mappatura del campo magnetico all'interno della bobina di Helmholtz.}
-			\label{tab:a}
-		\end{table}
-
 	Dai dati tabulati si è ricavato $B_z$, tenendo conto dell'amplificazione e della risposta della sonda
 	(\SI{5.0(1)}{\mV\per\gauss}); i dati sono mostrati in \fig{fit1} insieme all'andamento previsto
 	dato dalla formula (valida lungo il piano equidistante dalle due bobine):
@@ -101,7 +63,7 @@
 	$\mu_0$ la permeabilità magnetica del vuoto, $R$ il raggio delle bobine
 	ed $r$ la distanza dall'asse delle bobine.
 
-	\begin{figure}[hb]
+	\begin{figure}[h]
 		\centering
 		\includegraphics[scale=0.4]{mappatura_bz.pdf}
 		\caption{Mappatura e fit.}
@@ -123,22 +85,54 @@
 	una certa larghezza potrebbe non essere pienamente trascurabile la deviazione
 	dall'approssimazione che le vede come anelli).
 
-	Per il campo magnetico al centro dell'apparato in funzione della corrente si ottiene
-	$B_{z,max} = \SI{7.77(15)}{\gauss\per\A} \ I_{coil}$.
+	Per il campo magnetico al centro dell'apparato in funzione della corrente si ottiene,
+	utilizzando i parametri fittati per determinare $B_z(r=0)$ e dividendo per la corrente
+	misurata (\SI{0.95(1)}{\A}), si ottiene $B_{z,max} = \SI{7.77(15)}{\gauss\per\A} \, \cdot \, I_{coil}$.
+	Così facendo, utilizzando questo dato per calcolare in seguito $B_z$ al variare di $I_{coil}$
+	dovremmo escludere l'eventuale errore di calibrazione dell'amperometro
+	(assumendo che il suo zero sia invece sufficientemente preciso).
 
-	Per la trattazione di eventali distorsioni
-	si effettata una foto della scala gradata posta dietro la seconda bobina sia
-	a bulbo disinserito che a seguito della sua inserzione.
+	A scopo di riferimento per la successiva analisi delle acquisizioni
+	del fascio di \e si sono scattate foto della scala graduata sia
+	a bulbo disinserito che a seguito della sua inserzione, riportate in \fig{scala}.
+
 	\begin{figure}[hb]
 		\centering
-		\subfloat[assenza bulbo]{
-			\includegraphics[scale=0.35]{NO.JPG}
+		\subfloat[In assenza di bulbo]{
+			\includegraphics[scale=0.2]{NO.JPG}
 			\label{fig:scalano}
-		}\\
-		\subfloat[bulbo inserito]{
-			\includegraphics[scale=0.35]{SI.JPG}
+		}
+		\subfloat[A bulbo inserito]{
+			\includegraphics[scale=0.2]{SI.JPG}
 			\label{fig:scalasi}
 		}
-		\caption{foto della scala gradata posta dietro la seconda bobina sia a bulbo disinserito che a seguito della sua inserzione.}
+		\caption{foto della scala graduata posta dietro la seconda bobina.}
 		\label{fig:scala}
 	\end{figure}
+
+
+
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{ccccc}
+			\toprule
+			$l$ [\si{cm}]	& 	$V_{out}$ [\si{\volt}]	&& 	$l$ [\si{cm}]	& 	$V_{out}$ [\si{\volt}] \\
+			\midrule
+			14.0 	& 	 0.405	&&	25.5	& 	 0.407 \\
+			14.5	& 	 0.407	&&	20.5	& 	 0.410 \\
+			15.0	& 	 0.408	&&	21.0	& 	 0.410 \\
+			15.5	& 	 0.408	&&	21.5	& 	 0.409 \\
+			16.0	& 	 0.408	&&	22.0	& 	 0.410 \\
+			16.5	& 	 0.409	&&	22.5	& 	 0.410 \\
+			17.0	& 	 0.409	&&	23.0	& 	 0.410 \\
+			17.5	& 	 0.409	&&	23.5	& 	 0.409 \\
+			18.0	& 	 0.409	&&	24.0	& 	 0.409 \\
+			18.5	& 	 0.409	&&	24.5	& 	 0.409 \\
+			19.0	& 	 0.409	&&	25.0	& 	 0.408 \\
+			19.5	& 	 0.409	&&	25.0	& 	 0.408 \\
+			20.0	& 	 0.409	&&	26.0	& 	 0.406 \\
+			\bottomrule
+		\end{tabular}
+		\caption{Mappatura del campo magnetico all'interno della bobina di Helmholtz.}
+		\label{tab:a}
+	\end{table}
