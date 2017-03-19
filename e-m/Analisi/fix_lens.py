@@ -63,14 +63,14 @@ def b_z(r, a, ni):
 @np.vectorize
 def db(r, zero, a, z):
 	ni = 130 * 0.95 * z
-	r = (r - zero) / 100
+	r = np.abs(r - zero) / 100
 	k = r/a
 	gg, _ = integrate.quad(derint, 0, 2*np.pi, args=(k,))
 	return 2e-3 * ni/a**2 * gg
 
 
 def bz_wrap(r, zero, a, z):
-	return b_z((r - zero)/100, a, 130 * 0.95 * z)
+	return b_z(np.abs(r - zero)/100, a, 130 * 0.95 * z)
 
 
 bz_wrap.pars, cov, _ = _fit_generic_ev(bz_wrap, db, field.x.val, field.y.val, field.x.err, field.y.err, np.array([20.2, .158, 1.05]), 100)
@@ -93,5 +93,4 @@ print(fit_norm_cov(cov))
 
 print(bz_wrap(0, 0, *bz_wrap.pars[1:])/0.95)
 
-
-print(maketab(*rawdata.T, errors='none'))
+plt.show()

@@ -54,14 +54,15 @@
 		Si riportano i valori ottenuti da tale mappatura in \tab{a}.
 
 	Dai dati tabulati si è ricavato $B_z$, tenendo conto dell'amplificazione e della risposta della sonda
-	(\SI{5.0(1)}{\mV\per\gauss}); i dati sono mostrati in \fig{fit1} insieme all'andamento previsto
-	dato dalla formula (valida lungo il piano equidistante dalle due bobine):
+	(\SI{5.0(1)}{\mV\per\gauss}); i dati sono mostrati in \fig{fit1}: è chiaro l'effetto della digitalizzazione
+	della tensione in uscita dalla sonda. È inoltre riportato l'andamento ottenuto
+	da un fit a tre parametri della formula (valida lungo il piano equidistante dalle due bobine):
 	\begin{equation} \label{eq:bz}
 		B_z = \frac{\mu_0 N I_{coil}}{4 \pi} \int_0^{2\pi} \frac{2\, R\, (R - r \cos\theta )}{\big(\frac{5}{4} R^2 + r^2 + 2\, R \, r \cos \theta\big) ^ {3/2}} \, \dd \theta
 	\end{equation}
 	Dove $I_{coil}$ è la corrente nelle spire delle bobine, $N$ il numero di avvolgimenti,
 	$\mu_0$ la permeabilità magnetica del vuoto, $R$ il raggio delle bobine
-	ed $r$ la distanza dall'asse delle bobine.
+	ed $r = l - l_0$ la distanza dall'asse delle bobine.
 
 	\begin{figure}[h]
 		\centering
@@ -73,9 +74,10 @@
 	Dal fit si sono ricavati la posizione $l_0 = \SI{20.2(2)}{\cm} $, il raggio
 	delle bobine $R = \SI{15.9(8)}{\cm}$ ed un fattore correttivo $k = \num{1.06(5)}$
 	al prodotto $N I_{coil}$ (ovvero un fattore tale che $N I_{coil}$ utilizzato in \eqn{bz}
-	sia pari a $k \cdot  130 \cdot  \SI{0.95}{\A}$, dove questi ultimi sono rispettivamente il valore
-	indicato per il numero di avvolgimenti e la corrente misurata dal generatore);
-	si ottiene $\chi^2 = 19.7 \ (22 \dof , \  p = 0.6)$.
+	sia pari a $k\ , (N I_{coil})_{nominale}$, dove il fattore nominale viene calcolato dal valore
+	indicato per il numero di avvolgimenti e la corrente misurata dal generatore ed è dunque
+	pari a $130 \cdot  \SI{0.95}{\A}$);
+	si ottiene $\chi^2 = 19.7 \ (22 \dof , \  p = 0.60)$.
 
 	I valori non sono lontani da quanto atteso, ma potrebbero indicare un'inesattezza
 	nel numero di avvolgimenti oppure un errore di calibrazione dell'amperometro dell'ordine del \%,
@@ -87,7 +89,7 @@
 
 	Per il campo magnetico al centro dell'apparato in funzione della corrente si ottiene,
 	utilizzando i parametri fittati per determinare $B_z(r=0)$ e dividendo per la corrente
-	misurata (\SI{0.95(1)}{\A}), si ottiene $B_{z,max} = \SI{7.77(15)}{\gauss\per\A} \, \cdot \, I_{coil}$.
+	misurata (\SI{0.95(1)}{\A}), $B_{z,max} = \SI{7.77(15)}{\gauss\per\A} \, \cdot \, I_{coil}$.
 	Così facendo, utilizzando questo dato per calcolare in seguito $B_z$ al variare di $I_{coil}$
 	dovremmo escludere l'eventuale errore di calibrazione dell'amperometro
 	(assumendo che il suo zero sia invece sufficientemente preciso).
