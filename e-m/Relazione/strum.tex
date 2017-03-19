@@ -1,22 +1,45 @@
 \section{Strumentazione}
 	Per effettuare tale misurazioni abbiamo impiegato
-	\begin{itemize}[$\cdot$]
-		\item Un multimetro digitale
-		\item Un righello di risoluzione \SI{1}{\mm}
-		\item Un metro a nastro risoluzione \SI{1}{\cm}
-		\item Due bobine di Helmotz, di raggio $R = \SI{15}{cm}$ e 130 spire, impiegate per generare il campo magnetico
-		\item Un tubo catodico a bulbo contenente elio rarefatto
-		\item Alimentatori per regolare le tensioni e le correnti impiegate
-		\item Una scala graduata retroilluminata quale riferimento per il moto
-		\item Una macchina fotografica digitale, per effettuare le acqusizioni
-		delle tracce degli \e
+	\begin{itemize}
+		\item l'apparato e/m PASCO SE-9638 composto da:
+		\begin{itemize}
+			\item un bulbo di vetro contenente Neon alla pressione di $10^{-2} \; \si{\mmHg}$;
+			\item un cannone elettronico all'interno del bulbo: un catodo riscaldato che emette elettroni, che vengono poi accelerati dal potenziale applicato tra catodo e anodo;
+			\item due bobine di Helmholtz di raggio \SI{15}{cm} e 130 spire, che generano il campo magnetico;
+		\end{itemize}
+		\item alimentatori per regolare la tensione $V$ del cannone elettronico e la corrente $I$ passante per le bobine, queste grandezze vengono misurate dagli stessi e sono note con una risoluzione rispettivamente di \SI{1}{V} e $ $\SI{0.01}{\ampere};
+		\item un sensore di Hall SS94A, per la misura del campo magnetico e un circuito per la sua calibrazione e lettura;
+		\item una macchina fotografica digitale, per l'acquisizione delle tracce prodotte dagli elettroni, urtando ed eccitando gli atomi di elio;
+		\item Un righello retroilluminato di risoluzione \SI{1}{\mm} che verrà usato per calibrare la misura dei raggi;
+		\item un metro di risoluzione \SI{1}{\mm} usato per correggere la prospettiva poiché il piano del righello non coincide con quello dove si muovono gli elettroni.
+
+In \figurename{ \ref{apparato}} è mostrato uno schema dell'apparato di misura.
+
+	\begin{figure}[H]
+		\centering
+		\includegraphics[scale=1]{apparato.jpg}
+		\caption{apparato di misura}
+		\label{apparato}
+	\end{figure}
+	
 	\end{itemize}
-\section{Procedimento}
-	\subsection{calibrazione strumentale e verifica delle approssimazioni}
-		Prima di effettare le acqusizioni vere e proprie l'apparato impiegato necessita di una
+	
+\section{Misure da effettuare}
+Gli elettroni vengono accelerati dal campo presente nel cannone e elettronico e se lo strumento fosse perfetto (torneremo in seguito su questo punto) dovrebbero uscirne con velocità $v = \sqrt{2V \sfrac{e}{m} }$, che quindi dipende solo dal potenziale $V$.
+Il campo magnetico esercita una forza centripeta pari a $F = evB = mv^2/r$, segue che $$\frac{e}{m}=\frac{2V}{(B r)^2}.$$
+
+\noindent Bisognerà procedere alle seguenti misure:
+\begin{itemize}
+	\item misura di \textbf{B}: fissata la geometria delle bobine di Helmholtz il campo magnetico è teoricamente ricavabile a partire dalla sola intensità di corrente $I$. Si procederà alla misura del campo magnetico per mezzo del sensore di Hall al variare di $r$ per testarne l'uniformità e si fitterà la legge teorica. Successivamente nella misura di $\tfrac{e}{m}$ ci si limiterà alla misura di $I$ e al calcolo di $B$ a partire dalla legge fittata;
+	\item misura di \textbf{r} (raggio di curvatura degli elettroni): è determinato a partire da foto acquisite con un macchina fotografica digitale; la conversione pixel/metri deve tener conto dell'effetto prospettico dovuto alla diversa distanza a cui si trovano il righello di riferimento e il piano degli elettroni, bisognerà inoltre valutare l'effetto di distorsione dovuto al bulbo di vetro;
+	\item misura di \textbf{V}: da questa dipende la velocità di uscita degli elettroni ed è letta direttamente dall'alimentatore del cannone elettronico con una risoluzione di \SI{1}{\volt}; nel corso dell'esperienza misureremo il raggio di curvatura al variare di $V$ tra \SI{200}{\volt} e \SI{300}{\volt}.
+\end{itemize}
+
+\section{Misura di \textbf{B}}
+		Prima di effettuare le acquisizioni vere e proprie l'apparato impiegato necessita di una
 		fase di regolazione.
 
-		Essendo l'aparato sensibile al campo magnetico terrestre
+		Essendo l'apparato sensibile al campo magnetico terrestre
 		con una bussola si è individuata l'orientazione di $B_{terrestre}$
 		e si sono orientate le bobine in modo da minizzarne l'influenza, ovvero ponendo
 		l'asse delle bobine in direzione ortogonale a $B_{terrestre}$. Così facendo l'influenza
@@ -101,7 +124,7 @@
 	$\mu_0$ la permeabilità magnetica del vuoto, $R$ il raggio delle bobine
 	ed $r$ la distanza dall'asse delle bobine.
 
-	\begin{figure}[hb]
+	\begin{figure}[H]
 		\centering
 		\includegraphics[scale=0.4]{mappatura_bz.pdf}
 		\caption{Mappatura e fit.}

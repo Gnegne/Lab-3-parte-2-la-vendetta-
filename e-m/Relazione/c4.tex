@@ -14,12 +14,13 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{float}
 \usepackage{mathtools} % (!! PLACE BEFORE hyperref !!)
 \usepackage{xfrac} % \sfrac
 \usepackage{cancel} % \cancel \cancelto
-\usepackage{hyperref} % interactive links in TOC, URLs and references
+%\usepackage{hyperref} % interactive links in TOC, URLs and references
 % unneded \usepackage{fixltx2e} % provides \textsubscript and makes some fixes
-\usepackage[version=3]{mhchem} % \ce (chemical formula)
+\usepackage[toc,page]{appendix}
 \usepackage{siunitx} % \num \si \SI
 \usepackage{alltt} % {alltt} (like verbatim but with commands)
 \usepackage{moreverb} % {listing}
@@ -134,28 +135,22 @@
 % \SI{1.222 \pm 0.034}{\nF}         -> 1.222 +- 0.034 nF
 % use it plz
 
-\author{Gruppo BF \\ Roberto Ribatti, Thomas Giannoni, Valerio Lomanto}
+\author{Gruppo BF \\ Thomas Giannoni, Valerio Lomanto, Roberto Ribatti}
 \title{Esercitazione N.4: Misura del rapporto e/m.}
 \date{9 marzo 2017}
 %Intestazione
 \pagestyle{fancy}
 \lhead{Esperienza N.4}
-\chead{rapporto e/m}
+\chead{Rapporto e/m}
 \rhead{Gruppo BF}
 \begin{document}
 \maketitle
 \begin{abstract}
-	In quest'esperienza si è misurato il rapporto tra la carica dell'eletrone
+	L'obiettivo di questa esperienza è misurare il rapporto tra la carica dell'elettrone
 	e la sua massa.
-	Per effettuare tale misura si è analizzato il moto degli elettroni,
-	accellerati da un opportuna differenza di potenziale $V_{acc}$,in una regione ove è
-	presente un gas rarefatto ed un campo magnetico uniforme e costante \textbf{B}.Tale campo è stato generato  attraverso l'utilizzo di
-	due bobine in configurazione di Helmholtz.
+	Si analizzerà il moto degli elettroni accelerati da un opportuna differenza di potenziale $V$ in un bulbo contenente un gas di Elio rarefatto, con la presenza di un campo magnetico $B$ (in buona approssimazione uniforme e costante), generato da due bobine di Helmholtz.
 
-	Dalla conoscenza di $B$ e $V_{acc}$ e dalla misura del raggio di curvatura $r$ si ottiene
-	$e/m=$ \SI{0\pm 1000000}{\coulomb\per\kg}
-	che risulta compatibile con il valore atteso di
-	${e/m}_{noto}=$\SI{0\pm 1000000}{\coulomb\per\kg}
+	Dalla misura di $B$, $V$ e del raggio di curvatura $r$ sarà possibile ricavare $e/m_e$ e confrontarlo con il valore noto di $\SI{1.76}{C/Kg}$.
 
 
 \end{abstract}
