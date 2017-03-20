@@ -46,7 +46,7 @@ Nel seguito si è tenuto conto di questi effetti, ad esempio ignorando la parte 
 In prima battuta fitteremo le circonferenze misurandone il raggio in pixel, quindi valuteremo il fattore di conversione pixel/metri.
 
 \subsection{Fit delle circonferenze} 
-Dato l'elevato numero di foto acquisite si è deciso di procedere ad un fit automatico delle circonferenze. Il procedimento seguito consta di due fasi:
+Dato l'elevato numero di foto acquisite si è deciso di procedere ad un fit automatico delle circonferenze. Il procedimento seguito si divide in due fasi:
 \begin{itemize}
 	\item eliminare dalla foto tutti gli elementi estranei alla circonferenza da fittare;
 	\item eseguire il fit vero e proprio e valutare l'errore sul raggio.
@@ -127,7 +127,7 @@ Usando l'ottica geometrica una prima approssimazione potrebbe essere quella di c
 
 I raggi luminosi provenienti dalle tracce (in alto in \figurename{ \ref{ottica1}}) intersecano la superficie interna del bulbo ad una certa inclinazione, proseguono nel vetro con un angolo più piccolo rispetto alla perpendicolare, quindi intersecano la superficie esterna. In questa approssimazione l'angolo di uscita sarà lo stesso di quello di entrata.
 
-Il risultato è che il punto all'interno del bulbo sembrerà più esterno, tuttavia lo spostamento è nel peggiore dei casi pari allo spessore del vetro, che ragionevolmente non sarà più grande di $1-2 \;\text{mm}$. Rispetto ai raggi tipici misurati ($\sim \SI{5}{\cm}$) si tratterebbe di una correzione dell'ordine del $\sim 2-4\%$, quindi a priori non trascurabile.
+Il risultato è che il punto all'interno del bulbo sembrerà più esterno, tuttavia lo spostamento è nel peggiore dei casi pari allo spessore del vetro, che ragionevolmente non sarà più grande di $\SIrange{1}{2}{\mm}$. Rispetto ai raggi tipici misurati ($\sim \SI{5}{\cm}$) si tratterebbe di una correzione dell'ordine del $\sim \SIrange{2}{4}\%$, quindi a priori non trascurabile.
 
 In realtà questa non è una buona approssimazione sul bordo (dove misuriamo buona parte delle nostre tracce), come visibile in \figurename{ \ref{ottica2}}.
 
@@ -144,7 +144,7 @@ Il risultato è che in base alla posizione del punto nel bulbo questo potrebbe s
 
 Si è proceduto con l'ottica geometrica al calcolo della funzione che dato il raggio misurato ci dia il raggio corretto e si riporta in \figurename{ \ref{bulbo}} il grafico del fattore di correzione . Nel calcolo si è stimato il raggio del bulbo $R \sim \SI{6.4}{\cm}$ (misurato a partire dalle foto, noto il fattore di conversione prima calcolato), l'indice di rifrazione $n \sim 1.6$ (un vetro generico) e lo spessore di $d \sim \SI{1}{\mm}$.
 
-La correzione finale è quindi dell'ordine del $2-3\%$ e solo per raggi maggiori di \SI{6}{\cm}.
+La correzione finale è quindi dell'ordine del $\SIrange{2}{3}\%$ e solo per raggi maggiori di \SI{6}{\cm}.
 
 \begin{figure}[H]
 	\centering
@@ -170,7 +170,7 @@ A partire dalle misure effettuate si è proceduto al calcolo di $\tfrac{e}{m}$, 
 	\centering
 	\begin{tabular}{ccc}
 		\toprule
-		$V$ [\si{\volt}] & 	$\frac{e}{m}$ [C/Kg] \\
+		$V$ [\si{\volt}] & 	$\frac{e}{m} \times 10^{11}$ [C/Kg] \\
 		\midrule
 $	200 \pm 1	$ & $	2.76 \pm 0.08	$ \\
 $	219 \pm 1	$ & $	2.81 \pm 0.08	$ \\
@@ -183,30 +183,29 @@ $	302 \pm 1	$ & $	2.97 \pm 0.13	$ \\
 \end{table}
 
 \section{Conclusioni}
-Come è chiaro i risultati sono assolutamente incompatibili con il valore noto di $\SI{1.76}{C/Kg}$.
+Come è chiaro i risultati sono assolutamente incompatibili con il valore noto di $\SI{1.76e11}{C/Kg}$.
 
-Tuttavia questo risultato era atteso: il datasheet dell'apparato riporta che con questa strumentazione, dato l'errore sulla velocità, il risultato della misura di $\tfrac{e}{m}$ eccederà il valore noto di $\sim \SI{1.1}{C/Kg}$.
+Tuttavia questo risultato era atteso: il datasheet dell'apparato riporta che con questa strumentazione, dato l'errore sulla velocità, il risultato della misura di $\tfrac{e}{m}$ eccederà il valore noto di $\sim \SI{1.1e11}{C/Kg}$.
 È possibile confrontare il grafico presente nel datasheet riportato in \figurename{ \ref{grafico_farlocco}} con i risulti delle nostre misure in \figurename{ \ref{dati_nostri}} e notare che i valori trovati sono compatibili.
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[scale=0.3]{farlocco.png}6
-	\caption{Grafico riportato nel datasheet dell'apparato}
-	\label{grafico_farlocco}
+		\begin{minipage}{0.5\textwidth}
+			\includegraphics[scale=0.22]{farlocco.png}
+			\caption{datasheet dell'apparato}
+			\label{grafico_farlocco}
+		\end{minipage}
+		\begin{minipage}{0.49\textwidth}
+			\includegraphics[scale=0.45]{dm.pdf}
+			\caption{misure ottenute}
+			\label{dati_nostri}
+		\end{minipage}
 \end{figure}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.62]{dm.pdf}
-	\caption{Confronto esperimento/teoria con i nostri dati}
-	\label{dati_nostri}
-\end{figure}
-
 
 \newpage
 \section{Appendice}
-
-	\begin{table}[h]
+\begin{figure}[h!]
+\begin{minipage}{0.49\textwidth}
 		\centering
 		\begin{tabular}{ccccc}
 			\toprule
@@ -227,12 +226,11 @@ Tuttavia questo risultato era atteso: il datasheet dell'apparato riporta che con
 			20.0	& 	 0.409	&&	26.0	& 	 0.406 \\
 			\bottomrule
 		\end{tabular}
-		\caption{Mappatura del campo magnetico all'interno della bobina di Helmholtz.}
+		\captionof{table}{Mappatura del campo magnetico all'interno della bobina di Helmholtz.}
 		\label{tab:a}
-	\end{table}
-
-\begin{table}[hb]
-\centering
+\end{minipage}
+\begin{minipage}{0.49\textwidth}
+	\centering
 \begin{tabular}{ccc}
 	\toprule
 $V$ [\si{\volt}] & 	$I$ [\si{\ampere}] & $r$ [\si{\cm}]\\
@@ -258,9 +256,11 @@ $302	\pm 1 $		&	$1.10 \pm 0.01 $	&	$1193 \pm 	19$	\\
 $302	\pm 1 $		&	$1.15 \pm 0.01 $	&	$1123 \pm 	21$	\\
 \bottomrule
 \end{tabular}
-\caption{Dati di tutte le acquisizioni}
+\captionof{table}{Dati di tutte le acquisizioni}
 \label{dati_raggi}
-\end{table}
+\end{minipage}
+
+\end{figure}
 
 	
 	
