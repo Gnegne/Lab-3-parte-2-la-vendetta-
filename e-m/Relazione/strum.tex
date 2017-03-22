@@ -22,11 +22,11 @@ In \figurename{ \ref{apparato}} è mostrato uno schema dell'apparato di misura.
 		\caption{apparato di misura}
 		\label{apparato}
 	\end{figure}
-	
+
 	\end{itemize}
-	
+
 \section{Misure da effettuare}
-Gli elettroni vengono accelerati dal campo presente nel cannone e elettronico e se lo strumento fosse perfetto (torneremo in seguito su questo punto) dovrebbero uscirne con velocità $v = \sqrt{2V \sfrac{e}{m} }$, che quindi dipende solo dal potenziale $V$.
+Gli elettroni vengono accelerati dal campo presente nel cannone elettronico e se lo strumento fosse perfetto (torneremo in seguito su questo punto) dovrebbero uscirne con velocità $v = \sqrt{2V \sfrac{e}{m} }$, che quindi dipende solo dal potenziale $V$.
 Il campo magnetico esercita una forza centripeta pari a $F = evB = mv^2/r$, segue che $$\frac{e}{m}=\frac{2V}{(B r)^2}.$$
 
 \noindent Bisognerà procedere alle seguenti misure:
@@ -41,10 +41,10 @@ Essendo l'apparato sensibile al campo magnetico terrestre, con una bussola si è
 
 \paragraph{} La sonda ad effetto Hall necessita inoltre della calibrazione dello zero: si è perciò andati a modificare gli offset del circuito di amplificazione della sonda, agendo sul potenziometro del circuito sino a quando non si ottenesse una lettura uguale in modulo (e opposta in segno) in seguito ad una rotazione di \ang{180} della sonda.
 
-Effettuato ciò si sono alimentate le bobine con una tensione $V_{coil}=$\SI{7.5 \pm 0.1}{\volt} ottenendo una corrente $I=$\SI{0.95 \pm 0.01}{\ampere}\footnote{Tali misure sono ottenute dalla lettura del generatore di tensione; si è assunto come errore un digit, a cui andrebbe aggiunto l'errore (ignoto) di calibrazione dell'apparato.}; dopodiché si è mappato il campo $B_z$ sul piano del moto degli \e in funzione della distanza dal centro dell'apparato per un intorno di $\sim $\SI{\pm 6}{\cm}.
+Effettuato ciò si sono alimentate le bobine con una tensione $V_{coil}= \SI{7.5 \pm 0.1}{\volt}$ ottenendo una corrente $I=\SI{0.95 \pm 0.01}{\ampere}$\footnote{Tali misure sono ottenute dalla lettura del generatore di tensione; si è assunto come errore un digit, a cui andrebbe aggiunto l'errore (ignoto) di calibrazione dell'apparato.}; dopodiché si è mappato il campo $B_z$ sul piano del moto degli \e in funzione della distanza dal centro dell'apparato per un intorno di $\sim $\SI{\pm 6}{\cm}.
 Si è ritenuta tale regione come area di interesse poiché si essendo il raggio del bulbo approssimativamente di \SIrange{5}{6}{\cm}, il moto gli elettroni osservabili si svolge certamente entro tale intervallo.
 
-La sonda restituisce un segnale in tensione che è amplificato con un guadagno noto 
+La sonda restituisce un segnale in tensione che è amplificato con un guadagno noto
 $G = \num{11.090(3)}$ e viene letta attraverso un multimetro in dotazione. Si è associata alla lettura un incertezza di mezzo digit.
 
 La posizione della sonda è identificata dalla distanza $l$ di un'estremità dell'asta che la contiene dal lato dell'apparato attraverso cui l'asta è infilata; è stato eseguito un fit per determinare la posizione $l_0$ corrispondente al centro.
@@ -55,7 +55,7 @@ Dai dati tabulati si è ricavato $B_z$, tenendo conto dell'amplificazione e dell
 \begin{equation} \label{eq:bz}
 		B_z = \frac{\mu_0 N I}{4 \pi} \int_0^{2\pi} \frac{2\, R\, (R - r \cos\theta )}{\big(\frac{5}{4} R^2 + r^2 + 2\, R \, r \cos \theta\big) ^ {3/2}} \, \dd \theta
 \end{equation}
-Dove $I_{coil}$ è la corrente nelle spire delle bobine, $N$ il numero di avvolgimenti, $\mu_0$ la permeabilità magnetica del vuoto, $R$ il raggio delle bobine ed $r = l - l_0$ la distanza dall'asse delle bobine.
+Dove $I$ è la corrente nelle spire delle bobine, $N$ il numero di avvolgimenti, $\mu_0$ la permeabilità magnetica del vuoto, $R$ il raggio delle bobine ed $r = |l - l_0|$ la distanza dall'asse delle bobine.
 
 
 \begin{figure}[H]
@@ -65,7 +65,7 @@ Dove $I_{coil}$ è la corrente nelle spire delle bobine, $N$ il numero di avvolg
 	\label{fig:fit1}
 \end{figure}
 
-Dal fit si sono ricavati la posizione $l_0 = \SI{20.2(2)}{\cm} $, il raggio delle bobine $R = \SI{15.9(8)}{\cm}$ ed un fattore correttivo $k = \num{1.06(5)}$ al prodotto $N I$ (ovvero un fattore tale che $N I$ utilizzato in \eqn{bz} sia pari a $k\ , (N I)_{nominale}$, dove il fattore nominale viene calcolato dal valore indicato per il numero di avvolgimenti e la corrente misurata dal generatore ed è dunque pari a $130 \cdot  \SI{0.95}{\A}$); si ottiene $\chi^2 = 19.7 \ (22 \dof , \  p = 0.60)$.
+Dal fit si sono ricavati la posizione $l_0 = \SI{20.2(2)}{\cm} $, il raggio delle bobine $R = \SI{15.9(8)}{\cm}$ ed un fattore correttivo $k = \num{1.06(5)}$ al prodotto $N I$ (ovvero un fattore tale che $N I$ utilizzato in \eqn{bz} sia pari a $k \, (N I)_{nominale}$, dove il fattore nominale viene calcolato dal valore indicato per il numero di avvolgimenti e la corrente misurata dal generatore ed è dunque pari a $130 \cdot  \SI{0.95}{\A}$); si ottiene $\chi^2 = 19.7 \ (22 \dof , \  p = 0.60)$.
 
 I valori non sono lontani da quanto atteso, ma potrebbero indicare un'inesattezza nel numero di avvolgimenti oppure un errore di calibrazione dell'amperometro dell'ordine del \%, oltreché un raggio medio delle bobine leggermente diverso da quanto indicato (sebbene quest'ultima discrepanza possa essere data anche dalla distanza dalle bobine, che compare nella formula per $B_z$ anch'essa come $R$ ma che potrebbe essere diversa, ed inoltre avendo le bobine una certa larghezza potrebbe non essere pienamente trascurabile la deviazione dall'approssimazione che le vede come anelli).
 

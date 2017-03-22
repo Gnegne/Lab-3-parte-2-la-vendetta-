@@ -2,7 +2,7 @@
 
 Dopo aver misurato $B$ si inserisce il bulbo nell'alloggiamento posto tra le bobine.
 Si alimenta il filamento interno con una tensione sufficiente alla produzione di elettroni per effetto termoionico, si procede quindi all'alimentazione delle bobine di Helmholtz (tra \SI{6}{\volt} e \SI{9}{\volt}) e del cannone elettronico (tra \SI{200}{\volt} e \SI{300}{\volt}).
-	
+
 %Per i valori di $V_{coil}$ e $V_{acc}$ appena fissati si è  osservata la variazione del pennellino elettronico al variare di 	$V_{heat}$.
 %Per valori di $V_{heat}<$\SI{3}{\volt}
 %non si osserva emissione di \e; ciò suggerisce la presenza di un valore di soglia
@@ -14,7 +14,7 @@ Si posiziona la reflex con l'asse dell'obiettivo perpendicolare al piano in cui 
 Si procede quindi ad acquisire foto dell'apparato al variare di $B$ (controllato variando la tensione di alimentazione delle bobine e misurando $I$) e $V$ nei range sopra descritti.
 
 In \figurename{ \ref{f:acquisizione}} si riportano alcune delle foto acquisite a titolo di esempio.
-		
+
 		\begin{figure}[H]
 		\centering
 		\subfloat{
@@ -36,7 +36,7 @@ In \figurename{ \ref{f:acquisizione}} si riportano alcune delle foto acquisite a
 Dalle foto si possono notare alcuni elementi di cui bisognerà tener conto durante l'analisi:
 \begin{itemize}
 	\item il fascio, sopratutto per basse tensioni $V$ del cannone elettronico (e conseguentemente basse energie degli elettroni) si affievolisce velocemente per colpa degli urti tra elettroni e atomi di He nel bulbo, questo rende il fascio dai contorni meno netti e aumenta l'incertezza sulla determinazione del raggio;
-	\item nelle stesse condizioni del punto precedente il fascio diminuisce evidentemente il raggio di curvatura poiché gli elettroni perdendo energia curvano di più;
+	\item nelle stesse condizioni del punto precedente il fascio diminuisce evidentemente il raggio di curvatura poiché gli elettroni perdendo energia curvano maggiormente;
 	\item il fascio non è ben collimato, in certi punti è visibile come si divida in due parti, aumentando l'incertezza sulla determinazione del raggio;
 	\item per alte tensioni $V$ del cannone elettronico ma basse correnti $I$ passanti per le bobine il fascio esce subito dal bulbo, in queste condizioni la porzione di circonferenza visibile è ridotta e si trova tutta sul bordo del bulbo: la parte più soggetta alle distorsioni ottiche dovute allo stesso.
 \end{itemize}
@@ -45,14 +45,14 @@ Nel seguito si è tenuto conto di questi effetti, ad esempio ignorando la parte 
 
 In prima battuta fitteremo le circonferenze misurandone il raggio in pixel, quindi valuteremo il fattore di conversione pixel/metri.
 
-\subsection{Fit delle circonferenze} 
+\subsection{Fit delle circonferenze}
 Dato l'elevato numero di foto acquisite si è deciso di procedere ad un fit automatico delle circonferenze. Il procedimento seguito si divide in due fasi:
 \begin{itemize}
 	\item eliminare dalla foto tutti gli elementi estranei alla circonferenza da fittare;
 	\item eseguire il fit vero e proprio e valutare l'errore sul raggio.
 \end{itemize}
 
-\paragraph{Isolamento delle circonferenze} Si è sfruttato l'alto contrasto delle circonferenze e il loro colore (gli atomi di Elio eccitati emettono per lo più nel blu) per isolarle rispetto agli altri elementi. Utilizzando un software di photo-editing si sono eliminati i canali rosso e verde e tutti i pixel che non avessero luminosità in un certo range (scelto in modo da isolare le sole circonferenze). 
+\paragraph{Isolamento delle circonferenze} Si è sfruttato l'alto contrasto delle circonferenze e il loro colore (gli atomi di Elio eccitati emettono per lo più nel blu) per isolarle rispetto agli altri elementi. Utilizzando un software di photo-editing si sono eliminati i canali rosso e verde e tutti i pixel che non avessero luminosità in un certo range (scelto in modo da isolare le sole circonferenze).
 
 Alla fine di questo procedimento in certe foto è rimasto del segnale riflesso dal righello specchiato che è stato rimosso manualmente.
 
@@ -75,7 +75,7 @@ Nel selezionare i punti sperimentali possiamo decidere di stringere o allargare 
 Questa soglia è arbitraria (come del resto sarebbe se la scelta dei punti fosse fatta a mano) e si è scelta in modo da eliminare l'ultima parte delle circonferenze: le code come già detto hanno un raggio di curvatura minore avendo gli elettroni perso energia urtando. È visibile, infatti, come al diminuire della soglia di luminosità i raggi fittati diminuiscano leggermente.
 
 \paragraph{Errore sui raggi} Come è chiaro dalle foto delle tracce queste hanno uno spessore non trascurabile, per valutare l'incertezza sulla stima del raggio precedentemente eseguita si è deciso di graficare la distribuzione della lunghezza dei segmenti compresi tra il centro delle circonferenze fittate e i punti sperimentali.
-Dopo aver normalizzato la distribuzione per il raggio (altrimenti i punti della traccia più distanti sarebbero più numerosi, essendo la circonferenza più grande) si è deciso di fittarla con una gaussiana di prendere la deviazione standard come errore sulla misura del raggio.
+Dopo aver normalizzato la distribuzione per il raggio (altrimenti i punti della traccia più distanti sarebbero più numerosi, essendo la circonferenza più grande) si è deciso di fittarla con una gaussiana prendendo la deviazione standard come errore sulla misura del raggio.
 
 In \figurename{ \ref{gauss}} si riporta, a titolo di esempio, i fit della distribuzione dei raggi di alcune acquisizioni.
 
@@ -104,7 +104,7 @@ Questa prima stima va corretta per per l'effetto della prospettiva (il righello 
 	\label{righello}
 \end{figure}
 
-\paragraph{Prospettiva}	Si è misurata la distanza dell'obiettivo della macchina fotografica dal righello e la distanza di questo dal centro del bulbo. Anche se la risoluzione del metro è \SI{1}{\mm} si è valutato di non avere tale precisione nella determinazione del centro del bulbo e nel posizionamento del metro, la misura è stata perciò ripetuta da ogni membro del gruppo e si è preso l'errore massimo. 
+\paragraph{Prospettiva}	Si è misurata la distanza dell'obiettivo della macchina fotografica dal righello e la distanza di questo dal centro del bulbo. Anche se la risoluzione del metro è \SI{1}{\mm} si è valutato di non avere tale precisione nella determinazione del centro del bulbo e nel posizionamento del metro, la misura è stata perciò ripetuta da ogni membro del gruppo e si è preso l'errore massimo.
 % è falso ma è guisto per non dire che il nuovo errore è a caso
 
 I risultati delle misure sono $d_{OR} = \SI{56.5 \pm 0.3}{\cm}$ (distanza obiettivo/righello) e $d_{RB} = \SI{11 \pm 0.2}{\cm}$ (distanza righello/bulbo).
@@ -112,7 +112,7 @@ Il fattore di correzione alla misura precedente è di $c = {1.242 \pm 0.003}$, d
 
 \paragraph{Distorsione del bulbo} Non è banale determinare l'entità della distorsione alla forma delle tracce dovuta alla presenza del bulbo di vetro.
 
-L'osservazione della distorsione prodotta sulla scala graduata del righello non ci da molte informazioni poiché la scala graduata si trova dietro al bulbo e per arrivare all'obiettivo passa due volte per il vetro e l'effetto del primo passaggio è opposto a quello del secondo. La visibile distorsione della scala graduata è dovuta al fatto che dopo il primo passaggio, i raggi proseguono  nel bulbo deviati e urtano la seconda faccia ad un angolo diverso, per cui l'effetto della seconda faccia non è esattamente opposto a quello della prima.
+L'osservazione della distorsione prodotta sulla scala graduata del righello non ci dà molte informazioni poiché la scala graduata si trova dietro al bulbo e per arrivare all'obiettivo passa due volte per il vetro e l'effetto del primo passaggio è opposto a quello del secondo. La visibile distorsione della scala graduata è dovuta al fatto che dopo il primo passaggio, i raggi proseguono  nel bulbo deviati e urtano la seconda faccia ad un angolo diverso, per cui l'effetto della seconda faccia non è esattamente opposto a quello della prima.
 
 Tuttavia questo effetto è diverso da quello subito dagli oggetti all'interno del bulbo che attraversano una sola faccia e a priori non è detto che abbia lo stesso ordine di grandezza.
 
@@ -127,7 +127,7 @@ Usando l'ottica geometrica una prima approssimazione potrebbe essere quella di c
 
 I raggi luminosi provenienti dalle tracce (in alto in \figurename{ \ref{ottica1}}) intersecano la superficie interna del bulbo ad una certa inclinazione, proseguono nel vetro con un angolo più piccolo rispetto alla perpendicolare, quindi intersecano la superficie esterna. In questa approssimazione l'angolo di uscita sarà lo stesso di quello di entrata.
 
-Il risultato è che il punto all'interno del bulbo sembrerà più esterno, tuttavia lo spostamento è nel peggiore dei casi pari allo spessore del vetro, che ragionevolmente non sarà più grande di $\SIrange{1}{2}{\mm}$. Rispetto ai raggi tipici misurati ($\sim \SI{5}{\cm}$) si tratterebbe di una correzione dell'ordine del $\sim \SIrange{2}{4}\%$, quindi a priori non trascurabile.
+Il risultato è che il punto all'interno del bulbo sembrerà più esterno, tuttavia lo spostamento è nel peggiore dei casi pari allo spessore del vetro, che ragionevolmente non sarà più grande di $\SIrange{1}{2}{\mm}$. Rispetto ai raggi tipici misurati ($\sim \SI{5}{\cm}$) si tratterebbe di una correzione dell'ordine del $\sim \SIrange{2}{4}{\percent}$, quindi a priori non trascurabile.
 
 In realtà questa non è una buona approssimazione sul bordo (dove misuriamo buona parte delle nostre tracce), come visibile in \figurename{ \ref{ottica2}}.
 
@@ -144,7 +144,7 @@ Il risultato è che in base alla posizione del punto nel bulbo questo potrebbe s
 
 Si è proceduto con l'ottica geometrica al calcolo della funzione che dato il raggio misurato ci dia il raggio corretto e si riporta in \figurename{ \ref{bulbo}} il grafico del fattore di correzione . Nel calcolo si è stimato il raggio del bulbo $R \sim \SI{6.4}{\cm}$ (misurato a partire dalle foto, noto il fattore di conversione prima calcolato), l'indice di rifrazione $n \sim 1.6$ (un vetro generico) e lo spessore di $d \sim \SI{1}{\mm}$.
 
-La correzione finale è quindi dell'ordine del $\SIrange{2}{3}\%$ e solo per raggi maggiori di \SI{6}{\cm}.
+La correzione finale è quindi dell'ordine del $\SIrange{2}{3}{\percent}$ e solo per raggi maggiori di \SI{6}{\cm}.
 
 \begin{figure}[H]
 	\centering
@@ -261,26 +261,3 @@ $302	\pm 1 $		&	$1.15 \pm 0.01 $	&	$1123 \pm 	21$	\\
 \end{minipage}
 
 \end{figure}
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	

@@ -1,4 +1,6 @@
 ## Programma generico di fit numerico del minimo chi quadro.
+# PLEASE USE RELATIVE PATHS
+# PLEASE USE SPACES PROPERLY
 
 import math
 import pylab
@@ -9,6 +11,9 @@ from scipy.optimize import curve_fit
 from numpy.linalg import solve
 from matplotlib.legend_handler import HandlerLine2D
 folder = os.path.realpath('..')
+# ALSO THIS WON'T WORK
+# USE RAW STRINGS IF YOU USE UNESCAPED BACKSLASHES
+# AND I BELIEVE THE PATH IS INCORRECT
 sys.path.append(os.path.join(os.path.realpath('.\Desktop\LAB\lab3tras\0_Valerio_Utilities\Python'), '0_Valerio_Utilities', 'Python'))
 #sys.path.append('.\Desktop\LAB\lab3tras\0_Valerio_Utilities\Python')
 #import lab
