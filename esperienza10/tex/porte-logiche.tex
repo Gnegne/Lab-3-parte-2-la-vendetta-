@@ -40,6 +40,7 @@
 \usepackage{array}
 \usepackage{multirow}
 \usepackage{booktabs} % \toprule, \midrule, \bottomrule
+\usepackage{float}
 \graphicspath{ {../Figs-Tabs/} } % graphics search directories
 \setcounter{tocdepth}{1} % -1: part, 0: chapter, 1: section, 2: subsection, 3: subsubsection
 
@@ -142,11 +143,11 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-	In quest'esperienza si sono misurate alcune delle caratteristiche delle porte NOT di un circuito integrato SN74LS04 $controllare-potrebbe-essere-SN54LS04$.
+	In quest'esperienza si sono misurate alcune delle caratteristiche delle porte NOT di un circuito integrato SN74LS04.
 	
 	Verificando il sostanziale accordo tra le grandezze misurate e quelle fornite dal costruttore.
 	
-	In quest'esperienza è stato montato un circuito impulsatore (\figurename{ \ref{f:impulsatore}} ) basato su  un arduino nano SN74LS244.
+	In quest'esperienza è stato montato inoltre un circuito impulsatore (\figurename{ \ref{f:impulsatore}} ) basato su  un arduino nano SN74LS244.
 	
 \end{abstract}
 	\section{strumentazione}
@@ -158,6 +159,7 @@
 			\item un arduino nano SN74LS244
 			\item un multimetro digitale per effettuare le misurazioni statiche
 			\item un ascilloscopio digitale per effettuare le misurazioni dipendenti dal tempo.
+			\item un multimetro analogico,impiegato per prendere alcune misure di corrente.
 		\end{itemize}	
 	\input{proc.tex}
 \end{document}
