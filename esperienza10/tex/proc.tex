@@ -1,9 +1,9 @@
 \section{Misura delle caratteristiche di IC SN74LS244 }
 \subsection{Caratteristiche statiche}
-	Per tutta la sezione si è proceduto ad alimentare il circuito con una tensione 
+	Per tutta la sezione si è proceduto ad alimentare il circuito con una tensione
 	\SI{5.01 \pm 0.01}{\volt}.
 	\paragraph{Misvre delle tensioni d'operazione}
-	Per effettuare la misura delle tensioni operative si 
+	Per effettuare la misura delle tensioni operative si
 	è montato il circito in \figurename{ \ref{f:c1}}
 		\begin{figure}[h]
 			\includegraphics[scale=1.0]{../immagine/immagine1.png}
@@ -11,14 +11,14 @@
 			\label{f:c1}
 		\end{figure} .
 	Andando a campionare la tensione in scita $V_{ot}$ in fnzione della tensione di ingresso  $V_{in}$.
-	
+
 	Il circito in  \figurename{ \ref{f:c1}} rappresenta n partitore di tensione;
 		difatti variando la resistenza del trimmer $R_{1}$ si varia la tensione $V_{in}$.Per la costrzione si è impiegato n trimmer $R_{1}$ di valore massimale $R_{1}^{max}=$\SI{2 \pm 858}{\kilo \ohm} ed na resistenza $R_{2}=$\SI{100.8 \pm 0.1 }{ \ohm}.
-		
+
 	Si riportano i dati campionati in \tablename{ \ref{t:1}}
 		\begin{table}[hb]
 		\centering
-		\begin{tabular}{|s|s|}
+		\begin{tabular}{S S}
 			\toprule
 			V_{in} [\si{\volt}] & 	V_{ot} [\si{\volt}]\\
 			\midrule
@@ -50,7 +50,7 @@
 	Effettando n grafico  ( \figurename{ \ref{f:i1}} )
 	 dei dati in  \tablename{ \ref{t:1}} sono stati osservati i valori:
 	 $V_{I,H}$, tensione in ingresso associata all'scita HIGH;$V_{I,L}$, tensione in ingresso associata all'scita LOW;$V_{O,H}$,intervallo di tensione in scita   HIGH;$V_{O,L}$,intervallo di tensione in scita associata all'scita LOW.
-	 
+
 	 Essendo tali valori da intendersi come intervalli di tensione si sono osservati i loro valori superiori ed inferiori.
 	 Si ottiene :
 	 \begin{center}
@@ -58,98 +58,98 @@
 	 $V_{I,H}^{min}=$\SI{1.003 \pm 0.1}{\volt}\\
 	 $V_{I,L}^{max}=$\SI{5.0 \pm 0.1}{\volt}\\
 	 $V_{I,L}^{min}=$\SI{1.10 \pm 0.1}{\volt}\\
-	 
+
 	 $V_{O,H}^{min}=$\SI{2.95 \pm 0.1}{\volt}\\
 	 $V_{O,H}^{max}=$\SI{4.38 \pm 0.1}{\volt}\\
 	 $V_{O,L}^{min}=$\SI{0.1726 \pm 0.1}{\volt}\\
 	 $V_{O,L}^{max}=$\SI{0.1773 \pm 0.1}{\volt}	\\
 	 \end{center}
-	 
+
 	 Tali stime risltano essere meno restrittivi dei i valori
-	 nominali forniti dal costrttore nel datasheet.Si impta qesta lieve discrepanza 
+	 nominali forniti dal costrttore nel datasheet.Si impta qesta lieve discrepanza
 	 col fatto che i valori forniti dal datasheet siano fornite nelle peggiori condizioni di operatività possibili:
 	 \begin{center}
-	 
+
 	 	$V_{O,H}^{min,atteso}=$\SI{2.4}{\volt}\\
 	 	$V_{O,L}^{max,atteso}=$\SI{0.4}{\volt}\\
 	 $V_{I,H}^{min,atteso}=$\SI{2}{\volt}\\
 	 $V_{I,L}^{max,atteso}=$\SI{0.8}{\volt}\\
  \end{center}
 	 Si osserva che nella regine di tensione compresa tra 	$V_{I,L}^{max}$ ed $V_{I,H}^{min}$ il segnale in uscita non rislta essere forzato ne nella regione $V_{O,H}$ o $V_{O,L}$, risltando pertanto  l'scita indeterminata tra il regime di scita high e low.
-	\begin{center}
-		\begin{figure}[h]
-			\includegraphics[scale=0.50]{../immagine/in-ot.png}
-			\caption{Rappresentazione dei dati in \tablename{ \ref{t:1}}.}
-			\label{f:i1}
-		\end{figure}
-	\end{center}
-\paragraph{Misra correnti e del fanot}
-	Si è procedto d'apprima alla misra della corrente di ingresso.
-	Per fare ciò si è modificato il circito in \figurename{ \ref{f:i1}} inserendo in serie tra il trimmer e la porta logica il mltimetro in configrazione amperometro.
-	
-	Avendo assnto che il fabbisogno di corrente della porta logica dipenda 	dallo stato di fnzionamento HIGH o LOW
-	si è andati a imporre n segnale di $V_{in-high}=$\SI{4.73\pm 0.01}{\volt} tale da forzare la porta a lavorare in regime HIGH,osseervando sl mltimetro analogico $I_{in-HIGH}\sim$\SI{0.5e-10}{\mu \ampere};
-	Analogamente si è posto per la misra di  $I_{in-LOW}$ si e posto  $V_{in-LOW}=$\SI{0.1525\pm 0.0001}{\volt} ottenendo $I_{in-LOW}=$\SI{25}{\mu \ampere}
-	
-	
-	Per le correnti misrate si è impiegata la convenzione di porre positive le tensioni entranti nella porta  logica e consegentemente negative qelle scenti.
-	
-	Dalla variazione di  $V_{in}$ si osserva na relazione con i valori assnti della corrente $I$.
-	Per valori corrispondenti all'intervallo $V_{O,H}$, ovvero alti valori di 	$V_{in}$
-	la corrente si stabilizza a volori valori tipici di $I_{IH}\sim$\SI{0.5 e-10}{\ampere}
-	mentre per tensioni di $V_{in}$ bassi, corrispondenti a $V_{O,L}$, si pò
-	osservare n maggiore impiego di corrente pertanto si ottengo valori di tensione $I_{IL}=$\SI{25 \pm 0.1 e-6}{\ampere}.
-	
-	Tali valori non risltano in accordo con i valori forniti dal datasheet 
-	$I_{IL}^{atteso}\sim$\SI{-1.6}{\milli \ampere} e $I_{IH}^{atteso}\sim$\SI{40}{\mu \ampere}; tale discrepanza si impta novamente alla differenza di condizione di operatività rispetto alle condizioni di misra effettate dal datasheet.
-	
-	Per la stima del fan ot,overo il nmero di porte controllabile in cascata col NOT1, si deve considerare la parte intera del rapporto \begin{equation}
-	N=min[int \frac{I_{OL}}{I_{IL}};int \frac{I_{OL}}{I_{IL}}]
-		\end{equation}\label{eq:fan-o}
-		.
-	Si è pertanto procedto alla misra delle correnti in scita $I_{OL}$, corrente fornita dalla porta logica in scita per lo stato LOW, ed $I_{OH}$, corrente fornita dalla porta logica in scita per lo stato HIGH.
-	
-	Per fare ciò si è montato  il circito in \figurename{ \ref{f:c2} }
-	\begin{center}
-		\begin{figure}[h]
-			\includegraphics[scale=0.75]{../immagine/cir2.png}
-			\caption{Rappresentazione del circito impiegato per la misrazione di $I_{OL}$ e $I_{OH}$. }
-			\label{f:c2}
-		\end{figure}
-	\end{center}
-	Nella sa realizzazione sono state impiegate : na resistenza $R_{2}=$\SI{100.8 \pm 0.1}{\ohm} ed n trimmer di resistenza massima $R_{1}^{max}=$\SI{94.0 \pm 0.1 }{ \kilo \ohm}
-	Per ottenere le correnti in scita  si è misrata la cadta di potenziale , $V_{R_{2}}$, ai capi di $R_{2}$.
-	Ricavandone dal valore di $R_{2}$ e dalla legge di Ohm, il valore di $I_{O}$ [valore della corrente in scita dalla porta logica].
-	
-	Si sono collegati dapprima $V_{in}$ ed il circito al capo A alla tensione di alimentazione $V_{CC}=$\SI{5.01 \pm 0.1}{\volt}; così da osservare $I_{OL}$.
-	Si osserva che variando il valore della resistenza $R_{1}$ il
-	valore di  $V_{R_{2}}$  vari con continità sino ad na brsca variazione.
-	n analogo andamento si ha sostitendo ,dalla configrazione precedente, $V_{CC}$
-	con  $V_{GRD}\sin$\SI{0}{\volt} ,così da osservare $I_{OH}$.
-	Si riportano i valori massimi misrati appena precedentemente  alla brsca variazione:\\
-	\begin{center}
-	
-	\bigskip
-	$I_{OL}$: $V_{R_{3}}=$\SI{0.525 \pm 1}{ \volt} 
-	$\Rightarrow$ $I_{OL}=$\SI{5.21 \pm 0.1}{\milli \ampere}\\
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.50]{../immagine/in-ot.png}
+		\caption{Rappresentazione dei dati in \tablename{ \ref{t:1}}.}
+		\label{f:i1}
+	\end{figure}
 
-	$I_{OH}$: $V_{R_{3}}=$\SI{380 \pm 1}{\milli \volt} 
-	$\Rightarrow$ $I_{OH}=$\SI{-3.77 \pm 0.01}{\milli \ampere}.\\
-	\end{center}
+
+\paragraph{Misura delle correnti e stima del fanout}
+	Si è procedto d'apprima alla misura della corrente di ingresso.
+	Per fare ciò si è modificato il circito in \fig{i1} inserendo in serie tra il trimmer e la porta logica il multimetro in configrazione amperometro.
+
+	Avendo assunto che il fabbisogno di corrente della porta logica dipenda 	dallo stato di funzionamento (ingresso alto o ingresso basso)
+	si è andati a imporre un segnale di $V_{IH} =$ \SI{4.73\pm 0.01}{\volt} osservando una corrente $I_{IH} \lessapprox$ \SI{0.5e-10}{\micro \ampere} (si è scelto di usare il multimetro digitale come voltmetro per la misura di $V_I$ ed il multimetro analogico come amperometro per la misura di $I_I$, dal momento che quest'ultimo è in grado di misurare correnti molto più basse, ma $I_{IH}$ resta troppo piccola per poter essere misurata, con uno spostamento dallo zero inferiore alla mezza tacca con il fondoscala più basso disponibile);
+	analogamente si è posto per la misura di  $I_{IL}$ una tensione in ingresso $V_{IL} =$ \SI{0.1525(1)}{\volt} rilevando una corrente di \SI{-25}{\micro \ampere}. Si sono poste positive le correnti entranti nella porta logica e consegentemente negative quelle uscenti.
+
+	Al variare della tensione in ingresso $V_{I}$ rimanendo entro il rispettivo range di funzionamento per ingresso alto o basso le correnti rilevate non cambiano significativamente; tali valori sono ampiamente entro i valori massimi riportati dal datasheet.
+
+	Si è proceduto dunque alla misura delle correnti in uscita $I_{OL}$ ed $I_{OH}$, ovvero rispettivamente quelle rilevate in uscita alla porta logica per lo stato di output basso ed output alto; per fare ciò si è montato il circuito in \fig{c2}.
+
+	\begin{figure}[h]
+		\centering
+		\includegraphics[scale=0.75]{cir2.png}
+		\caption{Circuito impiegato per la misurazione di $I_{OL}$ e $I_{OH}$. }
+		\label{f:c2}
+	\end{figure}
+
+	Dove i valori misurati dei componenti utilizzati sono:\\
+	$R_{2}= $\SI{100.8 \pm 0.1}{\ohm}\\
+	$R_{1,max}=$ \SI{94.0 \pm 0.1 }{ \kilo \ohm}\\
+
+	Per ottenere le correnti in uscita si è misurata la caduta di potenziale  $V_2$ ai capi di $R_{2}$ con il multimetro digitale; per effettuare le misure di $I_{OL}$ si sono posti $V_{in}$ e $V_A$ alla tensione di alimentazione $V_{CC}=$\SI{5.01 \pm 0.1}{\volt}, mentre per $I_{OH}$ si sono poste le tensioni precedenti a terra. La convenzione sui segni è la
+	stessa della misura della corrente in ingresso: le correnti entranti
+	nel dispositivo sono positive, quelle uscenti negative.
+
+	Si osserva in entrambi i casi come al variare della resistenza del
+	potenziometro la corrente.
+	n analogo andamento si ha sostitendo ,dalla configrazione precedente, $V_{CC}$
+
+	\begin{table}
+		\begin{tabular}{SS ccc SS}
+			\toprule
+			\multicolumn{2}{c}{Uscita bassa}	&& \multicolumn{2}{c}{Uscita alta} \\
+			\cmidrule{1-2} \cmidrule{6-7}
+			{I}	& {V}	&&&& {I}	& {V} \\
+			\midrule
+			0.0506 (12)	&	0.1758 (10)	&&&&	-0.0437 (12)	&	4.12 (3)	\\
+			0.2679 (23)	&	0.1868 (10)	&&&&	-0.0873 (14)	&	3.93 (3)	\\
+			0.328 (3)	&	0.1904 (11)	&&&&	-0.1270 (16)	&	3.77 (3)	\\
+			1.553 (9)	&	0.2330 (22)	&&&&	-0.1637 (18)	&	3.63 (3)	\\
+			2.897 (24)	&	0.2660 (23)	&&&&	-0.2937 (25)	&	3.53 (3)	\\
+			5.21 (4)	&	0.320 (3)	&&&&	-3.77 (3)	&	3.28 (3)	\\
+			24.01 (22)	&	1.891 (10)	&&&&	-13.31 (8)	&	2.300 (21)	\\
+			27.88 (24)	&	1.988 (11)	&&&&	-16.91 (9)	&	1.860 (10)	\\
+			\bottomrule
+		\end{tabular}
+		\caption{Andamento dell'uscita della porta not al variare della corrente erogata.}
+	\label{t:iout}
+	\end{table}
+
 	Si osserva che i valori risltano speriori a qelli forniti dal datasheet;
 	tale discrepanza è imptabile alla differenza di condizioni operative in ci sono effettate le misre riportate rispetto a qelle del datasheet;
-	n lteriore rogione per tale discrepanza pò essere dovta alla difficoltà nell'individare di massimo della tensione di soglia a casa della sensibilità del trimmer. 
-	
+	n lteriore rogione per tale discrepanza pò essere dovta alla difficoltà nell'individare di massimo della tensione di soglia a casa della sensibilità del trimmer.
+
 	La regione di discontinità presentata nell'andamento di $V_{R_{3}}$
 	pò essere dovto al fatta che variando $R_{4}$ la richiesta di corrente fornita alla porta logica spera il valore massimo da essa erogabile;pertanto la tensione $V_{ot}$ amenta per ridrre il fabbisogno di corrente.
 	Pertanto le parta NOT ed in particolare i transistor vengano spostati dalla regione di operatività lineare sino ad scire da  essa.
-	
+
 	Da i valori ottenti e dall'\eqref{eq:fan-o} si ottiene $$N=$$; tale valore rislta maggiore di qello fornito nel datasheet; tale effetto si è imptata come fatto per le correnti al fatto che i valori forniti dal costrttore sono valori misrati in condizioni estremali della regione di operatività.
-	
+
 \section{Montaggio ardvino}
 	Per la verifica delle caratteristiche dinamiche dell'IC SN74LS244 si è montato n circito implsatore con il microcontrollore arduino.
-	Si riporta lo schema circitale in \figurename{ \ref{f:impulsatore}}. 
-	
+	Si riporta lo schema circitale in \figurename{ \ref{f:impulsatore}}.
+
 		\begin{figure}[htb]
 			\includegraphics[scale=0.50]{../immagine/imp.png}
 			\caption{Rappresentazione del circuito impulsatore montato.}
@@ -161,11 +161,11 @@
 		$R_{1}=$\SI{7.2 \pm 0.1}{\ohm} $R_{2}=$\SI{7.2 \pm 0.1}{\ohm} $R_{3}=$\SI{7.2 \pm 0.1}{\ohm} \\
 		$R_{4}=$\SI{7.2 \pm 0.1}{\ohm} n trimmer di $R_{5}^{max}=$\SI{7.2 \pm 0.1}{\ohm} \\
  		dei condensatori	$C_{1}=$\SI{7.2 \pm 0.1}{\coulomb} $C_{2}=$\SI{7.2 \pm 0.1}{\coulomb}
-	
+
 	\end{center}
 	Tale circito tra i terminali Y1 e Y2 dovrebbe generare dellle onde qadre sfasate di $\pi/2$ e freqenza compresa tra 50 Hz e 50KHz regolabile attraverso il valore di $R_{5}$.
 	Si è andati pertanto a verificarne il corretto montaggio attraverso la verifica di qeste proprietà.
-	Attraverso l'oscilloscopio si sono visalizzati s ch1 la tensione rilevata s Y1 e s  ch la tensione letta s Y2; si riporta na tipica acqisizione in 
+	Attraverso l'oscilloscopio si sono visalizzati s ch1 la tensione rilevata s Y1 e s  ch la tensione letta s Y2; si riporta na tipica acqisizione in
 	\figurename{ \ref{f:oscil} } .
 	\begin{figure}[htb]
 		\includegraphics[scale=0.50]{../immagine/imp.png}
@@ -182,7 +182,7 @@
 	\end{equation}\label{eq:sfas}
 	si ottiene $\Delta \phi=$\SI{0.5 \pm 0.01}{\radian}.
 	Si è assnta pertanto come verificato il corretto fnzionamento del circito implsatore montato.
-	
+
 \section{Misra delle caratteristiche dinamiche}
 	Per la misra delle caratteristiche dinamiche della porta logica si è impiegato il circito implsatore testé ricavato.
 	\subsection{Osservazioni generali}
@@ -200,7 +200,7 @@
 	Per la misra dei tempi di propagazione per il passaggio HIGH-LOW 	e LOW-HIGH,
 	rispettivamente $\Delta t_{PHL}$ e $\Delta t_{PLH}$, si sono misrati i ritardo tra l'instante in ci i segnali,in ingresso nella porta logica ed in scita, assmevano la metà del loro valore massimale.
 	Osservando l'onda in na scala che ponga in evidenza solamente il fronte d'onda in esame si osservano problemi ad individare il valore massimale sia a casa della presenza di na tensione di over-shoots,e rispettivamente nder-shoots,e di n ripple dei fronti d'onda speriore ed inferiore ( \figurename{ \ref{f:riple} } ).
-	
+
 	\begin{figure}[htb]
 		\includegraphics[scale=0.50]{../immagine/imp.png}
 		\caption{Acqisizione dall'oscilloscopio del fronte d'onda di salita tra l'onda in scita dalla porta logica   (ch1) e l'onda fornita da Y1 (ch2).
@@ -208,17 +208,17 @@
 		\label{f:riple}
 	\end{figure}
 	Per migliorare la lettra si è procedto a effettare le lettre da na scala che permetta l'osservazione di n periodo completo;triggerando sl fronte di salita per  $\Delta t_{PLH}$ e sl fronte di discesa per $\Delta t_{PHL}$.
-	
+
 	Si ottiene: \\
 	$\Delta t_{PLH}=$\SI{45 \pm 744}{\nano \sec} \qquad ed \qquad $\Delta t_{PHL}=$\SI{45 \pm 744}{\nano \sec}\\
 	tali valori risltano in accordo con i valori attesi del datasheet:\\
 	$\Delta t_{PLH}^{atteso}=$\SI{45 \pm 744}{\nano \sec}  e  $\Delta t_{PHL}^{atteso}=$\SI{45 \pm 744}{\nano \sec}
 	.
 	\subsection{Misra del tempo di salita e discesa.}
-	Per la misrazione dei tempi di salita ,$\Delta t_{salita}$, e di discesa ,$\Delta t_{discesa}$; si sono andati ad osservare 
-	gli intervalli temporali tra il 10 \textdiscount ed  
+	Per la misrazione dei tempi di salita ,$\Delta t_{salita}$, e di discesa ,$\Delta t_{discesa}$; si sono andati ad osservare
+	gli intervalli temporali tra il 10 \textdiscount ed
 	90\textdiscount per $\Delta t_{salita}$; e tra il 10\textdiscount ed  90\textdiscount del segnale per $\Delta t_{discesa}$ .
-	
+
 	Si misrano per tali intervalli per l'onda in ingresso nella porta logica,ottenendo $\Delta t_{salita}^{ingresso}=$\SI{45 \pm 744}{\nano \sec}
 	e
 	$\Delta t_{discesa}^{ingresso}=$\SI{45 \pm 744}{\nano \sec}.
@@ -241,7 +241,7 @@
 	\subfloat[acqsizione fronte di discesa dell'onda in scita da NOT1]{
 		\includegraphics[scale=0.35]{../immagine/imp.png}
 	}\\
-	
+
 		\caption{acqsizioni delle schermate impiegate per la misrazione di $\Delta t_{salita}^{ingresso}$ $\Delta t_{discesa}^{ingresso}$,$\Delta t_{salita}^{scita}$ $\Delta t_{discesa}^{scita}$ }
 		\label{f:sd}
 	\end{figure}
