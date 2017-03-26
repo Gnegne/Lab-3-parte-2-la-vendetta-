@@ -18,8 +18,7 @@
 \usepackage{xfrac} % \sfrac
 \usepackage{cancel} % \cancel \cancelto
 \usepackage{hyperref} % interactive links in TOC, URLs and references
-% unneded \usepackage{fixltx2e} % provides \textsubscript and makes some fixes
-\usepackage[version=3]{mhchem} % \ce (chemical formula)
+% Bob \usepackage[version=3]{mhchem} % \ce (chemical formula)
 \usepackage{siunitx} % \num \si \SI
 \usepackage{alltt} % {alltt} (like verbatim but with commands)
 \usepackage{moreverb} % {listing}
@@ -100,8 +99,9 @@
 \newcommand{\hwhm}{\text{HWHM}}
 
 \newcommand{\ndr}[1]{\footnote{#1 (n.d.r.)}}
-\newcommand{\fig}[1]{figura (\ref{f:#1})} %inserting reference to figures
-\newcommand{\tab}[1]{tabella (\ref{t:#1})} % inserting reference to tables
+\newcommand{\fig}[1]{figura (\ref{fig:#1})} %inserting reference to figures
+\newcommand{\tab}[1]{tabella (\ref{tab:#1})} % inserting reference to tables
+\newcommand{\eqn}[1]{equazione \eqref{eq:#1}} % inserting reference to equation
 \newcommand{\dof}{\text{ dof}} % degrees of freedom
 \newcommand{\paral}{\mathbin{\|}} % impedance parallel
 \DeclareSIUnit\deca{decade} % decade unit definition for use in siunitx

@@ -1,13 +1,15 @@
 # ********************** IMPORTS ***************************
 
+from __future__ import division, print_function
 import math
 import inspect
 import numpy as np
 import time
-from scipy import odr
-from scipy.optimize import curve_fit, leastsq
+from scipy import odr, optimize, stats, special, linalg
 import os
 import sympy
+from collections import Counter
+import numdifftools as numdiff
 
 # TODO
 #
@@ -22,8 +24,7 @@ import sympy
 #
 # util_format
 # opzione si=True per formattare come num2si
-# opzione errdig=(intero) per scegliere le cifre dell'errore
-# usare lo standard di arrotondamento del PDG
+# opzione errdig=(float)|'pdg' per scegliere le cifre dell'errore o usare il formato del PDG
 #
 # fit_generic (nuova funzione)
 # mangia anche le funzioni sympy calcolandone jacb e jacd, riconoscendo se può fare un fit analitico
@@ -31,7 +32,7 @@ import sympy
 # usa scipy.odr (anche fit implicito, covarianze, multidim, restart, fissaggio parametri)
 # le cose multidim sono trasposte nel modo comodo per scrivere le funz. (quindi mi sa come scipy.odr), può trasporre lei con un'opzione
 # riconosce se la f mangia un punto alla volta o tutti i dati insieme
-# interfaccia tipo curve_fit (fare in modo che i casi base siano uguali a fit_linear e fit_generic_xyerr)
+# interfaccia tipo optimize.curve_fit (fare in modo che i casi base siano uguali a fit_linear e fit_generic_xyerr)
 # ha un full_output e un print_info che fanno molte cose
 # fit_generic(f, x, y=None, dx=None, dy=None, p0=None, pfix=None, dfdx=None, dfdp=None, dimorder='compfirst', absolute_sigma=True, full_output=False, print_info=False, restart=False)
 # = par, cov,
@@ -41,78 +42,38 @@ import sympy
 # se restart=True, ritorna l'oggetto ODR; se restart è un ODR, lo usa per ripartire da lì.
 # pfix = [True, False ...] i True vengono bloccati
 # pfix = [0, 3, 5...] i parametri a questi indici vengono bloccati
+# i bounds!
 
 __all__ = [ # things imported when you do "from lab import *"
 	'fit_norm_cov',
 	'fit_generic',
 	'fit_linear',
 	'fit_const_yerr',
+	'fit_oversampling',
 	'util_mm_er',
 	'util_mm_list',
 	'mme',
-	'etastart',
-	'etastr',
 	'num2si',
 	'num2sup',
 	'num2sub',
 	'unicode_pm',
 	'xe',
 	'xep',
-	'util_format'
+	'util_format',
+	'Eta'
 ]
 
 # __all__ += [ # things for backward compatibility
 # 	'curve_fit_patched',
 # 	'fit_generic_xyerr',
-# 	'fit_generic_xyerr2'
+# 	'fit_generic_xyerr2',
+#	'etastart',
+#	'etastr'
 # ]
 
 __version__ = '2016.11'
 
 # ************************** FIT ***************************
-
-def _check_finite(array): # asarray_chkfinite is absent in old numpies
-	for x in array.flat:
-		if not np.isfinite(x):
-			raise ValueError("array must not contain infs or NaNs")
-
-def _patch_curve_fit(force_patch=False):
-	args = inspect.getargspec(curve_fit).args
-
-	if 'absolute_sigma' in args and 'check_finite' in args and not force_patch:
-		return curve_fit
-
-	elif 'absolute_sigma' in args and not force_patch:
-		def curve_fit_patched(f, xdata, ydata, p0=None, sigma=None, absolute_sigma=False, check_finite=True, **kw):
-			if check_finite:
-				_check_finite(xdata)
-				_check_finite(ydata)
-			return curve_fit(f, xdata, ydata, p0, sigma, absolute_sigma, **kw)
-		return curve_fit_patched
-
-	else: # the case check_finite yes and absolute_sigma no does not exist
-		def curve_fit_patched(f, xdata, ydata, p0=None, sigma=None, absolute_sigma=False, check_finite=True, **kw):
-			myp0 = p0
-			if p0 is None: # we need p0 to implement absolute_sigma
-				args = inspect.getargspec(f).args
-				if len(args) < 2:
-					raise ValueError("Unable to determine number of fit parameters.")
-				myp0 = [1.0] * (len(args) - (2 if 'self' in args else 1))
-			if np.isscalar(myp0):
-				myp0 = np.array([myp0])
-			if check_finite:
-				_check_finite(xdata)
-				_check_finite(ydata)
-			rt = curve_fit(f, xdata, ydata, p0, sigma, **kw)
-			if absolute_sigma and len(ydata) > len(myp0): # invert the normalization done by curve_fit
-				popt = rt[0]
-				s_sq = sum(((np.asarray(ydata) - f(xdata, *popt)) / (np.asarray(sigma) if sigma != None else 1.0)) ** 2) / (len(ydata) - len(myp0))
-				pcov = rt[1] / s_sq
-				rt = np.concatenate(([popt, pcov], rt[2:]))
-			return rt
-		return curve_fit_patched
-
-curve_fit_patched = _patch_curve_fit()
 
 def fit_norm_cov(cov):
 	"""
@@ -129,9 +90,17 @@ def fit_norm_cov(cov):
 	ncov : (N,N)-shaped array-like
 		the normalized matrix
 	"""
-
+	cov = np.copy(np.asarray(cov, dtype='float64'))
 	s = np.sqrt(np.diag(cov))
-	return cov / np.outer(s, s)
+	for i in range(len(s)):
+		for j in range(i + 1):
+			p = s[i] * s[j]
+			if p != 0:
+				cov[i, j] /= p
+			elif i != j:
+				cov[i, j] = np.nan
+			cov[j, i] = cov[i, j]
+	return cov
 
 def _fit_generic_ev(f, dfdx, x, y, dx, dy, par, cov, absolute_sigma=True, conv_diff=1e-7, max_cycles=5, **kw):
 	cycles = 1
@@ -140,7 +109,7 @@ def _fit_generic_ev(f, dfdx, x, y, dx, dy, par, cov, absolute_sigma=True, conv_d
 			cycles = -1
 			break
 		dyeff = np.sqrt(dy**2 + (dfdx(x, *par) * dx)**2)
-		rt = curve_fit_patched(f, x, y, p0=par, sigma=dyeff, absolute_sigma=absolute_sigma, **kw)
+		rt = optimize.curve_fit(f, x, y, p0=par, sigma=dyeff, absolute_sigma=absolute_sigma, **kw)
 		npar, ncov = rt[:2]
 		error = abs(npar - par) / npar
 		cerror = abs(ncov - cov) / ncov
@@ -151,7 +120,7 @@ def _fit_generic_ev(f, dfdx, x, y, dx, dy, par, cov, absolute_sigma=True, conv_d
 			break
 	return par, cov, cycles
 
-def _fit_generic_odr(f, dfdx, dfdps, dfdpdxs, x, y, dx, dy, p0):
+def _fit_generic_odr(f, dfdx, dfdps, dfdpdxs, x, y, dx, dy, p0, **kw):
 	dy2 = dy**2
 	dx2 = dx**2
 	def residual(p):
@@ -165,15 +134,20 @@ def _fit_generic_odr(f, dfdx, dfdps, dfdpdxs, x, y, dx, dy, p0):
 		for i in range(len(p)):
 			rt[i] = - (dfdps[i](x, *p) * srad + dfdpdxs[i](x, *p) * res) / rad
 		return rt
-	par, cov, _, _, _ = leastsq(residual, p0, Dfun=jac, col_deriv=True, full_output=True)
+	par, cov, _, _, _ = optimize.leastsq(residual, p0, Dfun=jac, col_deriv=True, full_output=True, **kw)
 	return par, cov
 
 class FitOutput:
-
-	def chi2(self):
-		"""compute chisquare. How to in case of non-linearized odr without inverse?
-		in many cases an inverse could be given or built"""
-		pass
+	
+	def __init__(self, par=None, cov=None, chisq=None, delta_x=None, delta_y=None):
+		self.par = par
+		self.cov = cov
+		self.chisq = chisq
+		if not (chisq is None):
+			self.chisq_dof = len(delta_x) - len(par)
+			self.chisq_pvalue = stats.chi2.sf(self.chisq, self.chisq_dof)
+		self.delta_y = delta_y
+		self.delta_x = delta_x
 
 class FitModel:
 
@@ -183,20 +157,26 @@ class FitModel:
 		if sym:
 			args = inspect.getargspec(f).args
 			xsym = sympy.symbols('x', real=True)
-			psym = [sympy.symbols('p_%d' % i, real=True) for i in range(len(args) - 1)]
+			psym = [sympy.symbols('p%s' % num2sub(i), real=True) for i in range(len(args) - 1)]
 			syms = [xsym] + psym
 			self._dfdx = sympy.lambdify(syms, f(*syms).diff(xsym), "numpy")
 			self._dfdps = [sympy.lambdify(syms, f(*syms).diff(p), "numpy") for p in psym]
 			self._dfdpdxs = [sympy.lambdify(syms, f(*syms).diff(xsym).diff(p), "numpy") for p in psym]
 			self._f = sympy.lambdify(syms, f(*syms), "numpy")
+			self._f_sym = f
+			self._repr = 'FitModel(y = {})'.format(f(*syms))
 			self._sym = True
 		else:
 			self._dfdx = dfdx
 			self._dfdp = dfdp
 			self._dfdpdx = dfdpdx
 			self._f = f
+			self._repr = 'FitModel(y = {})'.format(f)
 			self._sym = False
-
+	
+	def __repr__(self):
+		return self._repr
+		
 	# def implicit(self):
 	# 	"""return True if the model is implicit (no y)"""
 	# 	pass
@@ -248,28 +228,67 @@ class FitModel:
 	def dfdpdxs(self):
 		return self._dfdpdxs
 
-def fit_generic(f, x, y, dx=None, dy=None, p0=None, pfix=None, absolute_sigma=True, method='odrpack', full_output=False, print_info=False, **kw):
+def fit_generic(f, x, y, dx=None, dy=None, p0=None, pfix=None, absolute_sigma=True, method='auto', full_output=False, print_info=0, **kw):
 	"""f may be either callable or FitModel"""
+	print_info = int(print_info)
+	
+	if print_info > 0:
+		print('################ fit_generic ################')
+		print()
+	
+	# MODEL
 
 	if isinstance(f, FitModel):
 		model = f
+		if print_info > 0:
+			print('Model given: {}'.format(model))
+			print()
 	else:
 		model = FitModel(f)
+		if print_info > 0:
+			print('Model created from f: {}'.format(model))
+			print()
+	
+	# METHOD
+	
+	if method == 'auto':
+		dxn = dx is None
+		dyn = dy is None
+		if dxn and dyn:
+			method = 'leastsq'
+		elif dxn:
+			method = 'wleastsq'
+		else:
+			method = 'odrpack'
+		if print_info > 0:
+			print('Method chosen automatically: "%s"' % method)
+			print()
+	elif print_info > 0:
+		print('Method: "%s"' % method)
+		print()
+	
+	# FIT
 
 	if method == 'odrpack':
 		fcn = model.f_odrpack(len(x))
 		fjacb = model.dfdp_odrpack(len(x))
 		fjacd = model.dfdx_odrpack(len(x))
+		
 		M = odr.Model(fcn, fjacb=fjacb, fjacd=fjacd)
 		data = odr.RealData(x, y, sx=dx, sy=dy)
 		ODR = odr.ODR(data, M, beta0=p0)
-		output = ODR.run()
+		ODR.set_iprint(init=print_info > 1, iter=print_info > 2, final=print_info > 1)
+		output = ODR.run(**kw)
 		par = output.beta
 		cov = output.cov_beta
+		
+		if full_output or not absolute_sigma:
+			chisq = np.sum(((output.eps / dy)**2 + (output.delta / dx)**2))
 		if not absolute_sigma:
-			chisq = ((output.eps / dy)**2 + (output.delta / dx)**2).sum() / (len(x) - len(par))
-			cov *= chisq
-		if print_info:
+			cov *= chisq / (len(x) - len(par))
+		if full_output:
+			out = FitOutput(par=par, cov=cov, chisq=chisq, delta_x=output.delta, delta_y=output.eps)
+		if print_info > 0:
 			output.pprint()
 
 	elif method == 'linodr':
@@ -277,22 +296,78 @@ def fit_generic(f, x, y, dx=None, dy=None, p0=None, pfix=None, absolute_sigma=Tr
 		dfdps = model.dfdps()
 		dfdx = model.dfdx()
 		dfdpdxs = model.dfdpdxs()
-		par, cov = _fit_generic_odr(f, dfdx, dfdps, dfdpdxs, x, y, dx, dy, p0)
+		
+		par, cov = _fit_generic_odr(f, dfdx, dfdps, dfdpdxs, x, y, dx, dy, p0, **kw)
+		
+		if full_output or not absolute_sigma:
+			deriv = dfdx(x, *par)
+			err2 = dy ** 2   +   deriv ** 2  *  dx ** 2
+			chisq = np.sum((y - f(x, *par))**2 / err2)
+		if not absolute_sigma:
+			cov *= chisq / (len(x) - len(par))
+		if full_output:
+			fact = (y - f(x, *par)) / err2
+			delta_x = fact * deriv * dx**2
+			delta_y = -fact * dy**2
+			out = FitOutput(par=par, cov=cov, chisq=chisq, delta_x=delta_x, delta_y=delta_y)
 
 	elif method == 'ev':
+		# TODO jac
 		f = model.f()
 		dfdx = model.dfdx()
 		conv_diff = kw.pop('conv_diff', 1e-7)
 		max_cycles = kw.pop('max_cycles', 5)
-		par, cov = curve_fit_patched(f, x, y, p0=p0, absolute_sigma=absolute_sigma, **kw)
+		
+		par, cov = optimize.curve_fit(f, x, y, p0=p0, absolute_sigma=absolute_sigma, **kw)
 		par, cov, cycles = _fit_generic_ev(f, dfdx, x, y, dx, dy, par, cov, absolute_sigma=absolute_sigma, conv_diff=conv_diff, max_cycles=max_cycles, **kw)
+		
 		if cycles == -1:
 			raise RuntimeError('Maximum number (%d) of fit cycles reached' % max_cycles)
+	
+		if full_output:
+			# compute delta_xy as in linodr.
+			# doubt: should we compute it only along y?
+			deriv = dfdx(x, *par)
+			err2 = dy ** 2   +   deriv ** 2  *  dx ** 2
+			chisq = np.sum((y - f(x, *par))**2 / err2)
+			fact = (y - f(x, *par)) / err2
+			delta_x = fact * deriv * dx**2
+			delta_y = -fact * dy**2
+			out = FitOutput(par=par, cov=cov, chisq=chisq, delta_x=delta_x, delta_y=delta_y)
+
+	elif method == 'wleastsq':
+		f = model.f()
+		jac = model.dfdp_curve_fit(len(x))
+		
+		par, cov = optimize.curve_fit(f, x, y, sigma=dy, p0=p0, absolute_sigma=absolute_sigma, jac=jac, **kw)
+		
+		if full_output:
+			delta_x = np.zeros(len(x))
+			delta_y = y - f(x, *par)
+			chisq = np.sum((delta_y / dy) ** 2)
+			out = FitOutput(par=par, cov=cov, chisq=chisq, delta_x=delta_x, delta_y=delta_y)
+	
+	elif method == 'leastsq':
+		f = model.f()
+		jac = model.dfdp_curve_fit(len(x))
+		
+		par, cov = optimize.curve_fit(f, x, y, p0=p0, absolute_sigma=False, jac=jac, **kw)
+
+		if full_output:
+			delta_x = np.zeros(len(x))
+			delta_y = y - f(x, *par)
+			chisq = np.sum((delta_y / dy) ** 2)
+			out = FitOutput(par=par, cov=cov, chisq=chisq, delta_x=delta_x, delta_y=delta_y)
 
 	else:
 		raise KeyError(method)
+	
+	# RETURN
 
-	return par, cov
+	if full_output:
+		return par, cov, out
+	else:
+		return par, cov
 
 def _fit_affine_odr(x, y, dx, dy):
 	dy2 = dy**2
@@ -308,7 +383,7 @@ def _fit_affine_odr(x, y, dx, dy):
 		rt[1] = - 1 / srad
 		return rt
 	p0, _ = _fit_affine_unif_err(x, y)
-	par, cov, _, _, _ = leastsq(residual, p0, Dfun=jac, col_deriv=True, full_output=True)
+	par, cov, _, _, _ = optimize.leastsq(residual, p0, Dfun=jac, col_deriv=True, full_output=True)
 	return par, cov
 
 def _fit_linear_odr(x, y, dx, dy):
@@ -324,7 +399,7 @@ def _fit_linear_odr(x, y, dx, dy):
 		rt[0] = - (x * srad + res) / rad
 		return rt
 	p0, _ = _fit_affine_unif_err(x, y)
-	par, cov, _, _, _ = leastsq(residual, (p0[0],), Dfun=jac, col_deriv=True, full_output=True)
+	par, cov, _, _, _ = optimize.leastsq(residual, (p0[0],), Dfun=jac, col_deriv=True, full_output=True)
 	return np.array([par[0], 0]), np.array([[cov[0,0], 0], [0, 0]])
 
 def _fit_affine_yerr(x, y, sigmay):
@@ -562,6 +637,138 @@ def fit_const_yerr(y, sigmay):
 	vara = 1 / s1
 	return a, vara
 
+def fit_oversampling(data, digit=1, print_info=False, plot_axes=None):
+	"""
+	Given discretized samples, find the maximum likelihood estimate
+	of the average and standard deviation of a normal distribution.
+	
+	Parameters
+	----------
+	data : 1D array-like
+		Discretized samples. The discretization is assumed to be a
+		rounding to nearest integer, or to fixed multiple of integer (see
+		digit parameter).
+	digit : number
+		The unit of discretization. Data is divided by digit before
+		computing, then results are multiplied by digit.
+	print_info : boolean
+		If True, print verbose information about the fit.
+	plot_axes : Axes3DSubplot or None
+		If a 3D subplot is given, plot the likelihood around the estimate.
+	
+	Returns
+	-------
+	par : 1D array
+		Estimated [mean, standard deviation].
+	cov : 2D array
+		Covariance matrix of the estimate.
+	"""
+	# TODO
+	# usare monte carlo per fare un fit bayesiano, se no qui non ci si salva
+	if print_info:
+		print('########################## FIT_OVERSAMPLING ##########################')
+		print()
+	
+	data = np.asarray(data) / digit
+	n = len(data)
+	
+	p0 = [data.mean(), data.std(ddof=1)]
+	if p0[1] == 0:
+		p0[1] = np.sqrt(n - 1) / n / 2
+	
+	data -= p0[0]
+	data /= p0[1]
+	hdigit = digit / p0[1] / 2
+	
+	c = Counter(data)
+	points = np.array(list(c.keys()), dtype='float64')
+	counts = np.array(list(c.values()), dtype='uint32')
+	
+	if print_info:
+		print('Number of data points: %d' % n)
+		print('Number of unique points: %d' % len(points))
+		print('Discretization unit: %.3g' % digit)
+		print('Sample mean: %.3g' % p0[0])
+		print('Sample standard deviation: %.3g' % (p0[1] if len(counts) > 1 else 0))
+		print()
+	
+	lp = np.empty(len(points))
+	
+	def minusloglikelihood(par):
+		mu, sigma = par
+		dist = stats.norm(loc=mu, scale=sigma)
+		for i in range(len(lp)):
+			x = points[i]
+			if x > mu:
+				p = dist.sf(x - hdigit) - dist.sf(x + hdigit)
+			else:
+				p = dist.cdf(x + hdigit) - dist.cdf(x - hdigit)
+			if p == 0:
+				xd = np.abs(x - mu) - hdigit * 0.8
+				p = dist.logpdf(0.5 * (np.sign(xd) + 1) * xd * np.sign(x - mu))
+			else:
+				p = math.log(p)
+			lp[i] = p
+				
+		return -np.sum(counts * lp)# + np.log(sigma) # jeffreys' prior
+		
+	result = optimize.minimize(minusloglikelihood, (0, 1), method='L-BFGS-B', options=dict(disp=print_info), bounds=((-hdigit, hdigit), (0.1, None)))
+	
+	if print_info:
+		print('###### MINIMIZATION FINISHED ######')
+		print()
+	
+	par = result.x
+	cov = numdiff.Hessian(minusloglikelihood, method='forward')(par)
+	try:
+		cov = linalg.inv(cov)
+	except linalg.LinAlgError:
+		if print_info:
+			print('Hessian is not invertible, computing pseudo-inverse')
+			print()
+		jac = numdiff.Jacobian(minusloglikelihood, method='forward')(par)
+		_, s, VT = linalg.svd(jac, full_matrices=False)
+		threshold = np.finfo(float).eps * max(jac.shape) * s[0]
+		s = s[s > threshold]
+		VT = VT[:s.size]
+		cov = np.dot(VT.T / s**2, VT)
+	
+	if not (plot_axes is None):
+		if print_info:
+			print('Plotting likelihood')
+			print()
+		plot_axes.cla()
+		factor = special.gammaln(1 + n) - np.sum(special.gammaln(1 + counts))
+		err = np.sqrt(abs(np.diag(cov)))
+		if len(counts) > 1:
+			x = np.linspace(max(-hdigit, par[0] - 2 * err[0]), min(hdigit, par[0] + 2 * err[0]), 41)
+			y = np.linspace(max(0.05, par[1] - 2 * err[1]), min(12, par[1] + 2 * err[1]), 39)
+		else:
+			x = np.linspace(-hdigit, hdigit, 41)
+			y = np.linspace(0.05, 12, 39)
+		X, Y = np.meshgrid(x, y)
+		plot_axes.plot_surface(X, Y, [[np.exp(factor - minusloglikelihood((X[i, j], Y[i, j]))) for j in range(len(X[0]))] for i in range(len(X))])
+		plot_axes.plot3D([par[0]], [par[1]], [np.exp(factor - minusloglikelihood(par))], 'ok')
+		plot_axes.set_xlabel('Mean')
+		plot_axes.set_ylabel('Sigma')
+		plot_axes.set_zlabel('Likelihood')
+
+	par *= p0[1]
+	par[0] += p0[0]
+	par *= digit
+	
+	cov *= p0[1] ** 2
+	cov *= digit ** 2
+	
+	if print_info:
+		print('###### SUMMARY ######')
+		print('Sample mean: %.3g' % p0[0])
+		print('Sample standard deviation: %.3g' % (p0[1] if len(counts) > 1 else 0))
+		print('Estimated mean, standard deviation (with correlation):')
+		print(format_par_cov(par, cov))
+		
+	return par, cov
+
 # *********************** MULTIMETERS *************************
 
 def _find_scale(x, scales):
@@ -779,7 +986,7 @@ def util_mm_er(x, scale, metertype='lab3', unit='volt', sqerr=False):
 	if typ == 'digital':
 		e = errsum(x * info['perc'][idx] / 100.0, info['digit'][idx] * 10**(idx + math.log10(info['scales'][0] / 2.0) - 3))
 		if unit == 'volt' or unit == 'volt_ac':
-			r = info['voltres']
+			r = meter['voltres']
 		elif unit == 'ampere' or unit == 'ampere_ac':
 			r = info['cdt'] / s
 	elif typ == 'analog':
@@ -904,7 +1111,7 @@ def mme(x, unit, metertype='lab3', sqerr=False):
 
 d = lambda x, n: int(("%.*e" % (n - 1, abs(x)))[0])
 ap = lambda x, n: float("%.*e" % (n - 1, x))
-nd = lambda x: math.floor(math.log10(abs(x))) + 1
+_nd = lambda x: math.floor(math.log10(abs(x))) + 1
 def _format_epositive(x, e, errsep=True, minexp=3):
 	# DECIDE NUMBER OF DIGITS
 	if d(e, 2) < 3:
@@ -916,10 +1123,10 @@ def _format_epositive(x, e, errsep=True, minexp=3):
 	else:
 		n = 1
 	# FORMAT MANTISSAS
-	dn = int(nd(x) - nd(e)) if x != 0 else -n
+	dn = int(_nd(x) - _nd(e)) if x != 0 else -n
 	nx = n + dn
 	if nx > 0:
-		ex = nd(x) - 1
+		ex = _nd(x) - 1
 		if nx > ex and abs(ex) <= minexp:
 			xd = nx - ex - 1
 			ex = 0
@@ -928,14 +1135,14 @@ def _format_epositive(x, e, errsep=True, minexp=3):
 		sx = "%.*f" % (xd, x / 10**ex)
 		se = "%.*f" % (xd, e / 10**ex)
 	else:
-		le = nd(e)
+		le = _nd(e)
 		ex = le - n
 		sx = '0'
 		se = "%#.*g" % (n, e)
 	# RETURN
 	if errsep:
 		return sx, se, ex
-	return sx + '(' + ("%#.*g" % (n, e * 10 ** (n - nd(e))))[:n] + ')', '', ex
+	return sx + '(' + ("%#.*g" % (n, e * 10 ** (n - _nd(e))))[:n] + ')', '', ex
 
 def util_format(x, e, pm=None, percent=False, comexp=True, nicexp=False):
 	"""
@@ -969,7 +1176,7 @@ def util_format(x, e, pm=None, percent=False, comexp=True, nicexp=False):
 	util_format(1e8, 2.5e6, pm='+-') --> '(1.000 +- 0.025)e+8'
 	util_format(1e8, 2.5e6, pm='+-', comexp=False) --> '1.000e+8 +- 0.025e+8'
 	util_format(1e8, 2.5e6, percent=True) --> '1.000(25)e+8 (2.5 %)'
-	util_format(nan, nan) = 'nan +- nan'
+	util_format(nan, nan) --> 'nan +- nan'
 
 	See also
 	--------
@@ -1141,6 +1348,45 @@ def num2sup(x, format=None):
 		x = x.replace(_subscrc[i], _supscr[i])
 	return x
 
+def format_par_cov(par, cov):
+	"""
+	Format an estimate with a covariance matrix as an upper
+	triangular matrix with parameters on the diagonal (with
+	uncertainties) and correlations off-diagonal.
+	
+	Parameters
+	----------
+	par : M-length array
+		Parameters to be written on the diagonal.
+	cov : (M, M) matrix
+		Covariance from which uncertainties and correlations
+		are computed.
+	
+	Examples
+	--------
+	>>> par, cov = curve_fit(f, x, y)
+	>>> print(lab.format_par_cov(par, cov))
+	"""
+	pars = xe(par, np.sqrt(np.diag(cov)))
+	corr = fit_norm_cov(cov) * 100
+	corrwidth = 8
+	s = ''
+	for i in range(len(par)):
+		for j in range(len(par)):
+			width = max(corrwidth, len(pars[j])) + 1
+			if i == j:
+				sadd = pars[i]
+			elif i < j:
+				sadd = "%*.1f %%" % (corrwidth - 2, corr[i, j])
+			else:
+				sadd = ''
+			s += ' ' * (width - len(sadd)) + sadd
+			if j != len(par) - 1:
+				s += ' '
+			elif i != len(par) - 1:
+				s += '\n'
+	return s
+
 # ************************** TIME *********************************
 
 def util_timecomp(secs):
@@ -1190,74 +1436,97 @@ def util_timestr(secs):
 	"""
 	return "%02d:%02d:%02d" % util_timecomp(secs)
 
-_eta_start = 0
+class Eta():
+	
+	def __init__(self):
+		"""
+		Object to compute the eta (estimated time of arrival).
+		Create the object at the start of a lengthy process,
+		then use one of the methods to compute the estimated
+		remaining time.
+		
+		Examples
+		--------
+		>>> eta = lab.Eta() # initialize just before the start
+		>>> for i in range(N):
+		>>>     progress = i / N # a number between 0 and 1
+		>>>     eta.etaprint(progress, mininterval=10.0) # print remaining time every 10 seconds
+		>>>     # lengthy task(i)
+		"""
+		self.restart()
+	
+	def restart(self):
+		"""
+		Reset the eta object as if it was just initialized.
+		"""
+		now = time.time()
+		self._start_time = now
+		self._last_stamp = now
+	
+	def eta(self, progress):
+		"""
+		Compute the estimated time of arrival.
 
-def etastart():
-	"""
-	Call at the startpoint of something you want to compute the eta (estimated
-	time of arrival) of.
+		Parameters
+		----------
+		progress : number in [0,1]
+			The progress on a time-linear scale where 0 means still nothing done and
+			1 means finished.
 
-	Returns
-	-------
-	An object containing the starting time, to be given as argument to etastr().
+		Returns
+		-------
+		eta : float
+			The time remaining to the arrival, in seconds.
+		"""
+		if 0 < progress <= 1:
+			now = time.time()
+			interval = now - self._start_time
+			return (1 - progress) * interval / progress
+		elif progress == 0:
+			return np.inf
+		else:
+			raise RuntimeError("progress %.2f out of bounds [0,1]" % progress)
+	
+	def etastr(self, progress):
+		"""
+		Compute the estimated time of arrival.
 
-	Example
-	-------
-	>>> eta = etastart()
-	>>> for i in range(N):
-	>>>     print('elapsed time: %s, remaining time: %s' % etastr(eta, i / N))
-	>>>     # do something
+		Parameters
+		----------
+		progress : number in [0,1]
+			The progress on a time-linear scale where 0 means still nothing done and
+			1 means finished.
 
-	See also
-	--------
-	etastr
-	"""
-	now = time.time()
-	return [now, now]
+		Returns
+		-------
+		etastr : string
+			The time remaining to the arrival, formatted.
+		"""
+		eta = self.eta(progress)
+		if np.isfinite(eta):
+			return util_timestr(eta)
+		else:
+			return "--:--:--"
+	
+	def etaprint(self, progress, mininterval=5.0):
+		"""
+		Print the time elapsed and the estimated time of arrival.
 
-def etastr(eta, progress, mininterval=np.inf):
-	"""
-	Compute the eta given a startpoint returned from etastart() and the progress.
-
-	Parameters
-	----------
-	eta :
-		object returned by etastart()
-	progress : number in [0,1]
-		the progress on a time-linear scale where 0 means still nothing done and
-		1 means finished.
-
-	Returns
-	-------
-	timestr : string
-		elapsed time
-	etastr : string
-		estimated time remaining
-
-	Example
-	-------
-	>>> eta = etastart()
-	>>> for i in range(N):
-	>>>     print('elapsed time: %s, remaining time: %s' % etastr(eta, i / N))
-	>>>     # do something
-
-	See also
-	--------
-	etastart
-	"""
-	now = time.time()
-	interval = now - eta[0]
-	if 0 < progress <= 1:
-		etastr = util_timestr((1 - progress) * interval / progress)
-	elif progress == 0:
-		etastr = "--:--:--"
-	else:
-		raise RuntimeError("progress %.2f out of bounds [0,1]" % progress)
-	timestr = util_timestr(interval)
-	if now - eta[1] >= mininterval:
-		print('elapsed time: %s, remaining time: %s' % (timestr, etastr))
-		eta[1] = now
-	return timestr, etastr
+		Parameters
+		----------
+		progress : number in [0,1]
+			The progress on a time-linear scale where 0 means still nothing done and
+			1 means finished.
+		mininterval : number
+			If the elapsed time since the last time etaprint did print a message is
+			less than mininterval, do not print the message. Give a negative value
+			to print in any case.
+		"""
+		now = time.time()
+		etastr = self.etastr(progress)
+		if now - self._last_stamp >= mininterval:
+			print('elapsed time: %s, remaining time: %s' % (util_timestr(now - self._start_time), etastr))
+			self._last_stamp = now
 
 # *************************** FILES *******************************
 
@@ -1340,3 +1609,19 @@ def fit_generic_xyerr2(f, x, y, sigmax, sigmay, p0=None, print_info=False, absol
 	"""
 	model = FitModel(f, sym=False)
 	return fit_generic(model, x, y, dx=sigmax, dy=sigmay, p0=p0, absolute_sigma=absolute_sigma, print_info=print_info, method='odrpack')
+
+curve_fit_patched = optimize.curve_fit
+curve_fit_patched.__doc__ = '\nTHIS FUNCTION IS DEPRECATED\n'
+
+def etastart():
+	"""
+	THIS FUNCTION IS DEPRECATED
+	"""
+	return Eta()
+
+def etastr(eta, progress, mininterval=np.inf):
+	"""
+	THIS FUNCTION IS DEPRECATED
+	"""
+	eta.etaprint(progress, mininterval=mininterval)
+	return util_timestr(time.time() - eta._start_time), eta.etastr(progress)

@@ -6,7 +6,7 @@
 	Per effettuare la misura delle tensioni operative si
 	è montato il circito in \figurename{ \ref{f:c1}}
 		\begin{figure}[h]
-			\includegraphics[scale=1.0]{../immagine/immagine1.png}
+			\includegraphics[scale=1.0]{immagine1.png}
 			\caption{Rappresentazione del primo circuito impiegato.}
 			\label{f:c1}
 		\end{figure} .
@@ -78,7 +78,7 @@
 	 Si osserva che nella regine di tensione compresa tra 	$V_{I,L}^{max}$ ed $V_{I,H}^{min}$ il segnale in uscita non rislta essere forzato ne nella regione $V_{O,H}$ o $V_{O,L}$, risltando pertanto  l'scita indeterminata tra il regime di scita high e low.
 	\begin{figure}[h]
 		\centering
-		\includegraphics[scale=0.50]{../immagine/in-ot.png}
+		\includegraphics[scale=0.50]{in-ot.png}
 		\caption{Rappresentazione dei dati in \tablename{ \ref{t:1}}.}
 		\label{f:i1}
 	\end{figure}
@@ -112,24 +112,27 @@
 	nel dispositivo sono positive, quelle uscenti negative.
 
 	Si osserva in entrambi i casi come al variare della resistenza del
-	potenziometro la corrente.
-	n analogo andamento si ha sostitendo ,dalla configrazione precedente, $V_{CC}$
+	potenziometro la corrente vari dapprima lentamente per poi aumentare
+	bruscamente (supponiamo al raggiungimento dei limiti del dispositivo) in
+	corrispondenza del discostarsi della tensione in uscita dall'intervallo di
+	corretto funzionamento; le misure raccolte sono riportate in \tab{iout}.
 
-	\begin{table}
-		\begin{tabular}{SS ccc SS}
+	\begin{table}[h]
+		\centering
+		\begin{tabular}{SS cc SS}
 			\toprule
-			\multicolumn{2}{c}{Uscita bassa}	&& \multicolumn{2}{c}{Uscita alta} \\
-			\cmidrule{1-2} \cmidrule{6-7}
-			{I}	& {V}	&&&& {I}	& {V} \\
+			\multicolumn{2}{c}{Uscita bassa} &&& \multicolumn{2}{c}{Uscita alta} \\
+			\cmidrule{1-2} \cmidrule{5-6}
+			{$I_{OL}$ [\si{\mA}]}	& {$V_{out}$ [\si{\V}]}	&&& {$I_{OH}$ [\si{\mA}]}	& {$V_{out}$ [\si{\V}]} \\
 			\midrule
-			0.0506 (12)	&	0.1758 (10)	&&&&	-0.0437 (12)	&	4.12 (3)	\\
-			0.2679 (23)	&	0.1868 (10)	&&&&	-0.0873 (14)	&	3.93 (3)	\\
-			0.328 (3)	&	0.1904 (11)	&&&&	-0.1270 (16)	&	3.77 (3)	\\
-			1.553 (9)	&	0.2330 (22)	&&&&	-0.1637 (18)	&	3.63 (3)	\\
-			2.897 (24)	&	0.2660 (23)	&&&&	-0.2937 (25)	&	3.53 (3)	\\
-			5.21 (4)	&	0.320 (3)	&&&&	-3.77 (3)	&	3.28 (3)	\\
-			24.01 (22)	&	1.891 (10)	&&&&	-13.31 (8)	&	2.300 (21)	\\
-			27.88 (24)	&	1.988 (11)	&&&&	-16.91 (9)	&	1.860 (10)	\\
+			0.0506 (12)	&	0.1758 (10)	&&&	-0.0437 (12)	&	4.12 (3)	\\
+			0.2679 (23)	&	0.1868 (10)	&&&	-0.0873 (14)	&	3.93 (3)	\\
+			0.328 (3)	&	0.1904 (11)	&&&	-0.1270 (16)	&	3.77 (3)	\\
+			1.553 (9)	&	0.2330 (22)	&&&	-0.1637 (18)	&	3.63 (3)	\\
+			2.897 (24)	&	0.2660 (23)	&&&	-0.2937 (25)	&	3.53 (3)	\\
+			5.21 (4)	&	0.320 (3)	&&&	-3.77 (3)	&	3.28 (3)	\\
+			24.01 (22)	&	1.891 (10)	&&&	-13.31 (8)	&	2.300 (21)	\\
+			27.88 (24)	&	1.988 (11)	&&&	-16.91 (9)	&	1.860 (10)	\\
 			\bottomrule
 		\end{tabular}
 		\caption{Andamento dell'uscita della porta not al variare della corrente erogata.}
@@ -151,7 +154,7 @@
 	Si riporta lo schema circitale in \figurename{ \ref{f:impulsatore}}.
 
 		\begin{figure}[htb]
-			\includegraphics[scale=0.50]{../immagine/imp.png}
+			\includegraphics[scale=0.50]{imp.png}
 			\caption{Rappresentazione del circuito impulsatore montato.}
 			\label{f:impulsatore}
 		\end{figure}
@@ -168,7 +171,7 @@
 	Attraverso l'oscilloscopio si sono visalizzati s ch1 la tensione rilevata s Y1 e s  ch la tensione letta s Y2; si riporta na tipica acqisizione in
 	\figurename{ \ref{f:oscil} } .
 	\begin{figure}[htb]
-		\includegraphics[scale=0.50]{../immagine/imp.png}
+		\includegraphics[scale=0.50]{imp.png}
 		\caption{Tipica acqisizione delle tensioni lette si terminali Y1 (ch1) e Y2 (ch2) del circito implsatore.}
 		\label{f:oscil}
 	\end{figure}
@@ -192,7 +195,7 @@
 	L'onda inviata presenta na tensione picco picco $V_{PP}=$\SI{3.6543 \pm 10000}{\volt} ed na $f=$\SI{1\pm 0.001}{\kilo \hertz}\footnote{tali misre sono state fatte con l'oscilloscopio}.
 	Si riporta in \figurename{ \ref{f:d1} } l'acqisizione del oscilloscopio.
 		\begin{figure}[htb]
-		\includegraphics[scale=0.50]{../immagine/imp.png}
+		\includegraphics[scale=0.50]{imp.png}
 		\caption{visalizzazione al oscilloscopio. ch1 onda entrante in NOT1; ch2 scita NOT1}
 		\label{f:d1}
 	\end{figure}
@@ -202,7 +205,7 @@
 	Osservando l'onda in na scala che ponga in evidenza solamente il fronte d'onda in esame si osservano problemi ad individare il valore massimale sia a casa della presenza di na tensione di over-shoots,e rispettivamente nder-shoots,e di n ripple dei fronti d'onda speriore ed inferiore ( \figurename{ \ref{f:riple} } ).
 
 	\begin{figure}[htb]
-		\includegraphics[scale=0.50]{../immagine/imp.png}
+		\includegraphics[scale=0.50]{imp.png}
 		\caption{Acqisizione dall'oscilloscopio del fronte d'onda di salita tra l'onda in scita dalla porta logica   (ch1) e l'onda fornita da Y1 (ch2).
 			$V_{PP}=$\SI{3.6543 \pm 10000}{\volt} ed na $f=$\SI{1\pm 0.001}{\kilo \hertz}	}
 		\label{f:riple}
@@ -230,16 +233,16 @@
 	\begin{figure}[hb]
 		\centering
 		\subfloat[acqsizione fronte di salita dell'onda in ingresso da NOT1]{
-			\includegraphics[scale=0.35]{../immagine/imp.png}
+			\includegraphics[scale=0.35]{imp.png}
 			}
 		\subfloat[acqsizione fronte di discesa dell'onda in ingresso da NOT1]{
-			\includegraphics[scale=0.35]{../immagine/imp.png}
+			\includegraphics[scale=0.35]{imp.png}
 		}\\
 	\subfloat[acqsizione fronte di salita dell'onda in scita da NOT1]{
-		\includegraphics[scale=0.35]{../immagine/imp.png}
+		\includegraphics[scale=0.35]{imp.png}
 	}
 	\subfloat[acqsizione fronte di discesa dell'onda in scita da NOT1]{
-		\includegraphics[scale=0.35]{../immagine/imp.png}
+		\includegraphics[scale=0.35]{imp.png}
 	}\\
 
 		\caption{acqsizioni delle schermate impiegate per la misrazione di $\Delta t_{salita}^{ingresso}$ $\Delta t_{discesa}^{ingresso}$,$\Delta t_{salita}^{scita}$ $\Delta t_{discesa}^{scita}$ }
