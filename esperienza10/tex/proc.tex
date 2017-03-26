@@ -13,7 +13,7 @@
 	Andando a campionare la tensione in scita $V_{ot}$ in fnzione della tensione di ingresso  $V_{in}$.
 	
 	Il circito in  \figurename{ \ref{f:c1}} rappresenta n partitore di tensione;
-		difatti variando la resistenza del trimmer $R_{1}$ si varia la tensione $V_{in}$.Per la costrzione si è impiegato n trimmer $R_{1}$ di valore massimale $R_{1}^{max}$\SI{2 \pm 858}{\kilo \ohm} ed na resistenza $R_{2}$\SI{100.8 \pm 0.1 }{ \ohm}.
+		difatti variando la resistenza del trimmer $R_{1}$ si varia la tensione $V_{in}$.Per la costrzione si è impiegato n trimmer $R_{1}$ di valore massimale $R_{1}^{max}=$\SI{2 \pm 858}{\kilo \ohm} ed na resistenza $R_{2}=$\SI{100.8 \pm 0.1 }{ \ohm}.
 		
 	Si riportano i dati campionati in \tablename{ \ref{t:1}}
 		\begin{table}[hb]
@@ -52,18 +52,29 @@
 	 $V_{I,H}$, tensione in ingresso associata all'scita HIGH;$V_{I,L}$, tensione in ingresso associata all'scita LOW;$V_{O,H}$,intervallo di tensione in scita   HIGH;$V_{O,L}$,intervallo di tensione in scita associata all'scita LOW.
 	 
 	 Essendo tali valori da intendersi come intervalli di tensione si sono osservati i loro valori superiori ed inferiori.
-	 Si ottiene $V_{I,H}^{min}$\SI{0.01 \pm 0.1}{\volt} ,
-	 			$V_{I,H}^{max}$\SI{1.003 \pm 0.1}{\volt}
-	 			$V_{I,L}^{max}$\SI{5.0 \pm 0.1}{\volt}
-	 			$V_{I,L}^{min}$\SI{1.10 \pm 0.1}{\volt}
-	 			
-	 			$V_{O,H}^{min}$\SI{2.95 \pm 0.1}{\volt}
-	 			$V_{O,H}^{max}$\SI{4.38 \pm 0.1}{\volt}
-	 			$V_{O,L}^{min}$\SI{0.1726 \pm 0.1}{\volt}
-	 			$V_{O,L}^{max}$\SI{0.1773 \pm 0.1}{\volt}
-	 Tali stime risltano essere in accordo con i valori
-	 nominali forniti dal costrttore nel datasheet.
+	 Si ottiene :
+	 \begin{center}
+	 $V_{I,H}^{max}=$\SI{0.01 \pm 0.1}{\volt} \\
+	 $V_{I,H}^{min}=$\SI{1.003 \pm 0.1}{\volt}\\
+	 $V_{I,L}^{max}=$\SI{5.0 \pm 0.1}{\volt}\\
+	 $V_{I,L}^{min}=$\SI{1.10 \pm 0.1}{\volt}\\
 	 
+	 $V_{O,H}^{min}=$\SI{2.95 \pm 0.1}{\volt}\\
+	 $V_{O,H}^{max}=$\SI{4.38 \pm 0.1}{\volt}\\
+	 $V_{O,L}^{min}=$\SI{0.1726 \pm 0.1}{\volt}\\
+	 $V_{O,L}^{max}=$\SI{0.1773 \pm 0.1}{\volt}	\\
+	 \end{center}
+	 
+	 Tali stime risltano essere meno restrittivi dei i valori
+	 nominali forniti dal costrttore nel datasheet.Si impta qesta lieve discrepanza 
+	 col fatto che i valori forniti dal datasheet siano fornite nelle peggiori condizioni di operatività possibili:
+	 \begin{center}
+	 
+	 	$V_{O,H}^{min,atteso}=$\SI{2.4}{\volt}\\
+	 	$V_{O,L}^{max,atteso}=$\SI{0.4}{\volt}\\
+	 $V_{I,H}^{min,atteso}=$\SI{2}{\volt}\\
+	 $V_{I,L}^{max,atteso}=$\SI{0.8}{\volt}\\
+ \end{center}
 	 Si osserva che nella regine di tensione compresa tra 	$V_{I,L}^{max}$ ed $V_{I,H}^{min}$ il segnale in uscita non rislta essere forzato ne nella regione $V_{O,H}$ o $V_{O,L}$, risltando pertanto  l'scita indeterminata tra il regime di scita high e low.
 	\begin{center}
 		\begin{figure}[h]
@@ -85,12 +96,12 @@
 	
 	Dalla variazione di  $V_{in}$ si osserva na relazione con i valori assnti della corrente $I$.
 	Per valori corrispondenti all'intervallo $V_{O,H}$, ovvero alti valori di 	$V_{in}$
-	la corrente si stabilizza a volori valori tipici di $I_{IH}=$\SI{0.5\pm 0.1 e-10}{\ampere}
+	la corrente si stabilizza a volori valori tipici di $I_{IH}\sim$\SI{0.5 e-10}{\ampere}
 	mentre per tensioni di $V_{in}$ bassi, corrispondenti a $V_{O,L}$, si pò
 	osservare n maggiore impiego di corrente pertanto si ottengo valori di tensione $I_{IL}=$\SI{25 \pm 0.1 e-6}{\ampere}.
 	
 	Tali valori non risltano in accordo con i valori forniti dal datasheet 
-	$I_{IL}^{atteso}\sim$\SI{-1.6}{\milli \ampere} e $I_{IH}^{atteso}\sim$\SI{40}{\mu \ampere}; tale discrepanza si impta alla differenza di condizione di operatività rispetto alle condizioni di misra effettate dal datasheet.
+	$I_{IL}^{atteso}\sim$\SI{-1.6}{\milli \ampere} e $I_{IH}^{atteso}\sim$\SI{40}{\mu \ampere}; tale discrepanza si impta novamente alla differenza di condizione di operatività rispetto alle condizioni di misra effettate dal datasheet.
 	
 	Per la stima del fan ot,overo il nmero di porte controllabile in cascata col NOT1, si deve considerare la parte intera del rapporto \begin{equation}
 	N=min[int \frac{I_{OL}}{I_{IL}};int \frac{I_{OL}}{I_{IL}}]
@@ -106,21 +117,21 @@
 			\label{f:c2}
 		\end{figure}
 	\end{center}
-	Nella sa realizzazione sono state impiegate : na resistenza $R_{2}=$\SI{100.8 \pm 0.1}{\ohm} ed n trimmer di resistenza massima $R_{1}^{max}=$\SI{94.0 \pm 0.1 e3}{\ohm}
+	Nella sa realizzazione sono state impiegate : na resistenza $R_{2}=$\SI{100.8 \pm 0.1}{\ohm} ed n trimmer di resistenza massima $R_{1}^{max}=$\SI{94.0 \pm 0.1 }{ \kilo \ohm}
 	Per ottenere le correnti in scita  si è misrata la cadta di potenziale , $V_{R_{2}}$, ai capi di $R_{2}$.
 	Ricavandone dal valore di $R_{2}$ e dalla legge di Ohm, il valore di $I_{O}$ [valore della corrente in scita dalla porta logica].
 	
-	Si sono collegati dapprima $V_{in}$ ed il circito al capo A alla tensione di alimentazione $V_{CC}=$\SI{6.0 \pm 0.1}{\volt}; così da osservare $I_{OL}$.
+	Si sono collegati dapprima $V_{in}$ ed il circito al capo A alla tensione di alimentazione $V_{CC}=$\SI{5.01 \pm 0.1}{\volt}; così da osservare $I_{OL}$.
 	Si osserva che variando il valore della resistenza $R_{1}$ il
-	valore di  $V_{R_{2}}$  si $$bo$$ sino ad na brsca variazione.
+	valore di  $V_{R_{2}}$  vari con continità sino ad na brsca variazione.
 	n analogo andamento si ha sostitendo ,dalla configrazione precedente, $V_{CC}$
-	con  $V_{GRD}=$\SI{7.2 \pm 0.1}{\volt},così da osservare $I_{OH}$.
+	con  $V_{GRD}\sin$\SI{0}{\volt} ,così da osservare $I_{OH}$.
 	Si riportano i valori massimi misrati appena precedentemente  alla brsca variazione:\\
 	\begin{center}
 	
 	\bigskip
-	$I_{OL}$: $V_{R_{3}}=$\SI{7.2 \pm 0.1}{\volt} 
-	$\Rightarrow$ $I_{OL}=$\SI{7.2 \pm 0.1}{\ampere}\\
+	$I_{OL}$: $V_{R_{3}}=$\SI{ \pm 0.1}{\volt} 
+	$\Rightarrow$ $I_{OL}=$\SI{ \pm 0.1}{\ampere}\\
 
 	$I_{OH}$: $V_{R_{3}}=$\SI{7.2 \pm 0.1}{\volt} 
 	$\Rightarrow$ $I_{OH}=$\SI{7.2 \pm 0.1}{\ampere}.\\
