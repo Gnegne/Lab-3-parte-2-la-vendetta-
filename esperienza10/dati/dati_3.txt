@@ -1,0 +1,9 @@
+t_phl = 9.6e-9	# ns
+t_plh = 14.8e-9	# ns
+
+
+t_discesa_input = 6.4e-9	# ns
+t_salita_input = 12.2e-9	# ns
+
+t_discesa_output = 48.8e-9	# ns
+t_salita_output = 16.4e-9	# ns

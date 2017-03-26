@@ -1,0 +1,6 @@
+# potenziometro 2.05e3	# ohm
+I_in_low = 25e-6	# uA 
+V_in_low = .1525	# V
+
+I_in_high < .5e-6	# uA
+V_in_high = 4.73	# V

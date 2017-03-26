@@ -1,0 +1,13 @@
+# Vout		Vres [V]
+175.8e-3	5.1e-3
+186.8e-3	27e-3
+190.4e-3	33.1e-3
+.233		156.5e-3
+.266		.292
+.320		.525
+# qui salta tipo un altro botto
+# sale e scende la marea
+# balla tutta la giudea
+# sandokan con la diarrea
+1.891		2.42
+1.988		2.81
