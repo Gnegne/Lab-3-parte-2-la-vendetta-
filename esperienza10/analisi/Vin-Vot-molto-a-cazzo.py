@@ -1,27 +1,40 @@
 ## Programma generico di fit numerico del minimo chi quadro.
 # PLEASE USE RELATIVE PATHS
 # PLEASE USE SPACES PROPERLY
-
-import math
-import pylab
+import pylab 
 import numpy
 import sys, os
 import scipy.special
 from scipy.optimize import curve_fit
 from numpy.linalg import solve
+folder = os.path.realpath('..')
+sys.path.append(os.path.join(os.path.realpath('..\..'), '0_Valerio_Utilities', 'Python'))
+import numpy as np, matplotlib.pyplot as plt, matplotlib as mpl
+from lab import *
+from iandons import *
 from matplotlib.legend_handler import HandlerLine2D
 folder = os.path.realpath('..')
-# ALSO THIS WON'T WORK
-# USE RAW STRINGS IF YOU USE UNESCAPED BACKSLASHES
-# AND I BELIEVE THE PATH IS INCORRECT
-sys.path.append(os.path.join(os.path.realpath('.\Desktop\LAB\lab3tras\0_Valerio_Utilities\Python'), '0_Valerio_Utilities', 'Python'))
-#sys.path.append('.\Desktop\LAB\lab3tras\0_Valerio_Utilities\Python')
-#import lab
-from lab import *
+
 
 ## Import dei dati (x, dx, y, dy).
-x, y= pylab.loadtxt('dati_1a.txt', unpack = True)
-dx=dy=0.01
+x, y = pylab.loadtxt('..\dati\dati_1a.txt',unpack=True)
+volt = x
+dx = 0.5*x/100
+dy = 0.5*y/100
+for counter in range (0,len(x)):
+	if x[counter]  < 2:
+		dx[counter]=(0.001**2 +(x[counter]*0.5/100)**2)**0.5
+	else:
+		dx[counter]=(0.01**2 +(x[counter]*0.5/100)**2)**0.5
+for counter in range (0,len(y)):
+	if y[counter]  < 2:
+		dy[counter]=(0.0001**2 +(y[counter]*0.5/100)**2)**0.5
+	else:
+		dy[counter]=(0.01**2 +(y[counter]*0.5/100)**2)**0.5
+print( dy)
+r = 114
+dr = ((r*4/100)**2+9)**0.5
+print( dr)
 ## Grafico y(x).
 pylab.figure(1)
 pylab.rc('font',size=14)
@@ -35,18 +48,18 @@ pylab.xlabel('$V_{in}$ $[V]$')
 pylab.errorbar(x, y, dy, dx, linestyle = '', color = 'blue', marker = '+')
 
 
-func_grid = numpy.linspace(-1, 6, 10000000)
+func_grid = numpy.linspace(-1, 6, 1000)
 
 zeroline=func_grid*0 + 4.38
 pylab.plot(func_grid,zeroline, '--', color = 'red')
-zeroline=func_grid*0 + 2.82
+zeroline=func_grid*0 + 2.96
 pylab.plot(func_grid,zeroline, '--', color = 'red')
 
 zeroline=func_grid*0 + 0.142
 pylab.plot(func_grid,zeroline, '--', color = 'blue')
 
 pylab.errorbar([0.954,0.954],[0,5],[0,0],linestyle = '--', color= 'purple', marker = '')
-pylab.errorbar([1.092,1.092],[0,5],[0,0],linestyle = '--', color= 'green', marker = '')
+pylab.errorbar([1.012,1.092],[0,5],[0,0],linestyle = '--', color= 'green', marker = '')
 
 
 
