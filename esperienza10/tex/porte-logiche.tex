@@ -13,12 +13,13 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{float}
 \usepackage{mathtools} % (!! PLACE BEFORE hyperref !!)
 \usepackage{xfrac} % \sfrac
 \usepackage{cancel} % \cancel \cancelto
-\usepackage{hyperref} % interactive links in TOC, URLs and references
+%\usepackage{hyperref} % interactive links in TOC, URLs and references
 % unneded \usepackage{fixltx2e} % provides \textsubscript and makes some fixes
-\usepackage[version=3]{mhchem} % \ce (chemical formula)
+\usepackage[toc,page]{appendix}
 \usepackage{siunitx} % \num \si \SI
 \usepackage{alltt} % {alltt} (like verbatim but with commands)
 \usepackage{moreverb} % {listing}
@@ -40,7 +41,8 @@
 \usepackage{array}
 \usepackage{multirow}
 \usepackage{booktabs} % \toprule, \midrule, \bottomrule
-\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{wasysym}
 \graphicspath{ {../Figs-Tabs/} } % graphics search directories
 \setcounter{tocdepth}{1} % -1: part, 0: chapter, 1: section, 2: subsection, 3: subsubsection
 
@@ -132,7 +134,7 @@
 % use it plz
 % ALSO the S tab column is pretty useful
 
-\author{Gruppo BF \\ Roberto Ribatti, Thomas Giannoni, Valerio Lomanto}
+\author{Gruppo BF \\ Thomas Giannoni, Valerio Lomanto, Roberto Ribatti}
 \title{Esercitazione N.10: Caratteristiche delle porte logiche.}
 \date{21 marzo 2017}
 %Intestazione

@@ -20,7 +20,7 @@
 		\centering
 		\begin{tabular}{S S}
 			\toprule
-			V_{in} [\si{\volt}] & 	V_{ot} [\si{\volt}]\\
+			$V_{in}$ [\si{\volt}] & 	$V_{ot}$ [\si{\volt}]\\
 			\midrule
 			0 \pm 0.1 & 4.38 \pm 0.01\\
 			0.265 \pm 0.001 & 4.23 \pm 0.01\\
@@ -186,65 +186,24 @@
 	si ottiene $\Delta \phi=$\SI{0.5 \pm 0.01}{\radian}.
 	Si è assnta pertanto come verificato il corretto fnzionamento del circito implsatore montato.
 
-\section{Misra delle caratteristiche dinamiche}
-	Per la misra delle caratteristiche dinamiche della porta logica si è impiegato il circito implsatore testé ricavato.
-	\subsection{Osservazioni generali}
-	Essendo richiesto l'invio di n onda qadra alla porta logica NOT1 di $f\sim$\SI{1}{\kilo \hertz},
-	si è inviato in ingresso alla porta logica il segnale prodotto dall'scita Y1 dell'implsatore.
-	Attraverso la regolazione del trimmer si è selezionata la freqenza di lavoro $f$.
-	L'onda inviata presenta na tensione picco picco $V_{PP}=$\SI{3.6543 \pm 10000}{\volt} ed na $f=$\SI{1\pm 0.001}{\kilo \hertz}\footnote{tali misre sono state fatte con l'oscilloscopio}.
-	Si riporta in \figurename{ \ref{f:d1} } l'acqisizione del oscilloscopio.
-		\begin{figure}[htb]
-		\includegraphics[scale=0.50]{imp.png}
-		\caption{visalizzazione al oscilloscopio. ch1 onda entrante in NOT1; ch2 scita NOT1}
-		\label{f:d1}
-	\end{figure}
-	\subsection{Misra dei tempi di propagazione}
-	Per la misra dei tempi di propagazione per il passaggio HIGH-LOW 	e LOW-HIGH,
-	rispettivamente $\Delta t_{PHL}$ e $\Delta t_{PLH}$, si sono misrati i ritardo tra l'instante in ci i segnali,in ingresso nella porta logica ed in scita, assmevano la metà del loro valore massimale.
-	Osservando l'onda in na scala che ponga in evidenza solamente il fronte d'onda in esame si osservano problemi ad individare il valore massimale sia a casa della presenza di na tensione di over-shoots,e rispettivamente nder-shoots,e di n ripple dei fronti d'onda speriore ed inferiore ( \figurename{ \ref{f:riple} } ).
+\section{Caratteristiche dinamiche}
+	SI vogliono studiare le caratteristiche dinamiche della porta NOT, per farlo si è inviata all'ingresso della stessa un' onda quadra (generata dalla scheda Arduino, configurata come al punto precedente) di frequenza  $f\sim$\SI{1}{\kilo \hertz} e tensione picco picco $V=$\SI{3.40 \pm 0.20}{\volt}.
 
-	\begin{figure}[htb]
-		\includegraphics[scale=0.50]{imp.png}
-		\caption{Acqisizione dall'oscilloscopio del fronte d'onda di salita tra l'onda in scita dalla porta logica   (ch1) e l'onda fornita da Y1 (ch2).
-			$V_{PP}=$\SI{3.6543 \pm 10000}{\volt} ed na $f=$\SI{1\pm 0.001}{\kilo \hertz}	}
-		\label{f:riple}
-	\end{figure}
-	Per migliorare la lettra si è procedto a effettare le lettre da na scala che permetta l'osservazione di n periodo completo;triggerando sl fronte di salita per  $\Delta t_{PLH}$ e sl fronte di discesa per $\Delta t_{PHL}$.
+	\subsection{Tempi di propagazione}
+	Si è misurato il tempo $\Delta t_{PHL}$ che intercorre tra il centro del fronte di discesa all'ingresso e il centro del fronte di salita sull'uscita. Si è poi ripetuta la misura per $\Delta t_{PLH}$: il passaggio dal fronte di discesa (input) al fronte di salita (output).
+	Per determinare il centro dei fronti di salita/discesa si è preso il punto in cui i segnali assumevano la metà del loro valore HIGH, ignorando quindi la presenza di overshoot e undershoot, visibili in \figurename{ \ref{f:ripple}}.
 
-	Si ottiene: \\
-	$\Delta t_{PLH}=$\SI{45 \pm 744}{\nano \sec} \qquad ed \qquad $\Delta t_{PHL}=$\SI{45 \pm 744}{\nano \sec}\\
-	tali valori risltano in accordo con i valori attesi del datasheet:\\
-	$\Delta t_{PLH}^{atteso}=$\SI{45 \pm 744}{\nano \sec}  e  $\Delta t_{PHL}^{atteso}=$\SI{45 \pm 744}{\nano \sec}
-	.
-	\subsection{Misra del tempo di salita e discesa.}
-	Per la misrazione dei tempi di salita ,$\Delta t_{salita}$, e di discesa ,$\Delta t_{discesa}$; si sono andati ad osservare
-	gli intervalli temporali tra il 10 \textdiscount ed
-	90\textdiscount per $\Delta t_{salita}$; e tra il 10\textdiscount ed  90\textdiscount del segnale per $\Delta t_{discesa}$ .
-
-	Si misrano per tali intervalli per l'onda in ingresso nella porta logica,ottenendo $\Delta t_{salita}^{ingresso}=$\SI{45 \pm 744}{\nano \sec}
-	e
-	$\Delta t_{discesa}^{ingresso}=$\SI{45 \pm 744}{\nano \sec}.
-	Per l'onda in scita da NOT1 si ottiene
-	$\Delta t_{salita}^{scita}=$\SI{45 \pm 744}{\nano \sec}
-	e\\
-	$\Delta t_{discesa}^{scita}=$\SI{45 \pm 744}{\nano \sec}.
-	Si riportano le acqisizioni impiegate per tali misrazioni in \figurename{ \ref{f:sd} }
-	\begin{figure}[hb]
+	\begin{figure}[H]
 		\centering
-		\subfloat[acqsizione fronte di salita dell'onda in ingresso da NOT1]{
-			\includegraphics[scale=0.35]{imp.png}
-			}
-		\subfloat[acqsizione fronte di discesa dell'onda in ingresso da NOT1]{
-			\includegraphics[scale=0.35]{imp.png}
-		}\\
-	\subfloat[acqsizione fronte di salita dell'onda in scita da NOT1]{
-		\includegraphics[scale=0.35]{imp.png}
-	}
-	\subfloat[acqsizione fronte di discesa dell'onda in scita da NOT1]{
-		\includegraphics[scale=0.35]{imp.png}
-	}\\
-
-		\caption{acqsizioni delle schermate impiegate per la misrazione di $\Delta t_{salita}^{ingresso}$ $\Delta t_{discesa}^{ingresso}$,$\Delta t_{salita}^{scita}$ $\Delta t_{discesa}^{scita}$ }
-		\label{f:sd}
+		\includegraphics[scale=1]{undershoot_lh.png}
+		\caption{Undershoot del segnale in uscita}
+		\label{f:ripple}
 	\end{figure}
+	\noindent Per la misura si è scelta la scala che ottimizzava la risoluzione, ottenendo:
+	$$\Delta t_{PHL}=\SI{9.6(6)}{\nano \second} \qquad \text{e} \qquad \Delta t_{PLH}=\SI{14.8(6)}{\nano \second}$$
+	tali valori risultano in accordo con i valori attesi dal datasheet, che sostiene che entrambi i parametri debbano essere minori di \SI{15}{\nano \second}.
+	
+\subsection{Tempi di salita e discesa}
+Si sono misurati i tempi di salita $\Delta t^{\uparrow}$ e discesa $\Delta t^{\downarrow}$ del segnale tra il $10 \% $ e il $90 \% $ del valore HIGH, sia in ingresso che in uscita. Si è ottenuto:
+$$ \Delta t_{in}^{\uparrow}=\SI{12.2(6)}{\nano \second} \qquad \Delta t_{in}^{\downarrow}=\SI{6.4(6)}{\nano \second} $$
+$$ \Delta t_{out}^{\uparrow}=\SI{16.4(6)}{\nano \second} \qquad \Delta t_{out}^{\downarrow}=\SI{48.8(1)}{\nano \second}.$$
