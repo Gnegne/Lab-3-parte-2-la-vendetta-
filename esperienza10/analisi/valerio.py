@@ -16,7 +16,7 @@ iout = rawdata[1] / r2
 di = mme(rawdata[1], 'volt') / r2
 dv = mme(vout, 'volt')
 
-a = np.array((iout, di, vout, dv)) * np.array([[1e3], [1e3], [1], [1]])
+a = np.array((iout, di, vout, dv)) * np.array([[1e3], [2e3], [1], [1]])
 
 filename = "dati_1b_ii_ingressobasso_uscitaalta.txt"
 rawdata = np.loadtxt(os.path.join(folder, 'dati', filename)).T
@@ -27,6 +27,6 @@ iout = rawdata[1] / r2
 di = mme(rawdata[1], 'volt') / r2
 dv = mme(vout, 'volt')
 
-b = np.array((iout, di, vout, dv)) * np.array([[1e3], [1e3], [1], [1]])
+b = np.array((iout, di, vout, dv)) * np.array([[-1e3], [2e3], [1], [1]])
 
 print(maketab(*a, *b, errors='all'))

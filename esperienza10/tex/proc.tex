@@ -85,14 +85,15 @@
 
 
 \paragraph{Misura delle correnti e stima del fanout}
-	Si è procedto d'apprima alla misura della corrente di ingresso.
-	Per fare ciò si è modificato il circito in \fig{i1} inserendo in serie tra il trimmer e la porta logica il multimetro in configrazione amperometro.
+	Si è proceduto dapprima alla misura delle correnti in ingresso.
+	Per fare ciò si è modificato il circuito in \fig{i1} inserendo in serie tra il trimmer e la porta logica il multimetro in configurazione amperometro.
 
 	Avendo assunto che il fabbisogno di corrente della porta logica dipenda 	dallo stato di funzionamento (ingresso alto o ingresso basso)
-	si è andati a imporre un segnale di $V_{IH} =$ \SI{4.73\pm 0.01}{\volt} osservando una corrente $I_{IH} \lessapprox$ \SI{0.5e-10}{\micro \ampere} (si è scelto di usare il multimetro digitale come voltmetro per la misura di $V_I$ ed il multimetro analogico come amperometro per la misura di $I_I$, dal momento che quest'ultimo è in grado di misurare correnti molto più basse, ma $I_{IH}$ resta troppo piccola per poter essere misurata, con uno spostamento dallo zero inferiore alla mezza tacca con il fondoscala più basso disponibile);
-	analogamente si è posto per la misura di  $I_{IL}$ una tensione in ingresso $V_{IL} =$ \SI{0.1525(1)}{\volt} rilevando una corrente di \SI{-25}{\micro \ampere}. Si sono poste positive le correnti entranti nella porta logica e consegentemente negative quelle uscenti.
+	si è andati a imporre un segnale di $V_{IH} = \SI{4.73\pm 0.03}{\volt}$ osservando una corrente $I_{IH} \lesssim \SI{0.5}{\micro \ampere}$ (si è scelto di usare il multimetro digitale come voltmetro per la misura di $V_I$ ed il multimetro analogico come amperometro per la misura di $I_I$, dal momento che quest'ultimo è in grado di misurare correnti molto più basse, ma $I_{IH}$ resta troppo piccola per poter essere misurata, con uno spostamento dallo zero inferiore alla mezza tacca con il fondoscala più basso disponibile);
+	analogamente si è posto per la misura di  $I_{IL}$ una tensione in ingresso $V_{IL} =$ \SI{0.1525(1)}{\volt} rilevando una corrente di \SI{-25(1)}{\micro \ampere}. Si sono poste positive le correnti entranti nella porta logica e consegentemente negative quelle uscenti.
 
 	Al variare della tensione in ingresso $V_{I}$ rimanendo entro il rispettivo range di funzionamento per ingresso alto o basso le correnti rilevate non cambiano significativamente; tali valori sono ampiamente entro i valori massimi riportati dal datasheet.
+	Come ci aspettiamo per porte realizzate con	logica TTL, le correnti a linea bassa sono molto più alte di quelle a linea	alta.
 
 	Si è proceduto dunque alla misura delle correnti in uscita $I_{OL}$ ed $I_{OH}$, ovvero rispettivamente quelle rilevate in uscita alla porta logica per lo stato di output basso ed output alto; per fare ciò si è montato il circuito in \fig{c2}.
 
@@ -104,10 +105,10 @@
 	\end{figure}
 
 	Dove i valori misurati dei componenti utilizzati sono:\\
-	$R_{2}= $\SI{100.8 \pm 0.1}{\ohm}\\
-	$R_{1,max}=$ \SI{94.0 \pm 0.1 }{ \kilo \ohm}\\
+	$R_{2} = \SI{100.8 \pm 1.1}{\ohm}$\\
+	$R_{1,max} = \SI{94.0 \pm 0.9 }{ \kilo \ohm}$\\
 
-	Per ottenere le correnti in uscita si è misurata la caduta di potenziale  $V_2$ ai capi di $R_{2}$ con il multimetro digitale; per effettuare le misure di $I_{OL}$ si sono posti $V_{in}$ e $V_A$ alla tensione di alimentazione $V_{CC}=$\SI{5.01 \pm 0.1}{\volt}, mentre per $I_{OH}$ si sono poste le tensioni precedenti a terra. La convenzione sui segni è la
+	Per ottenere le correnti in uscita si è misurata la caduta di potenziale  $V_2$ ai capi di $R_{2}$ con il multimetro digitale; per effettuare le misure di $I_{OL}$ si sono posti $V_{in}$ e $V_A$ alla tensione di alimentazione $V_{CC}=$\SI{5.01 \pm 0.04}{\volt}, mentre per $I_{OH}$ si sono poste le tensioni precedenti a terra. La convenzione sui segni è la
 	stessa della misura della corrente in ingresso: le correnti entranti
 	nel dispositivo sono positive, quelle uscenti negative.
 
@@ -122,32 +123,61 @@
 		\begin{tabular}{SS cc SS}
 			\toprule
 			\multicolumn{2}{c}{Uscita bassa} &&& \multicolumn{2}{c}{Uscita alta} \\
-			\cmidrule{1-2} \cmidrule{5-6}
+			\cmidrule(lr){1-2} \cmidrule(lr){5-6}
 			{$I_{OL}$ [\si{\mA}]}	& {$V_{out}$ [\si{\V}]}	&&& {$I_{OH}$ [\si{\mA}]}	& {$V_{out}$ [\si{\V}]} \\
 			\midrule
-			0.0506 (12)	&	0.1758 (10)	&&&	-0.0437 (12)	&	4.12 (3)	\\
-			0.2679 (23)	&	0.1868 (10)	&&&	-0.0873 (14)	&	3.93 (3)	\\
-			0.328 (3)	&	0.1904 (11)	&&&	-0.1270 (16)	&	3.77 (3)	\\
-			1.553 (9)	&	0.2330 (22)	&&&	-0.1637 (18)	&	3.63 (3)	\\
-			2.897 (24)	&	0.2660 (23)	&&&	-0.2937 (25)	&	3.53 (3)	\\
-			5.21 (4)	&	0.320 (3)	&&&	-3.77 (3)	&	3.28 (3)	\\
-			24.01 (22)	&	1.891 (10)	&&&	-13.31 (8)	&	2.300 (21)	\\
-			27.88 (24)	&	1.988 (11)	&&&	-16.91 (9)	&	1.860 (10)	\\
+				0.0506 (25)	&	0.1758 (10)	&&&	-0.0437(24)	&	4.12 (3)	\\
+				0.268 (5)	&	0.1868 (10)	&&&	-0.087 (3)	&	3.93 (3)	\\
+				0.328 (5)	&	0.1904 (11)	&&&	-0.127 (3)	&	3.77 (3)	\\
+				1.553 (18)	&	0.233 (2)	&&&	-0.164 (4)	&	3.63 (3)	\\
+				2.90 (5)	&	0.266 (2)	&&&	-0.294 (5)	&	3.53 (3)	\\
+				5.21 (7)	&	0.320 (3)	&&&	-3.77 (6)	&	3.28 (3)	\\
+				24.0 (4)	&	1.891 (10)	&&&	-13.31 (15)	&	2.30 (2)	\\
+				27.9 (5)	&	1.988 (11)	&&&	-16.91 (19)	&	1.860 (10)	\\
 			\bottomrule
 		\end{tabular}
 		\caption{Andamento dell'uscita della porta not al variare della corrente erogata.}
 	\label{t:iout}
 	\end{table}
 
-	Si osserva che i valori risltano speriori a qelli forniti dal datasheet;
-	tale discrepanza è imptabile alla differenza di condizioni operative in ci sono effettate le misre riportate rispetto a qelle del datasheet;
-	n lteriore rogione per tale discrepanza pò essere dovta alla difficoltà nell'individare di massimo della tensione di soglia a casa della sensibilità del trimmer.
+	La porta logica sembra dunque non poter essere utilizzata correttamente con
+	uscita bassa per correnti $I_{OL}$ maggiori di $\sim \SI{5.5}{\mA}$, mentre
+	ad uscita alta la situazione è meno chiara: sebbene l'uscita sia
+	ragionevolmente stabile al variare del carico solo al di sotto di
+	$\sim \SI{0.3}{\mA}$, $V_{out}$ resta entro valori tipici fino a correnti
+	di qualche \si{\mA}, ed è sufficientemente alta da essere riconosciuta
+	come tale in ingresso a porte logiche con simili caratteristiche (il
+	datasheet dell'integrato da noi analizzato richiede una tensione alta in
+	input di almeno \SI{2}{\V}, ma come mostrato nella sezione precedente il
+	dispositivo è in realtà ben più generoso) fino ad oltre la decina di \si{\mA}.
+	Ci attendiamo comunque che in tali condizioni la porta logica possa essere
+	instabile, ed è certamente grandemente sensibile a piccole variazioni del
+	carico, dunque un limite di corretto funzionamento si dovrà attestare
+	su valori di $I_{OH}$ non maggiori di pochi \si{\mA}.
 
-	La regione di discontinità presentata nell'andamento di $V_{R_{3}}$
-	pò essere dovto al fatta che variando $R_{4}$ la richiesta di corrente fornita alla porta logica spera il valore massimo da essa erogabile;pertanto la tensione $V_{ot}$ amenta per ridrre il fabbisogno di corrente.
-	Pertanto le parta NOT ed in particolare i transistor vengano spostati dalla regione di operatività lineare sino ad scire da  essa.
+	Tali stime risultano maggiori dei valori limite riportati dal datasheet;
+	ciò è probabilmente dovuto alla necessità del produttore di avere un certo
+	margine d'errore, ma è anche possibile che la discrepanza sia imputabile
+	alla minor severità delle condizioni di test: nel valutare le correnti in
+	uscita si sono infatti mantenute sia $V_{cc}$ che $V_{in}$ lontane dai
+	valori limite ammessi dall'integrato, ed è plausibile che avvicinandovisi
+	il dispositivo sia meno tollerante nelle correnti erogabili.
 
-	Da i valori ottenti e dall'\eqref{eq:fan-o} si ottiene $$N=$$; tale valore rislta maggiore di qello fornito nel datasheet; tale effetto si è imptata come fatto per le correnti al fatto che i valori forniti dal costrttore sono valori misrati in condizioni estremali della regione di operatività.
+	Con una corrente in ingresso che non supera (in modulo) i \SI{25}{\uA} ed
+	una corrente erogabile certamente non inferiore a \SI{0.3}{\mA},
+	una singola porta può fornire il proprio output in ingresso ad una dozzina
+	di porte simili senza manifestare problemi. Questo è tuttavia un lower bound
+	erroneamente basso: se teniamo conto del fatto che \SI{25}{\uA} assorbiti
+	corrispondono ad un ingresso basso e ad uscita bassa la porta è certamente
+	in grado di	erogare fino a $\sim \SI{5.5}{\mA}$, il fanout è di centinaia
+	di porte in questa configurazione; anaolgamente, confrontando la corrente
+	emessa ad ingresso alto ($\lesssim \SI{0.5}{\micro \ampere}$) con la
+	corrente sopportabile ad uscita alta ($ > \SI{0.3}{\mA}$) otteniamo un
+	fanout non inferiore alle 600 porte (ma probabilmente sensibilmente
+	maggiore): prendendo il minore dei due come fanout effettivo della porta,
+	dovrebbe dunque essere possibile utilizzare una singola porta per
+	controllarne altre 220.
+
 
 \section{Montaggio ardvino}
 	Per la verifica delle caratteristiche dinamiche dell'IC SN74LS244 si è montato n circito implsatore con il microcontrollore arduino.
@@ -202,7 +232,7 @@
 	\noindent Per la misura si è scelta la scala che ottimizzava la risoluzione, ottenendo:
 	$$\Delta t_{PHL}=\SI{9.6(6)}{\nano \second} \qquad \text{e} \qquad \Delta t_{PLH}=\SI{14.8(6)}{\nano \second}$$
 	tali valori risultano in accordo con i valori attesi dal datasheet, che sostiene che entrambi i parametri debbano essere minori di \SI{15}{\nano \second}.
-	
+
 \subsection{Tempi di salita e discesa}
 Si sono misurati i tempi di salita $\Delta t^{\uparrow}$ e discesa $\Delta t^{\downarrow}$ del segnale tra il $10 \% $ e il $90 \% $ del valore HIGH, sia in ingresso che in uscita. Si è ottenuto:
 $$ \Delta t_{in}^{\uparrow}=\SI{12.2(6)}{\nano \second} \qquad \Delta t_{in}^{\downarrow}=\SI{6.4(6)}{\nano \second} $$
