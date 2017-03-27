@@ -282,10 +282,10 @@ _util_mm_esr_data = dict(
             perc = [0]*11,
             div = [0.5e-3]*2 + [(0.5*d*10**s) for s in range(-2, 1) for d in [1, 2, 5]]
         ),
-        time=dict(
-            scales=[5e-09] + [ (10*d*10**s) for s in range(-9, 2) for d in [1, 2.5, 5] ],
-            perc=[0.01]*37,
-            div=[3e-09] + [ (3*d*10**s) for s in range(-9, 2) for d in [1, 2.5, 5] ]  
+        time = dict(
+            scales=[5*10e-09] + [ (10*d*10**s) for s in range(-9, 2) for d in [1, 2.5, 5] ],
+            perc=[100e-6]*37,
+            div=[0.2e-09] + [ (0.2*d*10**s) for s in range(-9, 2) for d in [1, 2.5, 5] ]  
         ),
         freq = dict(
             scales = [1e9], 
@@ -301,7 +301,7 @@ def util_mm_list():
         l += [(meter, _util_mm_esr_data[meter]['type'], _util_mm_esr_data[meter]['desc'])]
     return l
 
-def util_mm_er(x, scale, metertype='dig', unit='volt', sqerr=False):
+def util_mm_er(x, scale, metertype='dig', unit='volt', sqerr=True):
     """
     Returns the uncertainty of x and the internal resistance of the multimeter.
 
@@ -362,13 +362,13 @@ def util_mm_er(x, scale, metertype='dig', unit='volt', sqerr=False):
         e = errsum(x*info['perc'][idx]/100.0, info['div'][idx] / 25)
         r = 10e6
         if unit=='time':
-            e=errsum(700e-9,e)
+            e=errsum(0.5e-9,e)
     else:
         raise KeyError(typ)
 
     return e, r
 
-def util_mm_esr(x, metertype='dig', unit='volt', sqerr=False):
+def util_mm_esr(x, metertype='dig', unit='volt', sqerr=True):
     """
     determines the fullscale used to measure x with a multimeter,
     supposing the lowest possible fullscale was used, and returns the
@@ -419,7 +419,7 @@ _util_mm_esr2_what = dict(
     res=_util_mm_esr_vect_res
 )
 
-def util_mm_esr2(x, metertype='dig', unit='volt', what='error', sqerr=False):
+def util_mm_esr2(x, metertype='dig', unit='volt', what='error', sqerr=True):
     """
     Vectorized version of lab.util_mm_esr
 
