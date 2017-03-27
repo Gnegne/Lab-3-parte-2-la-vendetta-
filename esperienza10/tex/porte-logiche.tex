@@ -165,19 +165,18 @@ Il circuito integrato integrato SN74LS04 è alimentato ad una tensione $V_{cc} =
 Si è montato il circuito in \figurename{ \ref{f:c1}}, dopodiché si è andati a  campionare la tensione in uscita $V_{out}$ in funzione della tensione di ingresso $V_{in}$.
 
 \begin{figure}[H]
-	\begin{minipage}{0.4\textwidth}
+	\begin{minipage}{0.7\textwidth}
 		\centering
+		\includegraphics[width=0.7\textwidth]{immagine1.jpg}
+		\caption{Circuito impiegato per lo studio delle tensioni d'operazione}
+		\label{f:c1}
+	\end{minipage}
+	\begin{minipage}{0.3\textwidth}
 		\begin{tabular}{l}
 			$R_1 = \SI{1.993(18)}{\ohm}$\\
 			$R_2 = \SI{100.8(9)}{\ohm}$
 			%R1 me lo sono inventato, alla faccia vostra :p
 		\end{tabular}
-	\end{minipage}
-	\begin{minipage}{0.6\textwidth}
-		\centering
-		\includegraphics[width=0.8\textwidth]{immagine1.jpg}
-		\caption{Schema del circuito impiegato}
-		\label{f:c1}
 	\end{minipage}
 \end{figure}
 
@@ -186,10 +185,10 @@ Si è variata la tensione in ingresso $V_{in}$ agendo sul trimmer $R_1$ e misura
 In \figurename{ \ref{f:i1}} è riportato il grafico dei dati raccolti.
 Siamo interessati ai seguenti parametri:
 \begin{itemize}
-\item $V_{IH}$ tensione in ingresso minima per cui  l'uscita è LOW (< \SI{0.4}{\volt});
-\item $V_{IL}$ tensione in ingresso massima per  l'uscita è HIGH (> \SI{2.4}{\volt});
-\item $V_{OH}$ tensione in uscita minima per cui l'ingresso è LOW (< \SI{0.8}{\volt});
-\item $V_{OL}$ tensione in uscita massima per cui  l'ingresso è HIGH (> \SI{2}{\volt}).
+\item $V_{IH}$ tensione in ingresso minima per cui  l'uscita è LOW (da datasheet < \SI{0.4}{\volt});
+\item $V_{IL}$ tensione in ingresso massima per  l'uscita è HIGH (da datasheet > \SI{2.4}{\volt});
+\item $V_{OH}$ tensione in uscita minima per cui l'ingresso è LOW (da datasheet < \SI{0.8}{\volt});
+\item $V_{OL}$ tensione in uscita massima per cui  l'ingresso è HIGH (da datasheet > \SI{2}{\volt}).
 \end{itemize}
 
 Di seguito si riportano i valori misurati e i valori limite riportati nel datasheet:
@@ -204,7 +203,7 @@ Di seguito si riportano i valori misurati e i valori limite riportati nel datash
 \end{tabular}
 \end{table}
 
-I valori misurati sono migliori di quelli dichiarati, la differenza è dovuta al fatto che essi siano misurati nelle peggiori condizioni di operatività possibili della porta NOT.
+I valori misurati sono migliori di quelli dichiarati, la differenza è dovuta al fatto che siano misurati nelle peggiori condizioni di operatività possibili della porta NOT.
 
 Per tensioni compresa tra 	$V_{IL}$ ed $V_{IH}$ il segnale in uscita oscilla tra lo stato HIGH e LOW in maniera apparentemente casuale, del resto il comportamento del circuito in questo range non è stabilito.
 
@@ -219,49 +218,86 @@ Per tensioni compresa tra 	$V_{IL}$ ed $V_{IH}$ il segnale in uscita oscilla tra
 
 
 \subsection{Misura delle correnti e stima del fanout}
-Si è procedto d'apprima alla misura della corrente di ingresso.
-Per fare ciò si è modificato il circito in \fig{i1} inserendo in serie tra il trimmer e la porta logica il multimetro in configrazione amperometro.
+\paragraph{Correnti in ingresso} 
+Avendo assunto che la corrente in ingresso alla porta logica dipenda dallo stato di funzionamento (ingresso alto o ingresso basso) si è andati a imporre un segnale di $V_{IH} = \SI{4.73\pm 0.03}{\volt}$ osservando una corrente $I_{IH} \lesssim \SI{0.5}{\micro \ampere}$ (si è scelto di usare il multimetro analogico come amperometro per la misura di $I_I$, dal momento che quest'ultimo è in grado di misurare correnti più basse, ma $I_{IH}$ resta troppo piccola per poter essere misurata, con uno spostamento dallo zero inferiore alla mezza tacca con il fondo scala più basso disponibile).
 
-Avendo assunto che il fabbisogno di corrente della porta logica dipenda 	dallo stato di funzionamento (ingresso alto o ingresso basso)
-si è andati a imporre un segnale di $V_{IH} =$ \SI{4.73\pm 0.01}{\volt} osservando una corrente $I_{IH} \lessapprox$ \SI{0.5e-10}{\micro \ampere} (si è scelto di usare il multimetro digitale come voltmetro per la misura di $V_I$ ed il multimetro analogico come amperometro per la misura di $I_I$, dal momento che quest'ultimo è in grado di misurare correnti molto più basse, ma $I_{IH}$ resta troppo piccola per poter essere misurata, con uno spostamento dallo zero inferiore alla mezza tacca con il fondoscala più basso disponibile);
-analogamente si è posto per la misura di  $I_{IL}$ una tensione in ingresso $V_{IL} =$ \SI{0.1525(1)}{\volt} rilevando una corrente di \SI{-25}{\micro \ampere}. Si sono poste positive le correnti entranti nella porta logica e consegentemente negative quelle uscenti.
+Analogamente per la misura di  $I_{IL}$ si è posta una tensione in ingresso $V_{IL} =$ \SI{152.5(1)}{\milli\volt} rilevando una corrente di $I_{IL}=\SI{-25(1)}{\micro \ampere}$. Si sono considerate positive le correnti entranti nella porta logica e negative quelle uscenti.
 
-Al variare della tensione in ingresso $V_{I}$ rimanendo entro il rispettivo range di funzionamento per ingresso alto o basso le correnti rilevate non cambiano significativamente; tali valori sono ampiamente entro i valori massimi riportati dal datasheet.
+Al variare della tensione in ingresso $V_{I}$, rimanendo entro il rispettivo range di funzionamento per ingresso alto o basso, le correnti rilevate non cambiano significativamente. Tali valori sono ampiamente entro i valori massimi riportati dal datasheet.
+Come ci aspettiamo per porte realizzate con	logica TTL, le correnti a linea bassa sono molto più alte di quelle a linea	alta.
 
-Si è proceduto dunque alla misura delle correnti in uscita $I_{OL}$ ed $I_{OH}$, ovvero rispettivamente quelle rilevate in uscita alla porta logica per lo stato di output basso ed output alto; per fare ciò si è montato il circuito in \fig{c2}.
+\paragraph{Correnti in uscita} Si è proceduto dunque alla misura delle correnti in uscita $I_{OL}$ ed $I_{OH}$, rispettivamente quelle rilevate in uscita alla porta logica per lo stato di output basso ed output alto.
+Si è quindi montato il circuito in \figurename{ \ref{f:c2}}.
 
-\begin{figure}[h]
-	\centering
-	\includegraphics[scale=0.75]{cir2.png}
-	\caption{Circuito impiegato per la misurazione di $I_{OL}$ e $I_{OH}$. }
-	\label{f:c2}
+\begin{figure}[H]
+	\begin{minipage}{0.7\textwidth}
+		\centering
+		\includegraphics[scale=0.75]{cir2.png}
+		\caption{Circuito impiegato per la misurazione di $I_{OL}$ e $I_{OH}$. }
+		\label{f:c2}
+	\end{minipage}
+	\begin{minipage}{0.3\textwidth}
+		\begin{tabular}{l}
+		$R_{2} = \SI{100.8 \pm 1.1}{\ohm}$\\
+		$R_{1} = \SI{94.0 \pm 0.9 }{ \kilo \ohm}$
+		\end{tabular}
+	\end{minipage}
 \end{figure}
 
-Dove i valori misurati dei componenti utilizzati sono:\\
-$R_{2}= $\SI{100.8 \pm 0.1}{\ohm}\\
-$R_{1,max}=$ \SI{94.0 \pm 0.1 }{ \kilo \ohm}\\
-
-Per ottenere le correnti in uscita si è misurata la caduta di potenziale  $V_2$ ai capi di $R_{2}$ con il multimetro digitale; per effettuare le misure di $I_{OL}$ si sono posti $V_{in}$ e $V_A$ alla tensione di alimentazione $V_{CC}=$\SI{5.01 \pm 0.1}{\volt}, mentre per $I_{OH}$ si sono poste le tensioni precedenti a terra. La convenzione sui segni è la
+Per ottenere le correnti in uscita si è misurata la caduta di potenziale  $V_2$ ai capi di $R_{2}$ con il multimetro digitale; per effettuare le misure di $I_{OL}$ si sono posti $V_{in}$ e $V_A$ alla tensione di alimentazione $V_{CC}=$\SI{5.01 \pm 0.04}{\volt}, mentre per $I_{OH}$ si sono poste le tensioni precedenti a terra. La convenzione sui segni è la
 stessa della misura della corrente in ingresso: le correnti entranti
 nel dispositivo sono positive, quelle uscenti negative.
 
 Si osserva in entrambi i casi come al variare della resistenza del
 potenziometro la corrente vari dapprima lentamente per poi aumentare
-bruscamente (supponiamo al raggiungimento dei limiti del dispositivo) in
-corrispondenza del discostarsi della tensione in uscita dall'intervallo di
-corretto funzionamento; le misure raccolte sono riportate in \tab{iout}.
+bruscamente (supponiamo al raggiungimento dei limiti del dispositivo) quando
+la tensione in uscita si discosta dall'intervallo di
+corretto funzionamento.
 
+Le misure raccolte sono riportate in appendice in \tablename{ \ref{t:iout}}.
 
+La porta logica sembra dunque non poter essere utilizzata correttamente con
+uscita bassa per correnti $I_{OL} \lesssim \SI{5.5}{\mA}$, mentre
+ad uscita alta la situazione è meno chiara: sebbene l'uscita sia
+ragionevolmente stabile al variare del carico solo al di sotto di
+$\sim \SI{0.3}{\mA}$, $V_{out}$ resta entro valori tipici fino a correnti
+di qualche \si{\mA}, ed è sufficientemente alta da essere riconosciuta
+come tale in ingresso a porte logiche con simili caratteristiche\footnote{il
+datasheet dell'integrato da noi analizzato richiede una tensione alta in
+input di almeno \SI{2}{\V}, ma come mostrato nella sezione precedente il
+dispositivo è in realtà ben più generoso} fino ad oltre la decina di \si{\mA}.
+Ci attendiamo comunque che in tali condizioni la porta logica possa essere
+instabile, ed è certamente molto sensibile a piccole variazioni del
+carico, dunque un limite di corretto funzionamento si dovrà attestare
+su valori di $I_{OH}$ non maggiori di pochi \si{\mA}.
 
-Si osserva che i valori risltano speriori a qelli forniti dal datasheet;
-tale discrepanza è imptabile alla differenza di condizioni operative in ci sono effettate le misre riportate rispetto a qelle del datasheet;
-n lteriore rogione per tale discrepanza pò essere dovta alla difficoltà nell'individare di massimo della tensione di soglia a casa della sensibilità del trimmer.
+Tali stime risultano migliori dei valori limite riportati dal datasheet;
+ciò è probabilmente dovuto alla necessità del produttore di avere un certo
+margine d'errore, ma è anche possibile che la discrepanza sia imputabile
+alla minor severità delle condizioni di test: nel valutare le correnti in
+uscita si sono infatti mantenute sia $V_{cc}$ che $V_{in}$ lontane dai
+valori limite ammessi dall'integrato, ed è plausibile che avvicinandovisi
+il dispositivo sia meno tollerante nelle correnti erogabili.
 
-La regione di discontinità presentata nell'andamento di $V_{R_{3}}$
-pò essere dovto al fatta che variando $R_{4}$ la richiesta di corrente fornita alla porta logica spera il valore massimo da essa erogabile;pertanto la tensione $V_{ot}$ amenta per ridrre il fabbisogno di corrente.
-Pertanto le parta NOT ed in particolare i transistor vengano spostati dalla regione di operatività lineare sino ad scire da  essa.
+Con una corrente in ingresso che non supera (in modulo) i \SI{25}{\uA} ed
+una corrente erogabile certamente non inferiore a \SI{0.3}{\mA},
+una singola porta può fornire il proprio output in ingresso ad una dozzina
+di porte simili senza manifestare problemi.
 
-Da i valori ottenti e dall'\eqref{eq:fan-o} si ottiene $$N=$$; tale valore rislta maggiore di qello fornito nel datasheet; tale effetto si è imptata come fatto per le correnti al fatto che i valori forniti dal costrttore sono valori misrati in condizioni estremali della regione di operatività.
+Questo è tuttavia un limite inferiore erroneamente basso: se teniamo conto
+del fatto che \SI{25}{\uA} assorbiti corrispondono ad un ingresso basso e ad uscita bassa, la porta è certamente
+in grado di	erogare fino a $\sim \SI{5.5}{\mA}$; il fanout è di centinaia
+di porte in questa configurazione. 
+
+Analogamente, confrontando la corrente
+emessa ad ingresso alto ($\lesssim \SI{0.5}{\micro \ampere}$) con la
+corrente sopportabile ad uscita alta ($ > \SI{0.3}{\mA}$) otteniamo un
+fanout non inferiore alle 600 porte (ma probabilmente sensibilmente
+maggiore).
+
+Prendendo il minore dei due come fanout effettivo della porta,
+dovrebbe dunque essere possibile utilizzare una singola porta per
+controllarne altre 220.
 
 \section{Montaggio Arduino}
 Per la verifica delle caratteristiche dinamiche della porta NOT si è montato un circuito generatore di onde quadre, basato su di un microcontrollore Arduino. 
@@ -269,19 +305,18 @@ Per la verifica delle caratteristiche dinamiche della porta NOT si è montato un
 Si riporta lo schema circuitale in \figurename{ \ref{f:impulsatore}}. 
 
 \begin{figure}[H]
-	\begin{minipage}{0.3\textwidth}
+	\begin{minipage}{0.7\textwidth}
 		\centering
+		\includegraphics[scale=0.27]{imp.png}
+		\caption{Schema del circuito montato}
+		\label{f:impulsatore}
+	\end{minipage}
+	\begin{minipage}{0.3\textwidth}
 		\begin{tabular}{l}
 			$R_{1}=$\SI{984 \pm 8}{\ohm} \\$R_{2}=$\SI{984 \pm 8}{\ohm} \\$R_{3}=$\SI{982 \pm 8}{\ohm} \\
 			$R_{4}=$\SI{983 \pm 8}{\ohm} \\$R_{5}=$\SI{10.2 \pm 0.8}{\kilo \ohm} \\
 		$C_{1}=$\SI{114 \pm 6}{\nano\farad} \\$C_{2}=$\SI{114  \pm 6}{\nano\farad}
 		\end{tabular}
-	\end{minipage}
-	\begin{minipage}{0.7\textwidth}
-	\centering
-	\includegraphics[scale=0.27]{imp.png}
-	\caption{Schema del circuito montato}
-	\label{f:impulsatore}
 	\end{minipage}
 \end{figure}
 

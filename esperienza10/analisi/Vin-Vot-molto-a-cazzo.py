@@ -47,7 +47,7 @@ pylab.grid(True, which="both", color = "gray")
 pylab.ylabel('$V_{OUT}$ $[V]$')
 pylab.xlabel('$V_{IN}$ $[V]$')
 #pylab.ylim(0.980,1)
-pylab.errorbar(x, y, dy, dx, fmt=",",ecolor="black",capsize=0.5)
+pylab.errorbar(x, y, dy, dx, fmt=".",ecolor="black",capsize=0.5, color="black")
 
 
 func_grid = numpy.linspace(-1, 6, 1000)
