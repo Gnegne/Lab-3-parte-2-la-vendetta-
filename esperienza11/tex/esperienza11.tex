@@ -71,39 +71,9 @@
 	captionpos=none,
 }
 
-\newcommand{\swaphmargins}{
-\newlength{\tmplength}
-\setlength{\tmplength}{\oddsidemargin}
-\setlength{\oddsidemargin}{\evensidemargin}
-\setlength{\evensidemargin}{\tmplength}}
-
-\newcommand{\setdispacing}[1][0pt]{\setlength{\abovedisplayskip}{#1}
-\setlength{\belowdisplayskip}{#1}
-\setlength{\abovedisplayshortskip}{#1}
-\setlength{\belowdisplayshortskip}{#1}}
-
-\newcommand{\inv}[1]{\frac{1}{#1}}
-\newcommand{\dd}{\mathrm{d}}
-\newcommand{\deriv}[2][x]{\frac{\dd #2}{\dd #1}}
-\newcommand{\derivn}[3][x]{\frac{\dd^{#2}#3}{\dd{#1}^{#2}}}
-\newcommand{\pardv}[2][x]{\frac{\partial #2}{\partial #1}}
-\newcommand{\pardvn}[3][x]{\frac{\partial^{#2}#3}{\partial{#1}^{#2}}}
-\newcommand{\integ}[2][x]{\int #2\,\dd #1}
-\newcommand{\invinteg}[2][x]{\int\frac{\dd #1}{#2}}
-\newcommand{\dinteg}[4]{\int_{#1}^{#2}#3\,\dd #4}
-%\renewcommand{\arcsin}{\operatorname{asin}}
-%\renewcommand{\arccos}{\operatorname{acos}}
-%\renewcommand{\arctan}{\operatorname{atan}}
-\DeclareMathOperator{\arccot}{arccot}
-\newcommand{\vel}{\vee}
-\newcommand{\et}{\wedge}
-
-\newcommand{\fwhm}{\text{FWHM}}
-\newcommand{\hwhm}{\text{HWHM}}
-
 \newcommand{\ndr}[1]{\footnote{#1 (n.d.r.)}}
-\newcommand{\fig}[1]{figura (\ref{fig:#1})} %inserting reference to figures
-\newcommand{\tab}[1]{tabella (\ref{tab:#1})} % inserting reference to tables
+\newcommand{\fig}[1]{\figurename{ \ref{:#1}} %inserting reference to figures
+\newcommand{\tab}[1]{\tablename{ \ref{:#1}} % inserting reference to tables
 \newcommand{\eqn}[1]{equazione \eqref{eq:#1}} % inserting reference to equation
 \newcommand{\dof}{\text{ dof}} % degrees of freedom
 \newcommand{\paral}{\mathbin{\|}} % impedance parallel
@@ -112,6 +82,7 @@
 
 \newcommand{\insertpart}[2]{\input{#1}}
 \newcommand{\e}{\textbf{$e^{-}$}}
+
 \sisetup{%
 	separate-uncertainty = true,
 	per-mode = symbol,
@@ -152,6 +123,43 @@
 
 
 \end{abstract}
-\input{strum.tex}
-%\input{proc.tex}
+
+\section{Strmentazione}
+In qest'esperienza esperienza sono state impiegate :
+\begin{itemize}
+	\item 2 circiti integrati SN7400 sati per costitire i circiti in esame
+	\item varie resistenze e capacità impiegateanch'esse per il montaggio dei circiti
+	\item 1 DIP switch a 4 interrttori
+	\item 1 diodo 1N418
+	\item 2 diodi LED, impiegati per rendere osservabile visivamente le tabelle di verità. 
+	\item Il circito implsatore basato sl Ardino nano montato nell'esperienza n:10
+	\item n mltimetro digitale
+	\item oscilloscopio digitale 
+	\item n generatore di fnzioni
+\end{itemize}
+\section{verifica tabella NEND}
+Per la verifica della tabella di verità di na porta NEND \tablename{ \ref{t:NEND}}
+\begin{table}[htb]
+	\centering
+	\begin{tabular}{sss}
+		\toprule
+		\text{ingresso} A & \text{ingresso} B &\text{scita porta NAND }$\overline{A\cdot B}$	\\
+		\midrule
+		0  & 0 & 1\\
+		0  & 1 & 1\\
+		1  & 0 & 1\\
+		1  & 1 & 0\\
+		\bottomrule
+	\end{tabular}
+	\caption{Tabella di verità di na porta NEND.}
+	\label{t:NEND}
+\end{table}
+si è procedto in de maniere distinte; na prima verifica visiva che impiega il DIP switch in dotazione; ed na che impiega il circito implsatore basato s ardino.
+Per entrambi i modi si è montato il circito in \figurename{ \ref{f:NEND}}
+\begin{figure}[htb]
+	\includegraphics[scale=1.0]{NEND.png}
+\end{figure}\label{f:NEND}
+
+\section{title}
+
 \end{document}

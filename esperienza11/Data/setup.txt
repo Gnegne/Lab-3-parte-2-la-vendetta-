@@ -1,0 +1,35 @@
+Rp = 983
+R1 = 330
+R_mult = 8.88e3
+
+# 2) monostabile
+C1 = 104.6e-9	# nF
+r = 464		# ohm
+V_comm = 1.43	# V
+f = 6593 #hz
+VNAND2 = 2.88
+
+# 3) astabile
+C2 = 109.1e-9	# nF
+r = 982		# ohm
+VNAND6 = 3.04
+
+#duty 
+T = 204e-6
+up = 143e-6
+V_commLH = 1.44
+V_commHL = 1.48
+
+# 4) gen quadra
+C3 = 10.80e-9
+R3 = 988
+
+T = 205e-6
+up = 47e-6
+
+R1 = 331
+R2 = 464
+
+T = 101e-6
+up = 30.2e-6
+
