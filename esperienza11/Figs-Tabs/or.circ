@@ -70,34 +70,35 @@ This file is intended to be loaded by Logisim (http://www.cburch.com/logisim/).
     <wire from="(230,160)" to="(230,180)"/>
     <wire from="(230,180)" to="(230,200)"/>
     <wire from="(230,290)" to="(230,320)"/>
-    <comp lib="0" loc="(200,180)" name="Pin">
-      <a name="tristate" val="false"/>
-    </comp>
     <comp lib="6" loc="(148,174)" name="Text">
       <a name="text" val="A"/>
     </comp>
-    <comp lib="1" loc="(320,180)" name="NAND Gate">
+    <comp lib="0" loc="(210,290)" name="Pin">
+      <a name="tristate" val="false"/>
+    </comp>
+    <comp lib="1" loc="(430,240)" name="NAND Gate">
       <a name="inputs" val="2"/>
+    </comp>
+    <comp lib="0" loc="(200,180)" name="Pin">
+      <a name="tristate" val="false"/>
+      <a name="pull" val="up"/>
     </comp>
     <comp lib="0" loc="(480,240)" name="Pin">
       <a name="facing" val="west"/>
       <a name="output" val="true"/>
       <a name="labelloc" val="east"/>
     </comp>
-    <comp lib="6" loc="(529,231)" name="Text">
-      <a name="text" val="A+B"/>
+    <comp lib="1" loc="(320,300)" name="NAND Gate">
+      <a name="inputs" val="2"/>
     </comp>
-    <comp lib="1" loc="(430,240)" name="NAND Gate">
+    <comp lib="1" loc="(320,180)" name="NAND Gate">
       <a name="inputs" val="2"/>
     </comp>
     <comp lib="6" loc="(161,285)" name="Text">
       <a name="text" val="B"/>
     </comp>
-    <comp lib="1" loc="(320,300)" name="NAND Gate">
-      <a name="inputs" val="2"/>
-    </comp>
-    <comp lib="0" loc="(210,290)" name="Pin">
-      <a name="tristate" val="false"/>
+    <comp lib="6" loc="(529,231)" name="Text">
+      <a name="text" val="A+B"/>
     </comp>
   </circuit>
 </project>
