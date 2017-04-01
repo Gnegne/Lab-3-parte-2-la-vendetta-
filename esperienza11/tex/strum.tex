@@ -12,14 +12,14 @@
 		\item un generatore di funzioni d'onda
 	\end{itemize}
 
-\section{verifica tabella NEND}
-	Per la verifica della tabella di verità di una porta NEND 
+\section{verifica tabella NAND}
+	Per la verifica della tabella di verità di una porta NAND 
 	\tablename{
-		 \ref{t:NEND}
+		 \ref{t:NAND}
 	 }
 	si è proceduto in due maniere distinte. Una prima verifica visiva, che impieghi il DIP SWITCH in dotazione; 
 	ed una che impieghi il circuito impulsatore basato su arduino.
-	Per entrambi i modi si è montato il circuito in \figurename{ \ref{f:NEND}}.
+	Per entrambi i modi si è montato il circuito in \figurename{ \ref{f:NAND}}.
 	In tale circuito si è 
 	impiegata una resistenza di pull-ups $R_{Pull-ups}=$\SI{983	\pm 8	}{\ohm} per migliorare 
 	l'operatività del circito;
@@ -27,8 +27,8 @@
 	Il diodo LED D1 è posto in serie con $R_{1}$ e chiuso su GROUND.
 	L'integrato  SN7400 è stato alimentato con una tensione di alimentazione $V_{cc}=$\SI{ 5.01 \pm 0.03  }{\volt}.
 	\begin{figure}[htb]
-		\includegraphics[scale=0.35]{../Figs-Tabs/NEND.png}
-	\end{figure}\label{f:NEND}
+		\includegraphics[scale=0.35]{../Figs-Tabs/NAND.png}
+	\end{figure}\label{f:NAND}
 
 \begin{table}[htb]
 	\centering
@@ -42,19 +42,19 @@
 		1  & 1 & 0\\
 		\bottomrule
 	\end{tabular}
-	\caption{Tabella di verità di una porta NEND.}
-	\label{t:NEND}
+	\caption{Tabella di verità di una porta NAND.}
+	\label{t:NAND}
 \end{table}
 
 \subsection{osservazione con dip switch}
 	Essendo le porte NAND impiegate basate su logica TTL quando esse non risultino collegate a terra si ottiene in uscita un segnale corrispondente allo stato HIGH; cosa che non avviene qualora si abbia un collegamento a terra.
-	Si è pertanto procedto a collegare da un lato gli ingressi 1 e 2 del deap switch alla tensione di GROND e da l'altro rispettivamente agli ingressi A e B del NEND.
+	Si è pertanto procedto a collegare da un lato gli ingressi 1 e 2 del deap switch alla tensione di GROND e da l'altro rispettivamente agli ingressi A e B del NAND.
 	
-	Il diodo led  essendo acceso qalora l'uscita del NEND sia alta
+	Il diodo led  essendo acceso qalora l'uscita del NAND sia alta
 	e spento qualora  l'uscita sia in stato LOW
 	permette la verifica della tabella di verità.
 	
-	Si è procedto pertanto alla verifica della tabella di verità provando le varie permitazioni degli switch 1 e 2, ottenendo n perfetto accordo con \tablename{ \ref{t:NEND}}.
+	Si è procedto pertanto alla verifica della tabella di verità provando le varie permitazioni degli switch 1 e 2, ottenendo n perfetto accordo con \tablename{ \ref{t:NAND}}.
 \subsection{Impiego di Ardino e del oscilloscopio}\label{sez:ard}
 	Per effettare una ulteriore verifica di tale tabella di verità 
 	si è proceduto a collegare le porte A e B della porta NAND rispettivamente alle 
@@ -66,21 +66,21 @@
 	Si riportano le acquisizioni ottente all'oscilloscopio in \figurename{ \ref{f:osci}} .
 	\begin{figure}[hb]
 		\centering
-		\subfloat[acquisizione delle tensioni in ingresso nella porta NEND; A (ch1) ed B (ch2)]{
+		\subfloat[acquisizione delle tensioni in ingresso nella porta NAND; A (ch1) ed B (ch2)]{
 		\includegraphics[scale=0.35]{../Figs-Tabs/ingressi.png}
 		\label{f:ing}
 	}\\
-	\subfloat[acquisizione uscita porta NEND (ch2) e della tensione in ingresso A (ch1)]{
+	\subfloat[acquisizione uscita porta NAND (ch2) e della tensione in ingresso A (ch1)]{
 		\includegraphics[scale=0.35]{../Figs-Tabs/NAND.png}
 		\label{f:sci}
 	}\\
-	\caption{acquisizioni delle schermate impiegate per la verifica di \tablename{ \ref{t:NEND}}.}
+	\caption{acquisizioni delle schermate impiegate per la verifica di \tablename{ \ref{t:NAND}}.}
 	\label{f:osci}
 \end{figure}
 
-	Per rendere significativa l'acquisizione dell'uscita dalla porta NEND ( \figurename{ \ref{f:sci}} ) si è acquisito contemporaneamente uno dei de ingressi, nella fattispecie A; dopodiché si sono acquisiti entrambi i segnali  in ingresso (\figurename{ \ref{f:ing}} ) quale indicazione dello stato di ingresso.
+	Per rendere significativa l'acquisizione dell'uscita dalla porta NAND ( \figurename{ \ref{f:sci}} ) si è acquisito contemporaneamente uno dei de ingressi, nella fattispecie A; dopodiché si sono acquisiti entrambi i segnali  in ingresso (\figurename{ \ref{f:ing}} ) quale indicazione dello stato di ingresso.
 	
-	Dall'osservazione della \figurename{ \ref{f:osci}} si ottiene un ulteriore verifica della \tablename{ \ref{t:NEND}}.
+	Dall'osservazione della \figurename{ \ref{f:osci}} si ottiene un ulteriore verifica della \tablename{ \ref{t:NAND}}.
 \section{Progettazione e verifica semplici circiti logici}
 	Per verificare le tabelle di verità dei seguenti circuiti si è impiegato il circuito impulsatore; ed in particolare la tecnica descritta in\textbf{ sezione \ref{sez:ard} }.
 	Si segnala che per tutta la sezione verrà impiegata la \figurename{ \ref{f:ing}} quale riferimento per i segnali in ingresso.
