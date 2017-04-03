@@ -2,7 +2,6 @@
 %!TEX TS-program = pdflatex
 
 %%% --- PREAMBLE --- %%%
-
 \documentclass[a4paper,11pt]{article}
 
 \usepackage[italian]{babel}
@@ -72,9 +71,9 @@
 }
 
 \newcommand{\ndr}[1]{\footnote{#1 (n.d.r.)}}
-\newcommand{\fig}[1]{\figurename{ \ref{:#1}} %inserting reference to figures
-\newcommand{\tab}[1]{\tablename{ \ref{:#1}} % inserting reference to tables
-\newcommand{\eqn}[1]{equazione \eqref{eq:#1}} % inserting reference to equation
+\newcommand{\fig}[1]{\figurename{ \ref{#1}}} %inserting reference to figures
+\newcommand{\tab}[1]{\tablename{ \ref{#1}}} % inserting reference to tables
+\newcommand{\eqn}[1]{equazione \eqref{#1}} % inserting reference to equation
 \newcommand{\dof}{\text{ dof}} % degrees of freedom
 \newcommand{\paral}{\mathbin{\|}} % impedance parallel
 \DeclareSIUnit\deca{decade} % decade unit definition for use in siunitx
@@ -108,7 +107,7 @@
 % use it plz
 
 \author{Gruppo BF \\ Thomas Giannoni, Valerio Lomanto, Roberto Ribatti}
-\title{Esercitazione N.11: Semplici circiti logici e mltivibratori.}
+\title{Esercitazione N.11: Semplici circiti logici e mltivibratori}
 \date{28 marzo 2017}
 %Intestazione
 \pagestyle{fancy}
@@ -122,7 +121,9 @@
 	In tale esperienza si sono realizzati ed analizzati un circuito multivibratore nonostabile, ed un circuito multivibratore astabile.
 \end{abstract}
 \input{./strum.tex}
+\input{./p3.tex}
 
+\input{./appendix.tex}
 \end{document}
 
 

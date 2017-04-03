@@ -23,6 +23,7 @@ from pylab import *
 #from pylab import loadtxt, transpose, matrix, zeros, figure, title, xlabel, ylabel, xscale, yscale, grid, errorbar, savefig, plot, clf, logspace, linspace, legend, rc
 
 from uncertainties import unumpy, ufloat
+import uncertainties
 #from lab import mme, fit_generic_xyerr2, xep, xe
 
 __all__ = [ # things imported when you do "from lab import *"
@@ -275,17 +276,17 @@ _util_mm_esr_data = dict(
         volt_nc = dict(
             scales = [8*2e-3] + [8*5e-3] + [(8*d*10**s) for s in range(-2, 1) for d in [1, 2, 5]],
             perc = [0]*11,
-            div = [0.5e-3]*2 + [(0.5*d*10**s) for s in range(-2, 1) for d in [1, 2, 5]]
+            div = [1e-3]*2 + [(1*d*10**s) for s in range(-2, 1) for d in [1, 2, 5]]
         ),
         volt_ar_nc = dict(
             scales = [4*2e-3] + [4*5e-3] + [(4*d*10**s) for s in range(-2, 1) for d in [1, 2, 5]],
             perc = [0]*11,
-            div = [0.5e-3]*2 + [(0.5*d*10**s) for s in range(-2, 1) for d in [1, 2, 5]]
+            div = [1e-3]*2 + [(1*d*10**s) for s in range(-2, 1) for d in [1, 2, 5]]
         ),
         time = dict(
-            scales=[5*10e-09] + [ (10*d*10**s) for s in range(-9, 2) for d in [1, 2.5, 5] ],
-            perc=[100e-6]*37,
-            div=[0.2e-09] + [ (0.2*d*10**s) for s in range(-9, 2) for d in [1, 2.5, 5] ]  
+            scales=[5*10e-09] + [ (10*d*10**s) for s in range(-8, 2) for d in [1, 2.5, 5] ],
+            perc=[100e-6]*34,
+            div=[1e-09] + [ (1*d*10**s) for s in range(-8, 2) for d in [1, 2.5, 5] ]  
         ),
         freq = dict(
             scales = [1e9], 
@@ -707,10 +708,11 @@ def _preplot(directory, file_, X, Y, dX, dY, title_="", fig="^^",
     if Yscale=="log":
         yscale("log")
     grid(b=True)
-    errorbar(X,Y,dY,dX, fmt=",",ecolor="black",capsize=0.5)
-    savefig(directory+"grafici/fast_plot_"+fig+".pdf")
-    savefig(directory+"grafici/fast_plot_"+fig+".png")
-
+    errorbar(X,Y,dY,dX, fmt=",",ecolor="black",capsize=0.1, color="black")
+    savefig(directory+"Figs-Tabs/fast_plot_"+fig+".pdf")
+    savefig(directory+"Figs-Tabs/fast_plot_"+fig+".png")
+    show()
+    
 def _outlier_(directory, file_, units, X, XYfun):
     # mark the outlier on the data plot, read them from a specific file
 
@@ -722,7 +724,7 @@ def _outlier_(directory, file_, units, X, XYfun):
 
     return X_ol, Y_ol, dX_ol, dY_ol, smin, smax
 
-def _residuals(fig, gne, gs, ax1, f, par, out, X, dX, Xlab, Xscale, Y, dY, X_ol=[], Y_ol=[], dY_ol=[]):
+def _residuals(fig, gne, gs, ax1, f, par, out, X, dX, Xlab, Xscale, Y, dY, kx, X_ol=[], Y_ol=[], dY_ol=[], dX_ol=[]):
     # performs the calculation of residuals and plot it in a fashion way
 
     figure(fig+"_1")
@@ -737,12 +739,15 @@ def _residuals(fig, gne, gs, ax1, f, par, out, X, dX, Xlab, Xscale, Y, dY, X_ol=
         xscale("log")
     grid(b=True)
     df = (f(X+dX/1e6,*par)-f(X,*par)) /(dX/1e6)
-    plot(X, (Y-f(X,*par))/sqrt(dY**2+(df*dX)**2), ".", color="black")
-
-    if out ==True:
-        plot(X_ol, (Y_ol-f(X_ol,*par))/dY_ol, "^", color="green")
-
-def plot_fit(directory, file_, title_, units, f, par, X, Y, dX, dY, 
+    plot(X*kx, (Y-f(X,*par))/sqrt(dY**2+(df*dX)**2), ".", color="black")
+    
+    #if out ==True:
+    #   df_ol = (f(X_ol+dX_ol/1e6,*par)-f(X_ol,*par)) /(dX_ol/1e6)
+    #   plot(kx*X_ol, (Y_ol-f(X_ol,*par))/sqrt(dY_ol**2+(df_ol*dX_ol)**2), "x", color="green")
+    
+    show()
+    
+def plot_fit(directory, file_, title_, units, f, par, X, Y, dX, dY, kx, ky,
              out=False, fig="^^", residuals=False,
              xlimp=[100,100], XYfun=_XYfunction,
              Xscale="linear", Yscale="linear", Xlab="", Ylab=""):
@@ -772,8 +777,6 @@ def plot_fit(directory, file_, title_, units, f, par, X, Y, dX, dY,
     if Yscale=="log":
         yscale("log")
 
-    errorbar(X,Y,dY,dX, fmt=",",ecolor="black",capsize=0.5)
-
     if residuals==False :
         xlabel(Xlab)
     ylabel(Ylab)
@@ -791,18 +794,23 @@ def plot_fit(directory, file_, title_, units, f, par, X, Y, dX, dY,
     else:
         l=linspace(smin*xlima[0],smax*xlima[1],1000)
     grid(b=True)
-    plot(l,f(l,*par),"red")
+    graph_fit = plot(l*kx,f(l,*par)*ky,"red",label="fit")
+    
+    graph_data = errorbar(X*kx,Y*ky,dY*ky,dX*kx, fmt=",",ecolor="black",capsize=0.1, color="black",label="data")
     
     if out==True:
-        outlier = errorbar(X_ol,Y_ol,dY_ol,dX_ol, fmt="g^",ecolor="black",capsize=0.5)
-        legend([outlier], ['outlier'], loc="best")
+        outlier = errorbar(X_ol*kx,Y_ol*ky,dY_ol*ky,dX_ol*kx, fmt="gx",ecolor="black",capsize=0.1, color="black",label="outlier")
+        legend([graph_data, outlier], ["data","outlier"],loc="best")
+    else:
+        legend([graph_data],["data"], loc="best")
     if residuals==True:
         if out==True:
-            _residuals(fig, gne, gs, ax1, f, par, out, X, dX, Xlab, Xscale, Y, dY, X_ol, Y_ol, dY_ol)
-        _residuals(fig, gne, gs, ax1, f, par, out, X, dX, Xlab, Xscale, Y, dY)
-            
-    savefig(directory+"pictures/fit_"+fig+".pdf")
-    savefig(directory+"pictures/fit_"+fig+".png")
+            _residuals(fig, gne, gs, ax1, f, par, out, X, dX, Xlab, Xscale, Y, dY, kx, X_ol, Y_ol, dY_ol, dX_ol)
+        _residuals(fig, gne, gs, ax1, f, par, out, X, dX, Xlab, Xscale, Y, dY, kx)
+    
+    savefig(directory+"Figs-Tabs/fit_"+fig+".pdf")
+    savefig(directory+"Figs-Tabs/fit_"+fig+".png")
+    show()
 
 def chi2_calc(f, par, X, Y, dY, dX, cov):
     """
@@ -857,7 +865,7 @@ def latex_table(directory, file_, data, data_err, tab, out, data_ol=[], data_err
     """
 
 
-    with open(directory+"tables/tab_"+file_+".txt", "w") as text_file:
+    with open(directory+"Figs-Tabs/tab_"+file_+".txt", "w") as text_file:
         text_file.write("\\begin{tabular}{c")
         for z in range (1,len(data)):
             text_file.write("|c")
@@ -884,8 +892,8 @@ def latex_table(directory, file_, data, data_err, tab, out, data_ol=[], data_err
 def fit(directory, file_, units, f, p0, 
         title_="", Xlab="", Ylab="", XYfun=_XYfunction, 
         preplot=False, Xscale="linear", Yscale="linear", 
-        xlimp = array([100.,100.]), residuals=False, 
-        table=False, tab=[""], fig="^^", out=False):
+        xlimp = array([97.,103.]), residuals=False, 
+        table=False, tab=[""], fig="^^", out=False, kx =1, ky = 1):
     
     """
         Interface for the fit functions of lab library.
@@ -931,7 +939,7 @@ def fit(directory, file_, units, f, p0,
     
     #Plotto il grafico con il fit e gli scarti
     plot_fit(directory, file_, title_, units, f, par,
-             X, Y, dX, dY,
+             X, Y, dX, dY, kx, ky,
              out, fig, residuals, xlimp, XYfun,
              Xscale, Yscale, Xlab, Ylab)
 
@@ -951,8 +959,9 @@ def fit(directory, file_, units, f, p0,
     if table==True:
         latex_table(directory, file_, data, data_err, tab, out, data_ol, data_err_ol)
 
-
-    return 1
+    par_err = uncertainties.correlated_values(par,cov)
+    
+    return par_err
 
 def fast_plot(directory, file_, units, XYfun=_XYfunction, title_="",
               fig="^^", Xscale="linear", Yscale="linear", Xlab="", Ylab=""):
