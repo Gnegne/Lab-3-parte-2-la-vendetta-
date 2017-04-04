@@ -1,5 +1,5 @@
 \begin{tabular}{c|c} 
-Resistenza [$\Ohm$] & Periodo [$\mu s$]\\
+Resistenza [$\Omega$] & Periodo [$\mu s$]\\
 \hline
 816 $\pm$ 7 & 171.0 $\pm$ 1.0\\
 982 $\pm$ 8 & 204.0 $\pm$ 1.0\\

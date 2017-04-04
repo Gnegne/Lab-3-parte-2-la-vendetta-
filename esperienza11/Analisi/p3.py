@@ -29,7 +29,7 @@ Ylab = "Periodo [$\mu s$]"
 
 tab = ["Resistenza [$\Omega$]", "Periodo [$\mu s$]"]
 
-fit(dir, file, unit, f, p0, titolo, Xlab, Ylab, XYfun, residuals=True, ky=1e6, tab=tab, table=True)
+par = fit(dir, file, unit, f, p0, titolo, Xlab, Ylab, XYfun, residuals=True, ky=1e6, tab=tab, table=True)
 
 #########################################
 
