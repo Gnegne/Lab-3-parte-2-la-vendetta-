@@ -1,40 +1,34 @@
 \section{Strumentazione}
-	In qest'esperienza esperienza sono stati impiegati :
+La strumentazione impiegata è quella presente sul banco di lavoro, più:
 	\begin{itemize}
-		\item 2 circiti integrati SN7400 usati per costituire i circuiti in esame
-		\item varie resistenze e capacità impiegate anch'esse per il montaggio dei circiti
-		\item 1 DIP switch a 4 interruttori
-		\item 1 diodo 1N418
-		\item 2 diodi LED, impiegati per rendere osservabile visivamente le tabelle di verità. 
-		\item Il circito impulsatore basato sul Arduino nano montato nell'esperienza n.10
-		\item un multimetro digitale
-		\item un oscilloscopio digitale 
-		\item un generatore di funzioni d'onda
+		\item 2 circuiti integrati SN7400 (4xNAND);
+		\item il generatore di onde quadre, montato nelle precedenti esperienze;
+		\item 1 DIP switch a 4 interruttori;
+		\item 1 diodo 1N4148, 2 diodi led.
 	\end{itemize}
 
-\section{verifica tabella NAND}
-	Per la verifica della tabella di verità di una porta NAND 
-	\tablename{
-		 \ref{t:NAND}
-	 }
-	si è proceduto in due maniere distinte. Una prima verifica visiva, che impieghi il DIP SWITCH in dotazione; 
-	ed una che impieghi il circuito impulsatore basato su arduino.
-	Per entrambi i modi si è montato il circuito in \figurename{ \ref{f:NAND}}.
-	In tale circuito si è 
-	impiegata una resistenza di pull-ups $R_{Pull-ups}=$\SI{983	\pm 8	}{\ohm} per migliorare 
-	l'operatività del circito;
-	una resistenza $R_{1}=$\SI{330 \pm 3 }{\ohm} montata per  limitare la richiesta di corrente al diodo.
-	Il diodo LED D1 è posto in serie con $R_{1}$ e chiuso su GROUND.
-	L'integrato  SN7400 è stato alimentato con una tensione di alimentazione $V_{cc}=$\SI{ 5.01 \pm 0.03  }{\volt}.
-	\begin{figure}[htb]
-		\includegraphics[scale=0.35]{../Figs-Tabs/NAND.png}
-	\end{figure}\label{f:NAND}
-
-\begin{table}[htb]
+\section{Circuiti logici elementari}
+Si è inizialmente proceduto alla verifica della tabella di verità della porta NAND (\tab{f:NAND}), in tre modi diversi:
+\begin{itemize}
+	\item collegando due interruttori agli ingressi e posizionandoli nella 4 possibili combinazione (lavorando in logica TTL l'estremo di ogni interruttore va collegato a massa);
+	\item collegando l’uscita o le uscite ad un diodo LED, attraverso una resistenza di limitazione di corrente;
+	\item utilizzando le due uscite	sfasate di arduino, che coprono tutti gli stati possibili: la traccia dell’oscilloscopio
+	in uscita rappresenta direttamente la tabella di verità.
+\end{itemize}
+	
+L'integrato  SN7400 è stato alimentato con una tensione di alimentazione $V_{cc}=$\SI{ 5.01 \pm 0.03  }{\volt}.
+\begin{figure}[H]
+	\begin{minipage}{0.5\textwidth}
+		\centering
+		\includegraphics[scale=0.8]{../Figs-Tabs/NAND.png}
+		\caption{porta NAND all'oscilloscopio}
+		\label{f:NAND}
+	\end{minipage}
+	\begin{minipage}{0.5\textwidth}
 	\centering
 	\begin{tabular}{sss}
 		\toprule
-		\text{ingresso} A & \text{ingresso} B &\text{uscita porta NAND }$\overline{A\cdot B}$	\\
+		A &  B & A\; NAND\; B	\\
 		\midrule
 		0  & 0 & 1\\
 		0  & 1 & 1\\
@@ -42,63 +36,28 @@
 		1  & 1 & 0\\
 		\bottomrule
 	\end{tabular}
-	\caption{Tabella di verità di una porta NAND.}
+	\captionof{table}{Tabella di verità NAND.}
 	\label{t:NAND}
-\end{table}
-
-\subsection{osservazione con dip switch}
-	Essendo le porte NAND impiegate basate su logica TTL quando esse non risultino collegate a terra si ottiene in uscita un segnale corrispondente allo stato HIGH; cosa che non avviene qualora si abbia un collegamento a terra.
-	Si è pertanto procedto a collegare da un lato gli ingressi 1 e 2 del deap switch alla tensione di GROND e da l'altro rispettivamente agli ingressi A e B del NAND.
-	
-	Il diodo led  essendo acceso qalora l'uscita del NAND sia alta
-	e spento qualora  l'uscita sia in stato LOW
-	permette la verifica della tabella di verità.
-	
-	Si è procedto pertanto alla verifica della tabella di verità provando le varie permitazioni degli switch 1 e 2, ottenendo n perfetto accordo con \tablename{ \ref{t:NAND}}.
-\subsection{Impiego di Ardino e del oscilloscopio}\label{sez:ard}
-	Per effettare una ulteriore verifica di tale tabella di verità 
-	si è proceduto a collegare le porte A e B della porta NAND rispettivamente alle 
-	uscite Y1 ed Y2 del circuito impulsatore, realizzato con arduino nell'esperienza 10,
-	e si  collegata l'uscita della NAND all'oscilloscopio.
-	
-	Essendo le traccie ottente alle porte Y1 e Y2 dell'impulsatore due onde quadre 
-	sfasate relativamente di $\pi/2$ su di un periodo assumono tuttue le permutazioni di due ingressi ad un bit.
-	Si riportano le acquisizioni ottente all'oscilloscopio in \figurename{ \ref{f:osci}} .
-	\begin{figure}[hb]
-		\centering
-		\subfloat[acquisizione delle tensioni in ingresso nella porta NAND; A (ch1) ed B (ch2)]{
-		\includegraphics[scale=0.35]{../Figs-Tabs/ingressi.png}
-		\label{f:ing}
-	}\\
-	\subfloat[acquisizione uscita porta NAND (ch2) e della tensione in ingresso A (ch1)]{
-		\includegraphics[scale=0.35]{../Figs-Tabs/NAND.png}
-		\label{f:sci}
-	}\\
-	\caption{acquisizioni delle schermate impiegate per la verifica di \tablename{ \ref{t:NAND}}.}
-	\label{f:osci}
+	\end{minipage}
 \end{figure}
 
-	Per rendere significativa l'acquisizione dell'uscita dalla porta NAND ( \figurename{ \ref{f:sci}} ) si è acquisito contemporaneamente uno dei de ingressi, nella fattispecie A; dopodiché si sono acquisiti entrambi i segnali  in ingresso (\figurename{ \ref{f:ing}} ) quale indicazione dello stato di ingresso.
-	
-	Dall'osservazione della \figurename{ \ref{f:osci}} si ottiene un ulteriore verifica della \tablename{ \ref{t:NAND}}.
-\section{Progettazione e verifica semplici circiti logici}
-	Per verificare le tabelle di verità dei seguenti circuiti si è impiegato il circuito impulsatore; ed in particolare la tecnica descritta in\textbf{ sezione \ref{sez:ard} }.
-	Si segnala che per tutta la sezione verrà impiegata la \figurename{ \ref{f:ing}} quale riferimento per i segnali in ingresso.
-	\subsection{AND}
-	Per verificare l'andamento di un circuito AND, essendo
-	$$AND(A,B) = A \cdot B = \overline{(\overline{A \cdot B})}$$
-	si è montato il circuito in \figurename{ \ref{f:AND}} 
-	\begin{figure}[htb]
-		\includegraphics[scale=1.0]{../Figs-Tabs/ENd.png}
-		\caption{rappresentazione di un circito AND realizzato con porte NAND. A e B rappresentano gli ingressi mentre si campiona in scita sl terzo terminale.}
-	\end{figure}\label{f:AND}
-.
-	Tale circito presenta la tabella di verità riportata in \tablename{ \ref{t:AND}} 
-	\begin{table}[htb]
+In \fig{t:NAND} è visibile il risultato ottenuto ed è possibile verificare la tabella di verità.
+
+\subsection{AND}
+Si è montato il circuito in \figurename{ \ref{f:AND}} che presenta la tabella di verità in \tab{t:AND}.
+
+\begin{figure}[H]
+	\begin{minipage}{0.5\textwidth}
 		\centering
-		\begin{tabular}{sss}
+		\includegraphics[scale=0.22]{../Figs-Tabs/AND_.png}
+		\caption{schema porta AND}
+		\label{f:AND}
+	\end{minipage}
+	\begin{minipage}{0.5\textwidth}
+		\centering
+		\begin{tabular}{ccc}
 			\toprule
-			\text{ingresso} A & \text{ingresso} B &\text{uscita porta AND }$A\cdot B$	\\
+			A & B & A\;AND\;B	\\
 			\midrule
 			0  & 0 & 0\\
 			0  & 1 & 0\\
@@ -106,33 +65,43 @@
 			1  & 1 & 1\\
 			\bottomrule
 		\end{tabular}
-		\caption{Tabella di verità di una porta AND.}
+		\captionof{table}{Tabella di verità AND.}
 		\label{t:AND}
-	\end{table}.
-	la quale risulta a sua volta verificata dall'andamento osservato
-	e riportato in \figurename{ \ref{f:osci-and}}
+	\end{minipage}
+\end{figure}
 	
-	\begin{figure}[hb]
+Questa risulta a sua volta verificata dall'andamento osservato e riportato in \figurename{ \ref{f:osci-and}}
+	
+\begin{figure}[H]
+	\begin{minipage}{0.5\textwidth}
 		\centering
-		\includegraphics[scale=0.35]{../Figs-Tabs/and.png}
-		\caption{acqusizione della schermata impiegata per la verifica di \tablename{ \ref{t:AND}}.
-		Uscita funzione AND (ch2) e tensione in ingresso in A (ch1).
-		}
+		\includegraphics[scale=1]{../Figs-Tabs/and.png}
+		\caption{porta AND all'oscilloscopio}
 		\label{f:osci-and}
-	\end{figure}.
-	\subsection{OR}
-			Per la funzione OR essendo $$ OR(A,B) = A + B = \overline{\overline{(A +B)}}= \overline{(\overline{A} \cdot \overline{B})}$$
-			è stato montato il circuito in \figurename{ \ref{f:OR}} 
-		\begin{figure}[htb]
-			\includegraphics[scale=1.0]{../Figs-Tabs/OR2.png}
-			\caption{rappresentazione di un circito OR realizzato con porte NAND. A e B rappresentano gli ingressi mentre si campiona in uscita sul terzo terminale.}
-		\end{figure}\label{f:OR}.
-		Tale circito presenta la tabella di verità riportata in \tablename{ \ref{t:OR}} 
-		\begin{table}[htb]
+	\end{minipage}
+	\begin{minipage}{0.5\textwidth}
+		\centering
+		\includegraphics[scale=1]{../Figs-Tabs/or.png}
+		\caption{porta OR all'oscilloscopio}
+		\label{f:osci-or}
+	\end{minipage}
+\end{figure}
+
+\subsection{OR}
+	Per la funzione OR essendo $ OR(A,B) = A + B = \overline{\overline{(A +B)}}= \overline{(\overline{A} \cdot \overline{B})}$	è stato montato il circuito in \figurename{ \ref{f:OR}}, che presenta la tabella di verità in \tab{t:OR}.
+
+
+\begin{figure}[H]
+	\begin{minipage}{0.5\textwidth}
+		\includegraphics[scale=0.28]{../Figs-Tabs/OR_.png}
+		\caption{schema porta OR}
+		\label{f:OR}
+	\end{minipage}
+	\begin{minipage}{0.5\textwidth}
 			\centering
 			\begin{tabular}{sss}
 				\toprule
-				\text{ingresso} A & \text{ingresso} B &\text{uscita porta AND }$A\cdot B$	\\
+				A & B & A\;OR\;B	\\
 				\midrule
 				0  & 0 & 0\\
 				0  & 1 & 1\\
@@ -140,22 +109,15 @@
 				1  & 1 & 1\\
 				\bottomrule
 			\end{tabular}
-			\caption{Tabella di verità di un circito OR.}
+			\caption{Tabella di verità OR.}
 			\label{t:OR}
-		\end{table}.
-		la quale risulta a sua volta verificata dall'andamento osservato
-		e riportato in \figurename{ \ref{f:osci-or}}
+	\end{minipage}
+\end{figure}
 		
-		\begin{figure}[hb]
-			\centering
-			\includegraphics[scale=0.35]{../Figs-Tabs/or.png}
-			\caption{acquisizione della schermata impiegata per la verifica di \tablename{ \ref{t:OR}}.
-				Uscita circito OR (ch2) e tensione in ingresso in A (ch1).
-			}
-			\label{f:osci-or}
-		\end{figure}.
-	\subsection{XOR}
-	Per la funzione XOR essendo $$ XOR(A,B) = A \oplus B = (A \cdot \overline{B}) + (\overline{A} \cdot B) =
+Questa risulta a sua volta verificata dall'andamento osservato e riportato in \figurename{ \ref{f:osci-or}}.
+\newpage		
+\subsection{XOR}
+	Per la funzione XOR essendo $ XOR(A,B) = A \oplus B = (A \cdot \overline{B}) + (\overline{A} \cdot B) =
 	 \overline{
 	 	\overline{
 	 		( A \cdot \overline{
@@ -167,18 +129,21 @@
  			} )
  		}
  	}
-	}$$
-	è stato montato il circuito in \figurename{ \ref{f:XOR}} 
-	\begin{figure}[htb]
-		\includegraphics[scale=1.0]{../Figs-Tabs/XOR2.png}
-		\caption{rappresentazione di un circuito XOR realizzato con porte NAND. A e B rappresentano gli ingressi mentre si campiona in uscita sul terzo terminale.}
-	\end{figure}\label{f:XOR}.
-	Tale circuito presenta la tabella di verità riportata in \tablename{ \ref{t:XOR}} 
-	\begin{table}[htb]
+	}$,
+	è stato montato il circuito in \figurename{ \ref{f:XOR}} che presenta la tabella di verità in \tablename{ \ref{t:XOR}}. 
+	
+	\begin{figure}[H]
+		\begin{minipage}{0.5\textwidth}
+		\centering
+		\includegraphics[scale=0.25]{../Figs-Tabs/XOR_.png}
+		\caption{schema porta XOR}
+			\label{f:XOR}
+		\end{minipage}
+		\begin{minipage}{0.5\textwidth}
 		\centering
 		\begin{tabular}{sss}
 			\toprule
-			\text{ingresso} A & \text{ingresso} B &\text{uscita porta XOR }$A \oplus B$	\\
+			A & B &A\; XOR\; B	\\
 			\midrule
 			0  & 0 & 0\\
 			0  & 1 & 1\\
@@ -186,136 +151,25 @@
 			1  & 1 & 0\\
 			\bottomrule
 		\end{tabular}
-		\caption{Tabella di verità di un circito XOR.}
+		\caption{Tabella di verità XOR.}
 		\label{t:XOR}
-	\end{table}.
-	la quale risulta a sua volta verificata dall'andamento osservato
-	e riportato in \figurename{ \ref{f:osci-xor}}
+		\end{minipage}
+	\end{figure}
+	
+Questa risulta a sua volta verificata dall'andamento osservato e riportato in \figurename{ \ref{f:osci-xor}}.
 	
 	\begin{figure}[hb]
 		\centering
-		\includegraphics[scale=0.35]{../Figs-Tabs/xor.png}
-		\caption{acqusizione della schermata impiegata per la verifica di \tablename{ \ref{t:XOR}}.
-			Uscita circito XOR (ch2); tensione in ingresso in A (ch1).
-		}
+		\includegraphics[scale=1]{../Figs-Tabs/xor.png}
+		\caption{porta XOR all'oscilloscopio}
 		\label{f:osci-xor}
-	\end{figure}.
-\subsection{Circito sommatore ad un bit}	
-	Per realizzare il circuito sommatore richiesto si è assunto
-	che esso potesse costituirsi su un uscita [uscita 1] di una funzione XOR, per esprimere il bit più significativo;
-	ed da una funzione AND sull uscita rimanente [uscita 2] per esprimere il meno significativo.
-	Si è montato pertantonto il circito in \figurename{ \ref{f:somma}}.
-		\begin{figure}[htb]
-		\includegraphics[scale=1.0]{../Figs-Tabs/somma.png}
-		\caption{rappresentazione di un circito sommatore a 2 ingressi e 2 uscite.}
-	\end{figure}\label{f:somma}
-	
-	L'andamento del circito risulta verificato dalla 	\figurename{ \ref{f:osci-somma}}.
-	
-	\begin{figure}[hb]
+	\end{figure}
+
+\subsection{Sommatore ad un bit}	
+Il circuito sommatore è costituito su un uscita da una porta XOR (bit più significativo) ed da una porta AND sull'altra uscita (bit meno significativo). Si è montato pertanto il circuito in \figurename{ \ref{f:somma}} e se ne è verificato il funzionamento.
+\begin{figure}[H]
 	\centering
-	\subfloat[acqsizione della tensione in uscita dal circito XOR (ch2) ed in ingresso A (ch1);
-	tale figura costituisce insieme alla \figurename{ \ref{f:ing}} un riferimento]{
-		\includegraphics[scale=0.35]{../Figs-Tabs/XOR.png}
-		\label{f:ing-somma}
-	}\\
-	\subfloat[acquisizione delle tensioni in uscita dal circito XOR (ch2) ed in uscita dal circito AND (ch1)]{
-		\includegraphics[scale=0.35]{../Figs-Tabs/sommatore_out.png}
-		\label{f:sci-somma}
-	}\\
-	\caption{acqusizioni delle schermate impiegate per la verifica del funzionamento del circuito sommatore.}
-	\label{f:osci-somma}
-\end{figure}
-Si può infatti osservare che l'uscita assuma alternativamente i valori $00-01-10-11$.
+	\includegraphics[scale=0.3]{../Figs-Tabs/SUM_.png}
+	\caption{schema del sommatore a 1 bit}
+\end{figure}\label{f:somma}
 
-
-\section{Generatore di onda quadra}
-	Per la realizzazione di un generatore di onda quadra
-	si sono impiegati i circuiti impiegati per il multivibratore monostabile e
-	per il multivibratore astabile 
-	accoppiandoli in maniera da ottenere il da ottenere il circuito in \figurename{ \ref{f:qadra}}.
-	\begin{figure}[htb]
-		\includegraphics[scale=1.0]{../Figs-Tabs/qadra.png}
-		\caption{rappresentazione del circuito realizzato per generare un onda quadra.}
-	\end{figure}\label{f:qadra}
-
-	Per il montaggio circuitale sono state impiegate le seguenti componenti\footnote{Tali valori sono stati ottenuti attraverso il multimetro digitale in dotazione. A tali misure sono state associate le incertezze calcolate sommando in quadratura l'errore di lettura con l'errore di calibrazione dello strumento.} :\\
-	\begin{center}
-		$R_{3}=$\SI{988 \pm 8}{\ohm}\\
-		$C_{3}=$\SI{10.8 \pm 0.4 }{\nano \farad}\\
-	\end{center}
-	
-	Si riportano in \figurename{ \ref{f:osci-qad}} l'acquisizione del segnale in 
-	ingresso nel multivibratore monostabile; ovvero il segnale in uscita dal derivatore (ch2) ed il segnale in ingresso (ch1).
-	\begin{figure}[htb]
-		\includegraphics[scale=1.0]{../Figs-Tabs/deth_generator.png}
-		\caption{Acquisizione dei segnali in ingresso [ch1] ed in uscita [ch2] dal circuito monostabile.}
-	\end{figure}\label{f:osci-qad}
-	Il circuito monostabile, come riscontrabile in \figurename{ \ref{f:osci-qad}},
-	trasforma l'onda quadra generata dall'astabile in un impulso di breve durata temporale; sempre dalla figura in esame può essere osservato che il monostabile risulti sensibile al fronte di salita del segnale in ingresso.
-	
-	Come atteso, dall'andamento osservato in sezione 2, in uscita al circuito monostabile si ottiene un onda quadra [ch2 di \figurename{ \ref{f:osci-qad}}].
-	Tale onda presenta un periodo 
-	$T=$\SI{205 \pm 1 }{\mu \sec}
-	\footnote{valori misurati con i cursori dell'oscilloscopio. Si è associata l'incertezza dovuta all'errore di posizionamento dei cursori; a cui si aggiunge a parte l'errore di calibrazione dello strumento.}
-	a fronte di un impulso di $\Delta T_{up} =$\SI{47.0 \pm 0.2 }{\mu \sec}
-	\footnote[1]{}
-	Si ottiene pertanto un duty-cycle $\frac{\Delta T_{up}}{T}= 22.9 \pm 0.2$\textdiscount.
-	
-	Nella sezione 2 è stato osservato che l'impulso ,$\Delta T_{up}$, 
-	abbia una dipendenza lineare dal valore della resistenza $R_{2}$;
-	la durata del periodo ne risulti indipendente; poiché non varia apprezzabilmente al variare di $R_{2}$.
-	
-	Mentre nella sezione  è stata osservata la dipendenza lineare 
-	del periodo $T$ dal valore della resistenza $R_{1}$;
-	mentre la durata del impulso non vari significativamente.
-	
-	Si assume pertanto che $$ \Delta T_{up} \propto R_{2}$$
-		$$T \propto R_{1} $$
-	e non il viceversa.
-	Per la verifica di tale assunzione si è proceduto a variare separatamente i valori di $R_{1}$ e $R_{2}$; si ottengono i dati in \tablename{ \ref{t:4}}.
-		
-	\begin{table}[htb]
-		\centering
-		\begin{tabular}{*{5}{S}}
-			\toprule
-			$R_{1}$ [\si{\ohm}] & $R_{2}$ [\si{\kilo \ohm}] & $T$ [\si{\mu \sec}] & $\Delta T_{up}$  [\si{\mu \sec}] & $\frac{\Delta T_{up}}{T}$ \\
-			\midrule
-			470\pm 5	&	1.12 \pm 0.01	&	234 \pm 1	&	47.6\pm2	&	4.92 \pm3	\\ 
-			567 \pm6	&	1.12 \pm 0.01	&	234\pm1	&	59.2 \pm4	&	3.95\pm 0.03	\\ 
-			567 \pm6	&	0.988 \pm 0.009	&	205\pm1	&	59.2 \pm0.4	&	3.46\pm0.03	\\ 
-			\bottomrule
-		\end{tabular}
-		\caption{
-			Tabella dei valori campionati per la verifica delle dipendenze di $\Delta T_{up}$ e $T$ dai valori di $R_{1}$ e  $R_{2}$.
-		}
-		\label{t:4}
-	\end{table}
-	Come possiamo osservare dai valori tabulati si ottiene un sostanziale accordo con la proporzionalità attesa.
-	
-	Si è adesso proceduto a realizzare un generatore di onde quadre di $T_{att}\sim 100$\si{\mu \sec} e $ \Delta {T_{up}}_{att}\sim 30$\si{\mu \sec}.
-	
-	Dai valori ottenuti nelle sezioni 2 e 3 e  dai rispettivi coefficienti stimati $a=$ e $b=$
-		abbiamo stimato per i valori richiesti delle resistenze attese 
-	${R_{2}}_{att}=$\SI{470 \pm 30}{\ohm}%valore placeholder
-	${R_{1}}_{att}=$\SI{260 \pm 40}{\ohm}%valore placeholder.
-	Si è osservato tuttavia che impiegando tali resistori si ottiene un impulso sensibilmente diverso da quello atteso.
-	Si è pertanto proceduto a variare i valori delle resistenze sino ad ottenere un accordo tra i valori misurati e quanto richiesto.
-	Al termine di tale processo sono state impiegate delle resistenze 
-	$R_{1}=$\SI{331 \pm 3}{\ohm}
-	$R_{2}=$\SI{464 \pm 4}{\ohm}
-	ottenendo 
-	$T=$\SI{101 \pm 1}{\mu \sec} e $ \Delta {T_{up}}=$\SI{30.2 \pm 0.2}{\mu \sec}.
-	
-	Una posssibile causa della discrepanza tra i valori dei resistori, per cui si verifichi l'accordo con le richieste, ed  i valori di ${R_{2}}_{att}$ e 	${R_{1}}_{att}$ potrebbe essere imputabile ad un andamento non esattamente lineare nelle dipendenze di $ \Delta T_{up}$ da $ R_{2}$ e di
-	$T $ da $ R_{1} $
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	

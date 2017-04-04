@@ -1,4 +1,3 @@
-\newpage
 \section{Multivibratore astabile}
 Si è montato il circuito in \fig{astab_sch}, con i seguenti valori dei componenti:
 
@@ -32,21 +31,13 @@ La tensione oscilla tra \SI{4.48(12)}{\volt} e \SI{-0.68(2)}{\volt}, mentre la c
 
 \subsection{Analisi del funzionamento}
 
-Per spiegare il comportamento del circuito facciamo riferimento alla \fig{astab_expl}.
 Consideriamo un istante prima della commutazione basso/alto del NAND6 (o equivalentemente sull'uscita OUT-A): VC2 si appresta a superare $V_{comm}=\SI{1.44}{\volt}$ (la tensione di commutazione) e, essendo l'uscita del NAND6 bassa, la tensione sul condensatore è proprio uguale a VC2 ($\Delta V_C = VC_2 - V_{NAND6}$).
 
 Raggiunta la tensione di commutazione l'uscita del NAND6 viene forzata allo stato HIGH e l'uscita del NAND7 si troverà in stato LOW, questo aumenterà istantaneamente la tensione VC2 di $V_{HIGH}=\sim \SI{3.04}{\volt}$, pari alla tensione dello stato HIGH della porta logica. Da questo punto in poi il condensatore si scaricherà con un $\tau = RC$, fino a raggiungere nuovamente la tensione di commutazione.
 
 Nel passaggio alto/basso del NAND6 la situazione è diversa: VC2 dal valore di $\sim \SI{1.44}{\volt}$ non può diminuire oltre i $\sim\SI{-0.7}{\volt}$ per la presenza di diodi di protezione agli ingressi delle porte logiche, a questo è dovuta l'asimmetria dei semiperiodi.
 
-\begin{figure}[H]
-	\centering
-	\includegraphics[scale=0.3]{astab_graph.png}
-	\caption{forme d'onda nei vari punti del circuito}
-	\label{astab_expl}
-\end{figure}
-
-Il semiperiodo HIGH è atteso essere pari a $RC\times \ln(V_{HIGH}/V_{comm}) = \SI{122(5)}{\micro\second}$, non compatibile con quello misurato di \SI{143(1)}{\micro\second}, il motivo è da ricercarsi probabilmente nel fatto che, diversamente da come schematizzata in \fig{astab_expl}, l'uscita del NAND6 non appariva costante ma aumentava leggermente nel corso del semiperiodo.
+Il semiperiodo HIGH è atteso essere pari a $RC\times \ln(V_{HIGH}/V_{comm}) = \SI{122(5)}{\micro\second}$, non compatibile con quello misurato di \SI{143(1)}{\micro\second}, il motivo è da ricercarsi probabilmente nel fatto che l'uscita del NAND6 non appariva costante ma aumentava leggermente nel corso del semiperiodo.
 	
 \subsection{Linearità del periodo con la resistenza}
 Si è variata la resistenza $R_2$ in un intorno di $\SI{1000}{\ohm}$ e per ogni valore di resistenza di è misurato il periodo del segnale. I risultati raccolti sono riportati in appendice in \tab{astab_data}.
