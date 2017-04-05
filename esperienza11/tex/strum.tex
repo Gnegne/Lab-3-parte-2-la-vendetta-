@@ -15,7 +15,7 @@ Si è inizialmente proceduto alla verifica della tabella di verità della porta 
 	\item utilizzando le due uscite	sfasate di arduino, che coprono tutti gli stati possibili: la traccia dell’oscilloscopio
 	in uscita rappresenta direttamente la tabella di verità.
 \end{itemize}
-	
+
 L'integrato  SN7400 è stato alimentato con una tensione di alimentazione $V_{cc}=$\SI{ 5.01 \pm 0.03  }{\volt}.
 \begin{figure}[H]
 	\begin{minipage}{0.5\textwidth}
@@ -69,9 +69,9 @@ Si è montato il circuito in \figurename{ \ref{f:AND}} che presenta la tabella d
 		\label{t:AND}
 	\end{minipage}
 \end{figure}
-	
+
 Questa risulta a sua volta verificata dall'andamento osservato e riportato in \figurename{ \ref{f:osci-and}}
-	
+
 \begin{figure}[H]
 	\begin{minipage}{0.5\textwidth}
 		\centering
@@ -113,16 +113,16 @@ Questa risulta a sua volta verificata dall'andamento osservato e riportato in \f
 			\label{t:OR}
 	\end{minipage}
 \end{figure}
-		
+
 Questa risulta a sua volta verificata dall'andamento osservato e riportato in \figurename{ \ref{f:osci-or}}.
-\newpage		
+\newpage
 \subsection{XOR}
 	Per la funzione XOR essendo $ XOR(A,B) = A \oplus B = (A \cdot \overline{B}) + (\overline{A} \cdot B) =
 	 \overline{
 	 	\overline{
 	 		( A \cdot \overline{
-	 			(A \cdot B) )
- 			}	\cdot 
+	 			(A \cdot B)
+ 			}	 ) \cdot
  		\overline{
  			(B \cdot \overline{
  				(A \cdot B)
@@ -130,8 +130,8 @@ Questa risulta a sua volta verificata dall'andamento osservato e riportato in \f
  		}
  	}
 	}$,
-	è stato montato il circuito in \figurename{ \ref{f:XOR}} che presenta la tabella di verità in \tablename{ \ref{t:XOR}}. 
-	
+	è stato montato il circuito in \figurename{ \ref{f:XOR}} che presenta la tabella di verità in \tablename{ \ref{t:XOR}}.
+
 	\begin{figure}[H]
 		\begin{minipage}{0.5\textwidth}
 		\centering
@@ -155,9 +155,9 @@ Questa risulta a sua volta verificata dall'andamento osservato e riportato in \f
 		\label{t:XOR}
 		\end{minipage}
 	\end{figure}
-	
+
 Questa risulta a sua volta verificata dall'andamento osservato e riportato in \figurename{ \ref{f:osci-xor}}.
-	
+
 	\begin{figure}[hb]
 		\centering
 		\includegraphics[scale=1]{../Figs-Tabs/xor.png}
@@ -165,11 +165,10 @@ Questa risulta a sua volta verificata dall'andamento osservato e riportato in \f
 		\label{f:osci-xor}
 	\end{figure}
 
-\subsection{Sommatore ad un bit}	
-Il circuito sommatore è costituito su un uscita da una porta XOR (bit più significativo) ed da una porta AND sull'altra uscita (bit meno significativo). Si è montato pertanto il circuito in \figurename{ \ref{f:somma}} e se ne è verificato il funzionamento.
+\subsection{Sommatore ad un bit}
+Il circuito sommatore è costituito su un uscita da una porta XOR (bit meno significativo) ed da una porta AND sull'altra uscita (bit più significativo). Si è montato pertanto il circuito in \figurename{ \ref{f:somma}} e se ne è verificato il funzionamento.
 \begin{figure}[H]
 	\centering
 	\includegraphics[scale=0.3]{../Figs-Tabs/SUM_.png}
 	\caption{schema del sommatore a 1 bit}
 \end{figure}\label{f:somma}
-

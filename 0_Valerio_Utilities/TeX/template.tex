@@ -99,14 +99,21 @@
 \newcommand{\hwhm}{\text{HWHM}}
 
 \newcommand{\ndr}[1]{\footnote{#1 (n.d.r.)}}
-\newcommand{\fig}[1]{figura (\ref{fig:#1})} %inserting reference to figures
-\newcommand{\tab}[1]{tabella (\ref{tab:#1})} % inserting reference to tables
+\newcommand{\fig}[1]{\figurename{ \ref{tab:#1}}} %inserting reference to figures
+\newcommand{\tab}[1]{\tablename{ \ref{fig:#1}}} % inserting reference to tables
 \newcommand{\eqn}[1]{equazione \eqref{eq:#1}} % inserting reference to equation
+\newcommand{\eqn}[1]{sezione \ref{sez:#1}} % inserting reference to section
 \newcommand{\dof}{\text{ dof}} % degrees of freedom
 \newcommand{\paral}{\mathbin{\|}} % impedance parallel
 \DeclareSIUnit\deca{decade} % decade unit definition for use in siunitx
 
-\newcommand{\insertpart}[2]{\input{#1}}
+\newcommand{\titleheads}[3][BF]{% comando comodo per ridurre il clutter iniziale
+	\author{Gruppo #1 \\ Thomas Giannoni, Valerio Lomanto, Roberto Ribatti}
+	\title{#2: #3}
+	\lhead{#2}
+	\chead{#3}
+	\rhead{Gruppo #1}
+}
 
 \sisetup{%
 	separate-uncertainty = true,
@@ -132,12 +139,17 @@
 % \SI{1.222 \pm 0.034}{\nF}         -> 1.222 +- 0.034 nF
 % use it plz
 
-\author{Gruppo BF \\ Roberto Ribatti, Thomas Giannoni, Valerio Lomanto}
-\title{Esercitazione N.-7: Diametro di Rotoballe.}
+\pagestyle{fancy}
+\titleheads{Esercitazione N.-7}{Diametro di Rotoballe}
 \date{Quinque Fiorile 179gatto}
 
 \begin{document}
 \maketitle
 
+\begin{abstract}
+	% peni
+\end{abstract}
+
+\input{}
 
 \end{document}

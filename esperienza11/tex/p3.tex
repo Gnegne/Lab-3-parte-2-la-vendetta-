@@ -38,11 +38,11 @@ Raggiunta la tensione di commutazione l'uscita del NAND6 viene forzata allo stat
 Nel passaggio alto/basso del NAND6 la situazione è diversa: VC2 dal valore di $\sim \SI{1.44}{\volt}$ non può diminuire oltre i $\sim\SI{-0.7}{\volt}$ per la presenza di diodi di protezione agli ingressi delle porte logiche, a questo è dovuta l'asimmetria dei semiperiodi.
 
 Il semiperiodo HIGH è atteso essere pari a $RC\times \ln(V_{HIGH}/V_{comm}) = \SI{122(5)}{\micro\second}$, non compatibile con quello misurato di \SI{143(1)}{\micro\second}, il motivo è da ricercarsi probabilmente nel fatto che l'uscita del NAND6 non appariva costante ma aumentava leggermente nel corso del semiperiodo.
-	
+
 \subsection{Linearità del periodo con la resistenza}
 Si è variata la resistenza $R_2$ in un intorno di $\SI{1000}{\ohm}$ e per ogni valore di resistenza di è misurato il periodo del segnale. I risultati raccolti sono riportati in appendice in \tab{astab_data}.
 Si è quindi proceduto ad un fit lineare ($ax+b$), ottenendo i seguenti risultati:
-$$a = \SI{20.74(27)}{\ohm / \micro\second} \qquad b=\SI{1.6 \pm 2.5}{\micro \second} \qquad \chi^2/ndof = 10.7/7 \qquad corr(a,b)= -0.966$$
+$$a = \SI{20.74(27)}{\micro\second \per \ohm} \qquad b=\SI{1.6 \pm 2.5}{\micro \second} \qquad \chi^2/ndof = 10.7/7 \qquad corr(a,b)= -0.966$$
 In \fig{astab_lin} sono rappresentati i dati raccolti e il fit eseguito.
 
 \begin{figure}[h!]
@@ -51,6 +51,3 @@ In \fig{astab_lin} sono rappresentati i dati raccolti e il fit eseguito.
 	\caption{Dati raccolti e fit della linearità del multivibratore astabile}
 	\label{astab_lin}
 \end{figure}
-
-
-

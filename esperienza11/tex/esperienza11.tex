@@ -5,7 +5,7 @@
 \documentclass[a4paper,11pt]{article}
 
 \usepackage[italian]{babel}
-\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,headheight=14pt]{geometry}
 \usepackage[T1]{fontenc} % OT1: basic, T1: western, T3 and T5: exotic, T4: lots of characters but WORSE READABILITY
 \usepackage[utf8x]{inputenc} % utf8x supports more characters than utf8
 \usepackage{graphicx} % import PNG, JPG and PDF with \includegraphics
@@ -106,23 +106,24 @@
 % \SI{1.222 \pm 0.034}{\nF}         -> 1.222 +- 0.034 nF
 % use it plz
 
+\pagestyle{fancy}
 \author{Gruppo BF \\ Thomas Giannoni, Valerio Lomanto, Roberto Ribatti}
 \title{Esercitazione N.11: Semplici circuiti logici e Multivibratori}
 \date{28 marzo 2017}
-%Intestazione
-\pagestyle{fancy}
-\lhead{Esperienza N.4}
+\lhead{Esercitazione N.11}
 \chead{Semplici circuiti logici e Multivibratori}
 \rhead{Gruppo BF}
+
 \begin{document}
 \maketitle
 \begin{abstract}
 	L'obiettivo di questa esperienza è la verifica della tabella di verità di alcuni circuiti logici basati sul circuito integrato SN7400 (4xNAND), quindi lo studio di un circuito multivibratore monostabile, ed uno astabile basati su questo integrato.
 \end{abstract}
-\input{./strum.tex}
-\input{./p3.tex}
-\input{./p4.tex}
-\input{./appendix.tex}
+\input{strum.tex}
+\input{monostabile.tex}
+\input{p3.tex}
+\input{p4.tex}
+\input{appendix.tex}
 \end{document}
 
 
@@ -163,10 +164,10 @@ In qest'esperienza esperienza sono state impiegate :
 	\item varie resistenze e capacità impiegateanch'esse per il montaggio dei circiti
 	\item 1 DIP switch a 4 interrttori
 	\item 1 diodo 1N418
-	\item 2 diodi LED, impiegati per rendere osservabile visivamente le tabelle di verità. 
+	\item 2 diodi LED, impiegati per rendere osservabile visivamente le tabelle di verità.
 	\item Il circito implsatore basato sl Ardino nano montato nell'esperienza n:10
 	\item n mltimetro digitale
-	\item oscilloscopio digitale 
+	\item oscilloscopio digitale
 	\item n generatore di fnzioni
 \end{itemize}
 \section{verifica tabella NEND}
