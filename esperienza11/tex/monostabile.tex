@@ -99,21 +99,32 @@ clock.
 
 Il ciclo si ripete al successivo fronte di salita del clock: ci aspettiamo
 dunque che il periodo del segnale del multivibratore monostabile sia pari a
-quello del clock in ingresso, mentre la durata ($T_H$) dello stato HIGH
+quello del clock in ingresso, mentre la durata $T_H$ dello stato HIGH
 dell'output dipenda unicamente da resistenza e condensatori utilizzati.
 
 \subsection{Linearità di $T_H$ con la resistenza}
 
 Si è variata la resistenza $R_1$ attorno ai \SI{450}{\ohm}, misurando $T_H$, per
 poi procedere ad un fit lineare $T_H = a R_1 + b$, ottenendo i seguenti risultati:
-
-$$a = \SI{0.1095(8)}{\micro\second \per \ohm} \qquad b=\SI{-3.5(4)}{\micro \second} \qquad \chi^2/ndof = 7.0/6 \qquad corr(a,b)= -0.986$$
-
-Dati e fit sono riportati in \fig{monofit}.
+$$a = \SI{0.109(3)}{\micro\second \per \ohm} \qquad b=\SI{-3.5(5)}{\micro \second} \qquad \chi^2/ndof = 7.0/6 \qquad corr(a,b)= -0.986$$
+Dati e fit sono riportati in \fig{monofit}; si sono trattati separatamente gli
+errori statistici e quelli sistematici (incertezza ed errori di calibrazione).
+È stato escluso dal fit il dato a $R_1 \sim \SI{250}{\ohm}$, poiché
+visibilmente fuori dall'andamento lineare.
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[scale=0.4]{monofit.pdf}
+	\includegraphics[scale=0.5]{monofit.pdf}
 	\caption{Dati raccolti e fit della linearità del multivibratore monostabile.}
 	\label{monofit}
 \end{figure}
+
+Idealmente ci aspetteremmo che valga la relazione
+$ T_H = R_1 C_1 \log (V_{HIGH}/V_{COMM}) $,
+che darebbe per il coefficiente angolare $a$ il valore
+$ C_1 \log (V_{HIGH}/V_{COMM}) = \SI{0.091(7)}{\us\per\ohm}$ (oltreché
+un termine costante $b$ nullo); non ci è del tutto
+chiara la ragione della (ridotta ma significativa) discrepanza, ma supponiamo
+che sia dovuto alla tensione non perfettamente costante in uscita da NAND2, che
+è infatti stata osservata crescere leggermente dopo il fronte di
+salita iniziale.
