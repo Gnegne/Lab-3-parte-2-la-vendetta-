@@ -14,7 +14,7 @@
 		\item un oscilloscopio digitale; impiegato per osservare le forme d'onda dei segnali ottenuto;per misurare i ritardi temporali e le quantità dinamiche
 	\end{itemize}
 \section{Flip-Flop D-Lantch}
-	per realizzare un flip-flop D-Latch (\figurename{ \ref{f:D-Latch1}}) non disponendo di porte NOT, è stato montato il circuito in \figurename{ \ref{f:D-Latch2}} impiegando le 
+	per realizzare un flip-flop D-Latch (\figurename{ \ref{f:D-Latch1}}) non disponendo di porte NOT, è stato montato il circuito in \figurename{ \ref{f:D-Latch2}} impiegando le
 	porte NAND in dotazione.
 	\begin{figure}[hb]
 		\centering
@@ -22,7 +22,7 @@
 		\caption{Rappresentazione di un circuito Flip-Flop D-Lantch}
 			\label{f:D-Latch1}
 	\end{figure}
-	
+
 	\begin{figure}[htb]
 		\centering
 		\includegraphics[scale=0.75]{../Figs-Tabs/D-Latch2.png}
@@ -33,7 +33,7 @@
 	L'ingresso D del circuito è stato collegato all'ingresso Y1 dell'impulsatore basato su arduino,
 	mentre l'ingresso di ENABLE è stato collegato al dip switch in dotazione.
 	Si è inoltre fornita una tensione di alimentazione continua $V_{cc}\sim$\SI{5}{\volt}.
-	
+
 	Per la verifica del funzionamento circuitale si è andati a verificare la tabella di verità riportata in \tablename{ \ref{t:D-Lantch}}.
 	\begin{table}[htb]
 		\centering
@@ -52,20 +52,20 @@
 	\label{t:D-Lantch}
 	\end{table}
 	La verifica può essere effettuata con due tecniche distinte.
-	
+
 	Una prima qualitativa in cui si verifica la tabella di verità attraverso i diodi LED; per fare ciò si dovrebbe montare delle resistenze, per limitare la richiesta di corrente dei LED,
 	rispettivamente precedentemente all'uscita $Q$ e all'uscita $\overline{Q}$.
-	
-	Ed una seconda tecnica in cui si acquisiscono le tensioni osservabili 
+
+	Ed una seconda tecnica in cui si acquisiscono le tensioni osservabili
 	sulle uscite $Q$ e $\overline{Q}$ in funzione degli ingressi $D$ ed $En$.
-	Essendo tale seconda  tecnica più facilmente riportabile 
+	Essendo tale seconda  tecnica più facilmente riportabile
 	si è proceduto alla verifica della tabella di verità attraverso questo metodo di verifica.
-	
-	Per fare ciò si è collegato al ingresso di $En$ all'ingresso 
+
+	Per fare ciò si è collegato al ingresso di $En$ all'ingresso
 	$Y2$ dell'impulsatore. Essendo 	$Y1$ e 	$Y2$ sfasati di circa \ang{90}, in un periodo tali ingressi assumono tutte le possibili permutazioni di un ingresso a 2 bit.
-	
+
 	Si riportano le acquisizioni ottenute in \figurename{ \ref{o:D-Latch}}
-		
+
 	\begin{figure}[htb]
 			\centering
 			\subfloat[acquisizione delle tensioni in ingresso nel ciruito D-Leach; $D$ (ch1) ed $En$ (ch2)]{
@@ -88,38 +88,38 @@
 \paragraph{Misura dei tempi di ritardo}
 	Essendo il circuito logico montato un sistema a più livelli
 	si è assunto che i tempi di ritardo tra il segnale in ingresso e quelli in uscita non siano trascurabili.
-	
+
 	Si è pertanto proceduto ad una misura dei tempi di propagazione per il fronte di salita e discesa del segnale.
-	
-	Per fare ciò è stata fissata un onda quadra di frequenza $f=$\SI{250\pm 8}{\hertz} ;tale valore è stato ottenuto dal sistema di acquisizione automatica dell'oscilloscopio . Per l'incertezza associata  è stata preso il 3\textdiscount dovuta all'incertezza di calibrazione dell'oscilloscopio stesso .	
+
+	Per fare ciò è stata fissata un onda quadra di frequenza $f=$\SI{250\pm 8}{\hertz} ;tale valore è stato ottenuto dal sistema di acquisizione automatica dell'oscilloscopio . Per l'incertezza associata  è stata preso il 3\textdiscount dovuta all'incertezza di calibrazione dell'oscilloscopio stesso .
 	Tale onda, generata dall'impulsatore, è stata impiegata quale  segnale per l'ingresso $D$, mentre per la porta $En$ si è impiegato l'interruttore  posto normalmente sull'$1$ logico.
-	
+
 	Visualizzando l'andamento del segnale in $D$ e nelle uscite $Q$ e $\overline{Q}$
 	sono stati misurati i seguenti ritardi:\\
 	\begin{center}
 		$ \Delta t_{Q,salita}=$\SI{16.4 \pm 0.1}{\nano \sec} \qquad $ \Delta t_{Q,discesa}=$\SI{29.2 \pm 0.2}{\nano \sec}\\
 			$ \Delta t_{\overline{Q},salita}=$\SI{29.2 \pm 0.2}{\nano \sec} \qquad $ \Delta t_{\overline{Q},discesa}=$\SI{16.4 \pm 0.1}{\nano \sec}\\
 	\end{center}
-	
+
 	Come è possibile osservare da i valori ottenuti $\Delta t_{\overline{Q},salita} = \Delta t_{{Q},discesa}$ e $\Delta t_{\overline{Q},discesa} = \Delta t_{{Q},salita}$; ciò risulta compatibile con le attese, essendo entrambe le uscite poste sul solito livello ed una l'inverso dell'altro.
 	\paragraph{Alcune analisi sulla costituzione ciruitali }
 	Come riportato in \figurename{ \ref{f:D-Latch1}} per la realizzazione del Flip-Flop D-Latch in esame si è impiegato una porta NOT;
 	tale porta svolge la la funzione di inviare agli ingressi del flip-flop D-latch valori opposti; evitando pertanto di inviare in ingresso l' $1$ logico, per entrambe le porte.
 	Quindi la porta NOT svolge la funzione di evitare l'ingresso del circuito nella cosiddetta zona "proibita".
 	Se il sistema fosse in tale stato una successiva variazione del segnale in ingresso porterebbe a variazioni non prevedibili delle uscite.
-	
+
 	Si segnala inoltre che essendo le porte NAND impiegate basate su logica TTL quando esse non risultino collegate a terra si ottiene in uscita alla porta un segnale corrispondente all'$1$ logico.
 	L'ingresso $En$ pertanto risulta essere attivo,e quindi abilita il circuito, per
 	segnali in ingresso, in $En$, corrispondenti allo stato LOW.
-	
+
 	\section{Divisori in frequenza}
 	Per realizzare un circuito divisore di frequenza binario come da richieste si è andati a nontare il circuito in \figurename{ \ref{f:div1}}.
-	
+
 	Per la realizzazione circuitale sono state impiegate le resistenze di limitazione di corrente$R_{1}$ $R_{2}$ $R_{3}$	$R_{4}$ $\sim$ \SI{330}{\ohm}
 	e l'IC SN74LS93; ovvero un ripple counter composto di quattro flip-flop JK.
-	
+
 	L'ingresso $R0$ è stato collegato a terra in modo da garantire un ingresso alla porta NAND posto sull'$1$ logico.
-	Essendo i Flip-Flop dell'IC SN74LS93  impiegati in configurazione $Master-slave$ 
+	Essendo i Flip-Flop dell'IC SN74LS93  impiegati in configurazione $Master-slave$
 	si attende che per ognuno di essi si ottenga una divisione per 2 del segnale di clock in ingresso; ottenendo pertanto frequenze rispettivamente 1/2, 1/4, 1/8 ed 1/16 della frequenza di
 	clock iniziale.
 	\begin{figure}[htb]
@@ -129,7 +129,7 @@
 		\label{f:div1}
 	\end{figure}
 \paragraph{verifica funzionamento contatore.}
-	Per tale verifica attraverso il circuito impulsatore in dotazione 
+	Per tale verifica attraverso il circuito impulsatore in dotazione
 	si è inviata una frequenza di clock al primo Flip-Flop $f_{clock,1}<$\SI{10}{\hertz} $\sim$ \SI{1}{\hertz};
 	attraverso l'accensione e lo spegnimento dei diodi LED montati è stato verifico che il circuito riproducesse la codifica binaria da 0 a 15 nella corretta sequenza.
 \paragraph{verifica funzionamento divisore e misura dei tempi di ritardo.}
@@ -139,18 +139,18 @@
 	$f_{clock,usc,2}=$\SI{12.4995 \pm 0.0001}{ \kilo \hertz}\footnote[1]{ }\\
 	$f_{clock,usc,3}=$\SI{ 6.2497 \pm 0.0001}{ \kilo \hertz}\footnote[1]{ }\qquad
 	$f_{clock,usc,4}=$\SI{3.12508 \pm 0.00001}{ \kilo \hertz}\footnote[1]{ }.\\
-	
+
 	Attraverso i valori ottenuti e le acquisizioni delle forme d'onda riportate in \figurename{ \ref{o:div}  } si è considerata verificato l'andamento da divisore previsto.
-	
+
 		\begin{figure}[htb]
 		\centering
 		\subfloat[acquisizione di $f_{clock,1}$ (ch2) e di  $f_{clock,usc,1}$ (ch1)]{
 			\includegraphics[scale=0.35]{../Figs-Tabs/divisore_2x.png}
-			
+
 		}
 		\subfloat[acquisizione di $f_{clock,1}$ (ch2) e di  $f_{clock,usc,2}$ (ch1)]{
 			\includegraphics[scale=0.35]{../Figs-Tabs/divisore_4x.png}
-			
+
 		}\\
 		\subfloat[acquisizione di $f_{clock,1}$ (ch2) e di  $f_{clock,usc,3}$ (ch1)]{
 			\includegraphics[scale=0.35]{../Figs-Tabs/divisore_8x.png}
@@ -161,25 +161,25 @@
 		\caption{acquisizioni delle schermate impiegate per la verifica del funzionamento del circuito in \figurename{ \ref{f:div1}}.}
 		\label{o:div}
 	\end{figure}
- 
- 	Per la misura dei tempi di ritardo, si è proceduto alla misura del ritardo, del fronte di salita e discesa, attraverso i cursori dell'oscilloscopio ottenendo i valori in \tablename{ \ref{t:div}}\p.
- 	Si osserva che i tempi di ritardo crescono al crescere della porta ove sono misurati;
- 	ciò risulta compatibile con le attese poichè spostandoci di Flip-Flop si sposta anche il livello gerarchico all'interno dell'circuito.
- 	
- 	\begin{table}
- 		\centering
- 		\begin{tabular}{sssss}
- 		\toprule
- 	\text{ } &Q_{1} & Q_{2}& Q_{3}&Q_{4}\\
- 		\midrule
- 		\Delta t_{salita}\text{ \si{\nano \sec}} &	76,0 \pm 0,4  & 101 \pm 1 & 110 \pm 1 & 155 \pm 1\\
- 			\Delta t_{discesa}\text{ \si{\nano \sec}}& 24,2 \pm 0,1	  & 30,8 \pm 0,2 & 42 \pm 0,2 & 53,2 \pm 04\\
- 	 		\bottomrule
- 	\end{tabular}
- 	\caption{tempi di ritardo misurati per il circuito in \figurename{ \ref{f:div1}}.}
- 	\label{t:div}
- 	\end{table}
- 	\paragraph{Costruzione circuito di reset}
- 	Per realizzare un sistema di reset per circuito divisore 
- 	è stato montato il contatore asincrono in \figurename{  \ref{f:reset} }.
- 	Per tale circuito è stata lasciata flottante l'ingresso $R1$
+
+	Per la misura dei tempi di ritardo, si è proceduto alla misura del ritardo, del fronte di salita e discesa, attraverso i cursori dell'oscilloscopio ottenendo i valori in \tablename{ \ref{t:div}}\p.
+	Si osserva che i tempi di ritardo crescono al crescere della porta ove sono misurati;
+	ciò risulta compatibile con le attese poichè spostandoci di Flip-Flop si sposta anche il livello gerarchico all'interno dell'circuito.
+
+	\begin{table}
+		\centering
+		\begin{tabular}{sssss}
+		\toprule
+	\text{ } &Q_{1} & Q_{2}& Q_{3}&Q_{4}\\
+		\midrule
+		\Delta t_{salita}\text{ \si{\nano \sec}} &	76,0 \pm 0,4  & 101 \pm 1 & 110 \pm 1 & 155 \pm 1\\
+			\Delta t_{discesa}\text{ \si{\nano \sec}}& 24,2 \pm 0,1	  & 30,8 \pm 0,2 & 42 \pm 0,2 & 53,2 \pm 04\\
+			\bottomrule
+	\end{tabular}
+	\caption{tempi di ritardo misurati per il circuito in \figurename{ \ref{f:div1}}.}
+	\label{t:div}
+	\end{table}
+	\paragraph{Costruzione circuito di reset}
+	Per realizzare un sistema di reset per circuito divisore
+	è stato montato il contatore asincrono in \figurename{  \ref{f:reset} }.
+	Per tale circuito è stata lasciata flottante l'ingresso $R1$

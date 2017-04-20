@@ -12,3 +12,12 @@ dTi = mme(Ti, 'time', 'oscil')
 dTd = mme(Td, 'time', 'oscil')
 print(Ti, dTi)
 print(Td, dTd)
+
+# valerio
+
+deltas = np.loadtxt(os.path.join(folder, 'data', '2_ritardo.txt'))[:,-1::-1] * 1e-9
+errs = mme(deltas, 'time', 'oscil')
+print(errs)
+print()
+print(*xe(deltas, errs)[0])
+print(*xe(deltas, errs)[1])
