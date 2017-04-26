@@ -2,11 +2,10 @@
 %!TEX TS-program = pdflatex
 
 %%% --- PREAMBLE --- %%%
-
 \documentclass[a4paper,11pt]{article}
 
 \usepackage[italian]{babel}
-\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,headheight=14pt]{geometry}
 \usepackage[T1]{fontenc} % OT1: basic, T1: western, T3 and T5: exotic, T4: lots of characters but WORSE READABILITY
 \usepackage[utf8x]{inputenc} % utf8x supports more characters than utf8
 \usepackage{graphicx} % import PNG, JPG and PDF with \includegraphics
@@ -14,11 +13,13 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{float}
 \usepackage{mathtools} % (!! PLACE BEFORE hyperref !!)
 \usepackage{xfrac} % \sfrac
 \usepackage{cancel} % \cancel \cancelto
-\usepackage{hyperref} % interactive links in TOC, URLs and references
-% Bob \usepackage[version=3]{mhchem} % \ce (chemical formula)
+%\usepackage{hyperref} % interactive links in TOC, URLs and references
+% unneded \usepackage{fixltx2e} % provides \textsubscript and makes some fixes
+\usepackage[toc,page]{appendix}
 \usepackage{siunitx} % \num \si \SI
 \usepackage{alltt} % {alltt} (like verbatim but with commands)
 \usepackage{moreverb} % {listing}
@@ -40,7 +41,8 @@
 \usepackage{array}
 \usepackage{multirow}
 \usepackage{booktabs} % \toprule, \midrule, \bottomrule
-
+\usepackage{fancyhdr}
+\usepackage{wasysym}
 \graphicspath{ {../Figs-Tabs/} } % graphics search directories
 \setcounter{tocdepth}{1} % -1: part, 0: chapter, 1: section, 2: subsection, 3: subsubsection
 
@@ -68,47 +70,18 @@
 	captionpos=none,
 }
 
-\newcommand{\swaphmargins}{
-\newlength{\tmplength}
-\setlength{\tmplength}{\oddsidemargin}
-\setlength{\oddsidemargin}{\evensidemargin}
-\setlength{\evensidemargin}{\tmplength}}
-
-\newcommand{\setdispacing}[1][0pt]{\setlength{\abovedisplayskip}{#1}
-\setlength{\belowdisplayskip}{#1}
-\setlength{\abovedisplayshortskip}{#1}
-\setlength{\belowdisplayshortskip}{#1}}
-
-\newcommand{\inv}[1]{\frac{1}{#1}}
-\newcommand{\dd}{\mathrm{d}}
-\newcommand{\deriv}[2][x]{\frac{\dd #2}{\dd #1}}
-\newcommand{\derivn}[3][x]{\frac{\dd^{#2}#3}{\dd{#1}^{#2}}}
-\newcommand{\pardv}[2][x]{\frac{\partial #2}{\partial #1}}
-\newcommand{\pardvn}[3][x]{\frac{\partial^{#2}#3}{\partial{#1}^{#2}}}
-\newcommand{\integ}[2][x]{\int #2\,\dd #1}
-\newcommand{\invinteg}[2][x]{\int\frac{\dd #1}{#2}}
-\newcommand{\dinteg}[4]{\int_{#1}^{#2}#3\,\dd #4}
-%\renewcommand{\arcsin}{\operatorname{asin}}
-%\renewcommand{\arccos}{\operatorname{acos}}
-%\renewcommand{\arctan}{\operatorname{atan}}
-\DeclareMathOperator{\arccot}{arccot}
-\newcommand{\vel}{\vee}
-\newcommand{\et}{\wedge}
-
-\newcommand{\fwhm}{\text{FWHM}}
-\newcommand{\hwhm}{\text{HWHM}}
-
 \newcommand{\ndr}[1]{\footnote{#1 (n.d.r.)}}
-\newcommand{\fig}[1]{figura (\ref{fig:#1})} %inserting reference to figures
-\newcommand{\tab}[1]{tabella (\ref{tab:#1})} % inserting reference to tables
-\newcommand{\eqn}[1]{equazione \eqref{eq:#1}} % inserting reference to equation
+\newcommand{\fig}[1]{\figurename{ \ref{f:#1}}} %inserting reference to figures
+\newcommand{\tab}[1]{\tablename{ \ref{t:#1}}} % inserting reference to tables
+\newcommand{\eqn}[1]{equazione \eqref{#1}} % inserting reference to equation
 \newcommand{\dof}{\text{ dof}} % degrees of freedom
 \newcommand{\paral}{\mathbin{\|}} % impedance parallel
 \DeclareSIUnit\deca{decade} % decade unit definition for use in siunitx
+\DeclareSIUnit\gauss{Gs} % Gauss unit definition for use in siunitx
 
 \newcommand{\insertpart}[2]{\input{#1}}
+\newcommand{\e}{\textbf{$e^{-}$}}
 
-\newcommand{\p}{\footnote{\textbf{valore placeholder}}}
 \sisetup{%
 	separate-uncertainty = true,
 	per-mode = symbol,
@@ -116,7 +89,7 @@
 	multi-part-units = single,
 	table-number-alignment = center,
 	range-phrase = \text{--},
-	range-units = brackets,
+	range-units = single,
 	output-complex-root =  \text{\ensuremath{j}},
 	table-figures-decimal = 3,
 	table-figures-exponent = 0,
@@ -127,14 +100,19 @@
 %%% --- DOCUMENT --- %%%
 
 
-%%%%% SIunitX example use:
+%%%%% SIunits example use:
 % \si{\kilo\volt\per\meter\squared} -> kV/m^2
 % \SI{1.222 (34)}{\joule\second}    -> 1.222 +- 0.034 Js
 % \SI{1.222 \pm 0.034}{\nF}         -> 1.222 +- 0.034 nF
 % use it plz
 
-\author{Gruppo BF \\ Roberto Ribatti, Thomas Giannoni, Valerio Lomanto}
-\title{Esercitazione N.12: Flip-Flop e contatori.}
+\pagestyle{fancy}
+\author{Gruppo BF \\ Thomas Giannoni, Valerio Lomanto, Roberto Ribatti}
+\title{Esercitazione N. 12: Flip-Flop e contatori}
+\date{4 aprile 2017}
+
+\author{Gruppo BF \\ Thomas Giannoni, Valerio Lomanto, Roberto Ribatti}
+\title{Esercitazione N. 12: Flip-Flop e contatori}
 \date{4 aprile 2017}
 
 \begin{document}
@@ -149,6 +127,7 @@
 		\end{itemize}
 \end{abstract}
 \input{./p1.tex}
+\input{./p3.tex}
 	\end{document}
 	
 	
