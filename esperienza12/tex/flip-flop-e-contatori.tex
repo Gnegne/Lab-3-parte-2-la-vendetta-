@@ -17,7 +17,7 @@
 \usepackage{mathtools} % (!! PLACE BEFORE hyperref !!)
 \usepackage{xfrac} % \sfrac
 \usepackage{cancel} % \cancel \cancelto
-%\usepackage{hyperref} % interactive links in TOC, URLs and references
+\usepackage{hyperref} % interactive links in TOC, URLs and references
 % unneded \usepackage{fixltx2e} % provides \textsubscript and makes some fixes
 \usepackage[toc,page]{appendix}
 \usepackage{siunitx} % \num \si \SI
@@ -71,9 +71,11 @@
 }
 
 \newcommand{\ndr}[1]{\footnote{#1 (n.d.r.)}}
-\newcommand{\fig}[1]{\figurename{ \ref{f:#1}}} %inserting reference to figures
-\newcommand{\tab}[1]{\tablename{ \ref{t:#1}}} % inserting reference to tables
-\newcommand{\eqn}[1]{equazione \eqref{#1}} % inserting reference to equation
+
+\newcommand{\fig}[1]{\figurename{ \ref{fig:#1}}} %inserting reference to figures
+\newcommand{\tab}[1]{\tablename{ \ref{tab:#1}}} % inserting reference to tables
+\newcommand{\eqn}[1]{equazione \eqref{eq:#1}} % inserting reference to equation
+
 \newcommand{\dof}{\text{ dof}} % degrees of freedom
 \newcommand{\paral}{\mathbin{\|}} % impedance parallel
 \DeclareSIUnit\deca{decade} % decade unit definition for use in siunitx
@@ -118,16 +120,10 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-		In questa esperienza sono stati realizzati ed analizzati dei circuiti logici sequenziali.
-		Nella fattispecie: \begin{itemize} 
-			\item un FLIP-FLOP D-LATCH
-			\item dei divisori di frequenza binari 
-			\item uno shift register con D-Latch
-			\item un generatore di sequenze pseudo-casuali
-		\end{itemize}
+L'obiettivo dell'esperienza è la realizzazione e l'analisi di semplici circuiti logici sequenziali, in particolare: un FLIP-FLOP D-LATCH, divisori di frequenza binari, uno shift register con D-Latch e generatore di sequenze pseudo-casuali (linear feedback shift register).
 \end{abstract}
+
 \input{./p1.tex}
+\input{divisore.tex}
 \input{./p3.tex}
 	\end{document}
-	
-	
