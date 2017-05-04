@@ -1,0 +1,24 @@
+\section{Strumentazione}
+	In questa esperienza sono state impiegati:
+	\begin{itemize}
+		\item alcuni circuiti integrati:
+		\begin{enumerate}
+			\item 1 IC SN74LS00 (Quad NAND Gate);
+			\item 2 IC SN74LS74 (Dual D-Latch);
+			\item 1 IC SN74LS08 (Quad AND Gate);
+			\item 1 IC SN74LS2 (Quad OR Gate);
+		\end{enumerate}
+		\item 1 Switch a 4 bit;
+		\item 3 diodi LED; rispettivamente verde giallo e rosso
+		\item il generatore di onde quadre basato su Arduino realizzato precedentemente.
+	\end{itemize}
+\section{Semafori con circuiti integrati }
+Il semaforo può presentare la modalità ABILITATO e DISABILITATO. Qualora sia abilitato si deve
+ottenere Verde acceso $\longrightarrow$ Verde e
+giallo acceso $\longrightarrow$ rosso acceso $\longrightarrow$
+verde acceso  ciclicamente. Mentre qualora il semaforo sia disabilitato si deve ottenere
+Led giallo acceso $\leftrightarrow$ Led giallo spento.
+Per descriminare tra i due modalità di funzionamento può essere impiegato un segnale di abilitazione
+ENABLE (E).
+Per la realizzazione del semaforo è stato realizzato d'apprima un semaforo privo di enable , per cui il sistema risulti costantemente abilitato;
+dopodiché riprendendone lo schema circuitale si è introdotto il segnale di ENABLE.
