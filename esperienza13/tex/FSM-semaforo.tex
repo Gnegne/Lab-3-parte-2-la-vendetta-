@@ -9,6 +9,7 @@
 \usepackage[T1]{fontenc} % OT1: basic, T1: western, T3 and T5: exotic, T4: lots of characters but WORSE READABILITY
 \usepackage[utf8x]{inputenc} % utf8x supports more characters than utf8
 \usepackage{graphicx} % import PNG, JPG and PDF with \includegraphics
+\usepackage{caption} % \captionof
 \usepackage[usenames,table]{xcolor} % \color
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -77,6 +78,7 @@
 \newcommand{\eqn}[1]{equazione \eqref{eq:#1}} % inserting reference to equation
 
 \newcommand{\dof}{\text{ dof}} % degrees of freedom
+\newcommand{\qbar}{\overline{Q}} % Q barrato
 \newcommand{\paral}{\mathbin{\|}} % impedance parallel
 \DeclareSIUnit\deca{decade} % decade unit definition for use in siunitx
 \DeclareSIUnit\gauss{Gs} % Gauss unit definition for use in siunitx
@@ -137,4 +139,5 @@ implementi il semaforo abilitabile.
 \end{abstract}
 \input{strum.tex}
 \input{no_enable.tex}
+\input{with_enable.tex}
 \end{document}

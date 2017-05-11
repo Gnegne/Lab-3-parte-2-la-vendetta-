@@ -15,12 +15,18 @@
 		\item un oscilloscopio digitale
 	\end{itemize}
 \section{Semafori con circuiti integrati }
-Il semaforo può presentare la modalità ABILITATO e DISABILITATO. Qualora sia abilitato si deve 
-ottenere Verde acceso $\longrightarrow$ Verde e 
-giallo acceso $\longrightarrow$ rosso acceso $\longrightarrow$ 
-verde acceso  ciclicamente. Mentre qualora il semaforo sia disabilitato si deve ottenere
-Led giallo acceso $\leftrightarrow$ Led giallo spento.
-Per descriminare tra i due modalità di funzionamento può essere impiegato un segnale di abilitazione 
+Il semaforo può presentare la modalità ABILITATO e DISABILITATO. Qualora sia abilitato si deve ottenere ciclicamente
+\begin{center}
+	Verde acceso $\longrightarrow$ Verde e
+	Giallo acceso $\longrightarrow$ Rosso acceso $\longrightarrow$
+	Verde acceso
+\end{center}
+Mentre qualora il semaforo sia disabilitato si deve ottenere
+\begin{center}
+	LED Giallo acceso $\leftrightarrow$ Tutti i LED spenti
+\end{center}
+
+Per descriminare tra i due modalità di funzionamento può essere impiegato un segnale di abilitazione
 ENABLE (En).
 Per la realizzazione del semaforo completo è stato realizzato d'apprima un semaforo privo di enable , per cui il sistema risulti costantemente abilitato;
 dopodiché riprendendone lo schema circuitale si è introdotto il segnale di ENABLE.

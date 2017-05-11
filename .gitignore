@@ -14,3 +14,4 @@
 Makefile
 __pycache__/
 !**/Figs-Tabs/*.pdf
+!NoIgnore/*
