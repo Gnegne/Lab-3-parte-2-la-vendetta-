@@ -9,7 +9,6 @@
 \usepackage[T1]{fontenc} % OT1: basic, T1: western, T3 and T5: exotic, T4: lots of characters but WORSE READABILITY
 \usepackage[utf8x]{inputenc} % utf8x supports more characters than utf8
 \usepackage{graphicx} % import PNG, JPG and PDF with \includegraphics
-\usepackage{caption} % \captionof
 \usepackage[usenames,table]{xcolor} % \color
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -18,7 +17,7 @@
 \usepackage{mathtools} % (!! PLACE BEFORE hyperref !!)
 \usepackage{xfrac} % \sfrac
 \usepackage{cancel} % \cancel \cancelto
-%\usepackage{hyperref} % interactive links in TOC, URLs and references
+\usepackage{hyperref} % interactive links in TOC, URLs and references
 % unneded \usepackage{fixltx2e} % provides \textsubscript and makes some fixes
 \usepackage[toc,page]{appendix}
 \usepackage{siunitx} % \num \si \SI
@@ -46,15 +45,6 @@
 \usepackage{wasysym}
 \graphicspath{ {../Figs-Tabs/} } % graphics search directories
 \setcounter{tocdepth}{1} % -1: part, 0: chapter, 1: section, 2: subsection, 3: subsubsection
-\usepackage{listings} %Per inserire codice
-%\usepackage[usenames]{color} %Per permettere la colorazione dei caratteri 
-
-\lstnewenvironment{codice_arduino}[1][]
-{\lstset{basicstyle=\small\ttfamily, columns=fullflexible,
-		keywordstyle=\color{red}\bfseries, commentstyle=\color{blue},
-		language=C++, basicstyle=\small,
-		numbers=left, numberstyle=\tiny,
-		stepnumber=2, numbersep=5pt, frame=shadowbox, float=*, #1}}{}
 
 \lstset{ %
 	language=C,
@@ -87,7 +77,6 @@
 \newcommand{\eqn}[1]{equazione \eqref{eq:#1}} % inserting reference to equation
 
 \newcommand{\dof}{\text{ dof}} % degrees of freedom
-\newcommand{\qbar}{\overline{Q}} % Q barrato
 \newcommand{\paral}{\mathbin{\|}} % impedance parallel
 \DeclareSIUnit\deca{decade} % decade unit definition for use in siunitx
 \DeclareSIUnit\gauss{Gs} % Gauss unit definition for use in siunitx
@@ -121,19 +110,16 @@
 
 \pagestyle{fancy}
 \author{Gruppo BF \\ Thomas Giannoni, Valerio Lomanto, Roberto Ribatti}
-\title{Esercitazione N. 13: Macchine a stati finiti: semaforo }
-\date{2 maggio 2017}
+\title{Esercitazione N. 14: Misura costante di assorbimento del mylar usando un amplificatore lock-in}
+\date{9 maggio 2017}
+
+\author{Gruppo BF \\ Thomas Giannoni, Valerio Lomanto, Roberto Ribatti}
+\title{Esercitazione N. 14:}
+\date{9 maggio 2017}
 
 \begin{document}
 \maketitle
-\begin{abstract}
-L'obiettivo di questa esperienza è la realizzazione di semplici macchine a stati finiti basate su FF D-Latch; in particolare si vuole realizzare un semaforo. In una prima parte si realizzerà un semaforo sempre attivo (che alterna tra gli stati verde, verde/giallo, rosso ciclicamente); in una seconda parte verrà aggiunta la possibilità di disabilitarlo tramite un segnale di enable (quando disabilitato alternerà tra gli stati giallo e completamente spento).
 
-Si è quindi realizzata la stessa FSM scrivendo un programma per Arduino.
-\end{abstract}
-\input{strum.tex}
-\input{no_enable.tex}
-\input{with_enable.tex}
-\input{p3.tex}
-\end{document}
+\input{./intro.tex}
 
+	\end{document}
