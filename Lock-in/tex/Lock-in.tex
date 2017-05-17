@@ -78,11 +78,19 @@
 
 \newcommand{\dof}{\text{ dof}} % degrees of freedom
 \newcommand{\paral}{\mathbin{\|}} % impedance parallel
-\DeclareSIUnit\deca{decade} % decade unit definition for use in siunitx
-\DeclareSIUnit\gauss{Gs} % Gauss unit definition for use in siunitx
+\DeclareMathOperator{\atan}{atan}
+\DeclareSIUnit{\deca}{decade} % decade unit definition for use in siunitx
+\DeclareSIUnit{\gauss}{Gs} % Gauss unit definition for use in siunitx
+\DeclareSIUnit{\pie}{\ensuremath{\pi}} % to use \pi as part of a unit
 
-\newcommand{\insertpart}[2]{\input{#1}}
-\newcommand{\e}{\textbf{$e^{-}$}}
+% delimiter spacing is dumb
+\let\originalleft\left
+\let\originalright\right
+\renewcommand{\left}{\mathopen{}\mathclose\bgroup\originalleft}
+\renewcommand{\right}{\aftergroup\egroup\originalright}
+
+\DeclareRobustCommand{\longfrac}[3][4pt]{% seghino gratuito per frazioni prettier
+  {\begingroup\hspace{#1}#2\hspace{#1}\endgroup\over\hspace{#1}#3\hspace{#1}}}
 
 \sisetup{%
 	separate-uncertainty = true,
@@ -116,8 +124,9 @@
 \begin{document}
 \maketitle
 
-\input{./intro.tex}
-\input{./ampli.tex}
-\input{./squad.tex}
+\input{intro.tex}
+\input{ampli.tex}
+\input{sfaso.tex}
+\input{squad.tex}
 \input{p3.tex}
 \end{document}
