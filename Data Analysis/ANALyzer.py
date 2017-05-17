@@ -39,7 +39,8 @@ __all__ = [ # things imported when you do "from lab import *"
     'fit',
     'fast_plot',
     'umme',
-    'mme'
+    'mme',
+    'fit_nox'
 
 ]
 
@@ -176,7 +177,7 @@ _util_mm_esr_data = dict(
         type = 'digital',
         volt = dict(
             scales = [0.2, 2, 20, 200, 1000],
-            perc = [0.5] * 4 + [0.8],
+            perc = [0.5*3] * 4 + [0.8],
             digit = [1, 1, 1, 1, 2]
         ),
         volt_ac = dict(
@@ -292,6 +293,11 @@ _util_mm_esr_data = dict(
             scales = [1e9], 
             perc = [1]*11,
             div = [0]*11
+        ),
+        fix = dict(
+            scales = [1e9],
+            perc = [1],
+            div = [1e-9]
         )
     )
 )
@@ -834,6 +840,27 @@ def chi2_calc(f, par, X, Y, dY, dX, cov):
             normcov[i,j]=cov[i, j]/(sigma[i]*sigma[j])
 
     return chi, sigma, normcov, p
+    
+def chi2_calc_nox(f, par, X, Y, dY, dX, cov):
+    """
+        Parameters
+        ----------    
+
+        Returns
+        -------
+
+    """  
+    chi = sum((Y-f(X,*par))**2/(dY**2))
+    p = chisqprob(chi, len(X)-len(par))
+    sigma = sqrt(diag(cov))
+    
+    normcov = zeros((len(par),len(par)))
+    
+    for i in range(len(par)):
+        for j in range(len(par)):
+            normcov[i,j]=cov[i, j]/(sigma[i]*sigma[j])
+
+    return chi, sigma, normcov, p
 
 def pretty_print_chi2(file_, par, sigma, chi, X, normcov, p):
     """
@@ -945,6 +972,80 @@ def fit(directory, file_, units, f, p0,
 
     #Calcolo chi, errori e normalizzo la matrice di cov
     chi, sigma, normcov, p = chi2_calc(f, par, X, Y, dY, dX, cov)
+
+    #Stampo i risultati, il chi e la matrice di cov
+    pretty_print_chi2(file_, par, sigma, chi, X, normcov, p)
+
+    if out ==True:
+        data_ol = load_data(directory,file_+"_ol")
+        X_ol, Y_ol, dX_ol, dY_ol, data_err_ol = errors(data_ol, units, XYfun)
+    else:
+        data_ol=[]
+        data_err_ol=[]
+    #Salvo la tabella formattata latex
+    if table==True:
+        latex_table(directory, file_, data, data_err, tab, out, data_ol, data_err_ol)
+
+    par_err = uncertainties.correlated_values(par,cov)
+    
+    return par_err
+    
+def fit_nox(directory, file_, units, f, p0, 
+        title_="", Xlab="", Ylab="", XYfun=_XYfunction, 
+        preplot=False, Xscale="linear", Yscale="linear", 
+        xlimp = array([97.,103.]), residuals=False, 
+        table=False, tab=[""], fig="^^", out=False, kx =1, ky = 1):
+    
+    """
+        Interface for the fit functions of lab library.
+        It performs the following tasks:
+            - make a fast plot of the datas, with errors of course
+            - make the fit of the data and print the plot
+            - print the residuals plot
+            - recognize the outlier and mark them on the fit plot
+            - print a file with the latex tables of data, 
+                ready to import in the .tex file
+
+        Parameters
+        ----------
+        directory:
+        file_:
+        units: array of tuples, 
+               each tuple must contains two elements (unit, metertype)
+        f:
+        p0:
+        
+
+        Returns
+        -------
+        1, if all is gone well.
+
+        Notes
+        -----
+        
+    """
+    data = load_data(directory,file_)
+    X, Y, dX, dY, data_err = errors(data, units, XYfun)
+
+    # define a default for the figure name
+    if fig=="^^":
+        fig=file_
+    
+    # print a fast plot of the data    
+    if preplot==True :
+        _preplot(directory, file_, title_, fig, X, Y, dX, dY, Xscale, Yscale, Xlab, Ylab)
+    
+    #Fit
+    par, cov = curve_fit(f,X,Y,p0,dY,absolute_sigma=True)
+    
+    #Plotto il grafico con il fit e gli scarti
+    plot_fit(directory, file_, title_, units, f, par,
+             X, Y, dX, dY, kx, ky,
+             out, fig, residuals, xlimp, XYfun,
+             Xscale, Yscale, Xlab, Ylab)
+
+    #Calcolo chi, errori e normalizzo la matrice di cov
+    chi, sigma, normcov, p = chi2_calc_nox(f, par, X, Y, dY, dX, cov)
 
     #Stampo i risultati, il chi e la matrice di cov
     pretty_print_chi2(file_, par, sigma, chi, X, normcov, p)

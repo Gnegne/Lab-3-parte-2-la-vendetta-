@@ -1,47 +1,39 @@
 \begin{abstract}
-	In questa esperienza è stata misurata la costante di assorbimento del mylar.
-	Tale misura è stata effettuata misurando le tensioni generate in un fotodiodo in funzione della luce trasmessa dai vari spessori di mylar.
-	Essendo tali misurazioni fortemente perturbate dai rumori strumentali, basso $sgn=\frac{signal}{noise}$ 
+	L'obiettivo dell'esperienza è la misura della costante di assorbimento del mylar.
+	Tale misura è stata effettuata misurando le tensioni generate in un fotodiodo in funzione della luce trasmessa attraverso vari spessori di mylar.
+	
+	Essendo tali misurazioni fortemente perturbate da rumori ambientali e strumentali
 	si è proceduto alla realizzazione di un amplificatore sensibile alla frequenza con la tecnica del lock-in
-	in maniera da aumentare il $sgn$ delle misure ottenute.
-	La costante di assorbimento del mylar è poi stato ottenuto attraverso un fit della 
+	in maniera da aumentare il rapporto segnale/rumore.
+	
+	La costante di assorbimento del mylar è poi stata ottenuta attraverso un fit della 
 	legge di Lambert per l'assorbimento di una radiazione da parte di un mezzo uniforme.
 \end{abstract}
 
 \section{Strumentazione}
-	In tale esperienza sono stati impiegati 
-	\begin{itemize}
-		\item un generatore di forme d'onda
-		\item un oscilloscopio digitale per acquisire i segnali
-		\item i seguenti circuiti integrati 
-			\item TL082: JFET input dual op-amp
-			\item 4 TL081: JFET input op-amp
-			\item SN7400: quad NAND gates
-			\item DG441: quad CMOS analog switch
-			\item 2N1711,BC182: NPN transistor
-			\item LED rosso
-			\item un fotodiodo
-			\item varie lastrine di mylar, spessore di $150$\si{\mu \metre} l'una
-			\item varie resistenze e condensatori
+La strumentazione usata è quella presente sul banco di lavoro, più:
+\begin{itemize}
+		\item i seguenti circuiti integrati:
+		\begin{itemize}
+			\item TL082: JFET input dual op-amp;
+			\item quattro TL081: JFET input op-amp;
+			\item SN7400: quad NAND gates;
+			\item DG441: quad CMOS analog switch;
+			\item 2N1711,BC182: NPN transistor;
+		\end{itemize}
+			\item un LED rosso;
+			\item un fotodiodo;
+			\item varie lastrine di mylar dello spessore di $150$\si{\micro \metre} l'una.
 	\end{itemize}
-\section{Metodo di misura }
-	Per stimare la costante di assorbimento del mylar sono stati acquisiti i valori di tensione generati 
-	dal fotodiodo, per la radiazione generata dal LED e passante attraverso il mezzo,
-	in funzione del numero di lastre di mylar.
 	
-	Dopo una prima verifica diretta; riportata nelle sezioni a seguito, si osserva che al crescere il
-	numero di lastrine il segnale presenti un $sgn=\frac{signal}{noise}$ basso;
-	si ottiene inoltre che tale misure siano particolarmente influenzate dal rumore e 
-	dall'illuminazione ambientale.
-	Si è pertanto proceduto a realizzare il circuito in \figurename{ \ref{f:complessivo}}.
-	Tale circuito svolge la funzione di un amplificatore sensibile alla frequenza con la tecnica del lock-in in maniera da aumentare il $sgn$.
+\section{Metodo di misura}
+L'apparato sperimentale è schematizzato in \figurename{ \ref{f:complessivo}}.
+	Tale circuito svolge la funzione di un amplificatore sensibile alla frequenza con la tecnica del lock-in in maniera da aumentare il segnale.
 	Per la verifica del funzionamento circuitale si è proceduto effettuando un montaggio a blocchi
 	e verificandone separatamente il funzionamento.
 	
-	Si segnala inoltre che per limitare le fonti di rumore si è proceduto a
-	collegare le varie linee di terra della breadboard,
-	collegare dei condensatori tra le tensioni di alimentazione ed il circuito,
-	impiegare collegamenti quanto più corti e appiattiti possibile per il montaggio effettuato.
+	Per limitare le fonti di rumore si è proceduto a collegare tra loro le varie linee di terra della breadboard,
+	si sono impegati condensatori tra le linee di alimentazione della breadboard, i collegamenti sono stati realizzati quanto più corti e appiattiti possibile.
 	\begin{figure}[ht]
 		\centering
 		\includegraphics[scale=0.3]{./c1.png}
@@ -49,6 +41,6 @@
 		\label{f:complessivo}
 	\end{figure}
 \paragraph{Setup}
-	Si segnala che in tale esperienza sono state impiegate le tensioni di alimentazione 
+	Sono state impiegate le tensioni di alimentazione 
 	$V_{+}=$\SI{ 5.00 \pm 0.04}{\volt} e $V_{-}=$\SI{ -4.98 \pm 0.04}{\volt}
-	e un segnale sinusoidale $S1$ di tensione $V_{pp}=$\SI{6.00\pm 0.04}{\volt} e $f=$\SI{1.0271 \pm 0.0001}{\kilo \hertz}\footnote{per tale valore è stata impiegata la funzione di misura automatica dell'oscilloscopio associando a essa l'incertezza data dalla prima cifra che risultasse variare} e le componenti circuitali riportati in allegato 1.
+	e un segnale sinusoidale $S1$ di tensione $V_{pp}=$\SI{6.00\pm 0.04}{\volt} e $f=$\SI{1.0271 \pm 0.0001}{\kilo \hertz}.
