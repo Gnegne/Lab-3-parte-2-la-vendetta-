@@ -10,23 +10,22 @@ Si è proceduto a montare il circuito in \fig{ampli_media}, il valore misurato d
 		\label{fig:ampli_media}
 	\end{minipage}
 	\begin{minipage}{0.19\textwidth}
-		\begin{tabular}{l}
-			$R_{18}$ = \SI{3.19(4)}{\mega\ohm}\\
-			$R_{20}$ = \SI{1.22(1)}{\mega\ohm}\\
-			$R_{21}$ = \SI{1.45(1)}{\mega\ohm}\\
-			$R_{22}$ = \SI{38.2(4)}{\kilo\ohm}\\
-			$R_{23}$ = \SI{32.5(4)}{\kilo\ohm}\\
-			$R_{24}$ = \SI{38.3(4)}{\kilo\ohm}\\
-			$R_{26}$ = \SI{32.0(4)}{\kilo\ohm}\\
-			$C_5$ = \SI{228(9)}{\nano\farad}\\
-			$C_6$ = \SI{51(2)}{\nano\farad}
-			
+		\begin{tabular}{l@{ }c@{ }l}
+			$R_{18}$& = &\SI{3.19(4)}{\mega\ohm}\\
+			$R_{20}$& = &\SI{1.22(1)}{\mega\ohm}\\
+			$R_{21}$& = &\SI{1.45(1)}{\mega\ohm}\\
+			$R_{22}$& = &\SI{38.2(4)}{\kilo\ohm}\\
+			$R_{23}$& = &\SI{32.5(4)}{\kilo\ohm}\\
+			$R_{24}$& = &\SI{38.3(4)}{\kilo\ohm}\\
+			$R_{26}$& = &\SI{32.0(4)}{\kilo\ohm}\\
+			$C_5$& = &\SI{228(9)}{\nano\farad}\\
+			$C_6$& = &\SI{51(2)}{\nano\farad}
 		\end{tabular}
 	\end{minipage}
 \end{figure}
 
 \paragraph{Amplificatore differenziale} La prima parte del circuito è un amplificatore differenziale che prende in ingresso le uscite $S7$ e $S8$ e in uscita ($S9$) e in condizioni ideali restituisce la differenza amplificata di un fattore $g_f$ (guadagno differenziale).
-In particolare se $R_{23} = R_{26}$ e $R_{22} = R_{24}$\footnote{In realtà basterebbe fossero proporzionali}, allora la tensione in uscita sarà: $$V_{S9}=(V_{S8}-V{S7})\frac{R_{23}}{R_{22}}$$ dove perciò è presente solo amplificazione differenziale e non amplificazione di modo comune.
+In particolare se $R_{23} = R_{26}$ e $R_{22} = R_{24}$\footnote{In realtà basterebbe fossero proporzionali}, allora la tensione in uscita sarà: $$V_{S9}=(V_{S8}-V_{S7})\frac{R_{23}}{R_{22}}$$ dove perciò è presente solo amplificazione differenziale e non amplificazione di modo comune.
 
 Come misurato, le resistenze non sono esattamente uguali, perciò il comportamento devierà leggermente da quello ideale, in particolare ci attendiamo che $$V_{S9}=V_{S8}\frac{R_{23}}{R_{23}+R_{22}}\frac{R_{24}}{R_{24}+R_{26}}-V_{S7}\frac{R_{22}}{R_{23}}$$, in particolare i guadagni di modo comune e differenziale saranno:
 
@@ -37,7 +36,7 @@ Considerato il segnale in ingresso, l'uscita in condizioni ideali sarà il segna
 
 Si verifica che nel primo caso il segnale è sempre negativo, mentre nel secondo è sostanzialmente a media nulla, come atteso.
 
-Essendo presente un guadagno di modo comune, seppur piccolo, il risultato sarà un asimmetria nelle due semi-onde, come in effetti si osserva\footnote{Questo non è l'unico motivo per cui aspettarsi una asimmetria tra le due semi-onde, c'è infatti da considerare la risposta del fotodiodo, possibilmente non lineare.}.
+Essendo presente un guadagno di modo comune, seppur piccolo, il risultato sarà un'asimmetria nelle due semi-onde, come in effetti si osserva\footnote{Questo non è l'unico motivo per cui aspettarsi una asimmetria tra le due semi-onde, c'è infatti da considerare la risposta del fotodiodo, possibilmente non lineare.}.
 
 \begin{figure}[h]
 		\centering
@@ -53,7 +52,7 @@ Essendo presente un guadagno di modo comune, seppur piccolo, il risultato sarà 
 		\label{fig:s7}
 \end{figure}
 
-\paragraph{Mediatore} La seconda parte del circuito è un mediatore che prende in ingresso l'uscita $S9$ dell'amplificatore differenziale e restituisce in output il valore medio. 
+\paragraph{Mediatore} La seconda parte del circuito è un mediatore che prende in ingresso l'uscita $S9$ dell'amplificatore differenziale e restituisce in output il valore medio.
 
 Misurando con il voltmetro l'output quando il deviatore è su $S2$, quindi il segnale in ingresso è quello in \fig{S9b}, il valore letto è dell'ordine di qualche decina di $\si{\milli\volt}$. Agendo sul potenziometro per la regolazione della fase è possibile calibrare il circuito in modo che la media sia il più possibile vicina a 0.
 
@@ -85,7 +84,7 @@ I risultati del fit eseguito sono:
 $$V_0 = \SI{2.11 \pm 0.04}{\volt} \qquad k = 5.71 \pm 0.24 \qquad a = \SI{-0.117 \pm 0.021}{\volt}$$
 $$ \text{corr}(V_0,k) = -0.79 \qquad \text{coor}(V_0,a) = 0.63 \qquad \text{corr}(k,a) = -0.97$$
 
-Il valore del $\chi^2$ dipende fortemente dalla presenza o meno dell'errore sullo spessore delle lastre. Nell'ipotesi che questo sia trascurabile $\chi^2 /\text{ndof} = 30.3 / 8$, con un $p = 0.02\%$. Se invece, ad esempio, l'errore sullo spesso è $1\%$ si ottiene $\chi^2 /\text{ndof} = 10.2 / 8$ e un $p = 25.0\%$, che sembra quindi ragionevole.
+Il valore del $\chi^2$ dipende fortemente dalla presenza o meno dell'errore sullo spessore delle lastre. Nell'ipotesi che questo sia trascurabile $\chi^2 /\text{ndof} = 30.3 / 8$, con un $p = 0.02\%$. Se invece, ad esempio, l'errore sullo spessore è $1\%$ si ottiene $\chi^2 /\text{ndof} = 10.2 / 8$ e un $p = 25.0\%$, che sembra quindi ragionevole.
 
 Il grafico dei dati e del fit realizzato è riportato in \fig{fit}.
 
