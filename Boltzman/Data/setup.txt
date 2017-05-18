@@ -1,0 +1,29 @@
+# cazzate
+R1 = 984
+R2 = 974
+C1 = 112.5e-9
+C2 = 105.7e-9
+
+# preamp
+R1 = 971
+R2 = 4.69e3
+R3 = 71.9e3
+
+#partitore
+r4 = 987
+R5 = 1.031e6
+
+# passabbanda
+R1 = 2.66e3
+R2 = 117.9
+R3 = 46.4e3
+
+# postAMP
+R1 = 972
+R3 = 3.87e3
+R2 = 33.1e3
+
+
+# RMSatore
+C1 = 114e-9
+C3 = 474e-9
