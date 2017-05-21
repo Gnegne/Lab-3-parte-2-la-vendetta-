@@ -102,7 +102,7 @@ print('banda resist:')
 #print(R1, dR1)
 #print(R2, dR2)
 #print(R3, dR3)
-a = np.array((f, vin, dvin, vo, dvo)) * np.array([[-1e3], [1], [1], [1], [1]])
+a = np.array((vin, dvin)) * np.array([[-1e3], [1], ])
 print(maketab(*a, errors='all', precision=7))
 
 print(f)
