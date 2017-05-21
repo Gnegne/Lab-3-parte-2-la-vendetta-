@@ -8,59 +8,35 @@ import time
 from scipy import odr, optimize, stats, special, linalg
 import os
 import sympy
-from collections import Counter
-import numdifftools as numdiff
-
-# TODO
-#
-# util_mm_esr
-# aggiungere possibilità di configurazione degli errori (in particolare non contare l'errore percentuale) usando il parametro sqerr
-#
-# fit_concatenate
-# concatena modelli di fit per fittare simultaneamente condividendo parametri
-#
-# _fit_*_odr
-# vedere se c'è qualcosa di meglio di leastsq (es. least_squares?)
-#
-# util_format
-# opzione si=True per formattare come num2si
-# opzione errdig=(float)|'pdg' per scegliere le cifre dell'errore o usare il formato del PDG
-#
-# fit_generic (nuova funzione)
-# mangia anche le funzioni sympy calcolandone jacb e jacd, riconoscendo se può fare un fit analitico
-# controlla gli argomenti in ingresso prima per dare errori sensati
-# usa scipy.odr (anche fit implicito, covarianze, multidim, restart, fissaggio parametri)
-# le cose multidim sono trasposte nel modo comodo per scrivere le funz. (quindi mi sa come scipy.odr), può trasporre lei con un'opzione
-# riconosce se la f mangia un punto alla volta o tutti i dati insieme
-# interfaccia tipo optimize.curve_fit (fare in modo che i casi base siano uguali a fit_linear e fit_generic_xyerr)
-# ha un full_output e un print_info che fanno molte cose
-# fit_generic(f, x, y=None, dx=None, dy=None, p0=None, pfix=None, dfdx=None, dfdp=None, dimorder='compfirst', absolute_sigma=True, full_output=False, print_info=False, restart=False)
-# = par, cov,
-# {'resx': residui x,
-# 'resy': residui y,
-# 'restart': oggetto ODR}
-# se restart=True, ritorna l'oggetto ODR; se restart è un ODR, lo usa per ripartire da lì.
-# pfix = [True, False ...] i True vengono bloccati
-# pfix = [0, 3, 5...] i parametri a questi indici vengono bloccati
-# i bounds!
+import uncertainties
 
 __all__ = [ # things imported when you do "from lab import *"
 	'fit_norm_cov',
-	'fit_generic',
+	'fit_curve',
+	'fit_curve_bootstrap',
+	'CurveModel',
+	'FitCurveOutput',
 	'fit_linear',
 	'fit_const_yerr',
 	'fit_oversampling',
 	'util_mm_er',
+	'util_mm_esr',
+	'util_mm_esr2',
 	'util_mm_list',
 	'mme',
 	'num2si',
 	'num2sup',
 	'num2sub',
 	'unicode_pm',
+	'format_par_cov',
 	'xe',
 	'xep',
 	'util_format',
-	'Eta'
+	'util_timecomp',
+	'util_timestr',
+	'Eta',
+	'nextfilename',
+	'sanitizefilename'
 ]
 
 # __all__ += [ # things for backward compatibility
@@ -102,7 +78,7 @@ def fit_norm_cov(cov):
 			cov[j, i] = cov[i, j]
 	return cov
 
-def _fit_generic_ev(f, dfdx, x, y, dx, dy, par, cov, absolute_sigma=True, conv_diff=1e-7, max_cycles=5, **kw):
+def _fit_curve_ev(f, dfdx, x, y, dx, dy, par, cov, absolute_sigma=True, conv_diff=1e-7, max_cycles=5, **kw):
 	cycles = 1
 	while True:
 		if cycles >= max_cycles:
@@ -120,41 +96,265 @@ def _fit_generic_ev(f, dfdx, x, y, dx, dy, par, cov, absolute_sigma=True, conv_d
 			break
 	return par, cov, cycles
 
-def _fit_generic_odr(f, dfdx, dfdps, dfdpdxs, x, y, dx, dy, p0, **kw):
+class _Nonedict(dict):
+	
+	def __init__(self, **kw):
+		for k in kw:
+			if not (kw[k] is None):
+				self[k] = kw[k]
+
+def _fit_curve_odr(f, x, y, dx, dy, p0, dfdx=None, dfdps=None, dfdpdxs=None, dfdp=None, dfdpdx=None, **kw):
 	dy2 = dy**2
 	dx2 = dx**2
-	def residual(p):
+	def fun(p):
 		return (y - f(x, *p)) / np.sqrt(dy2 + dfdx(x, *p)**2 * dx2)
-	rt = np.empty((len(p0), len(x)))
-	def jac(p):
-		sdfdx = dfdx(x, *p)
-		rad = dy2 + sdfdx**2 * dx2
-		srad = np.sqrt(rad)
-		res = (y - f(x, *p)) * dx2 * sdfdx / srad
-		for i in range(len(p)):
-			rt[i] = - (dfdps[i](x, *p) * srad + dfdpdxs[i](x, *p) * res) / rad
-		return rt
-	par, cov, _, _, _ = optimize.leastsq(residual, p0, Dfun=jac, col_deriv=True, full_output=True, **kw)
-	return par, cov
+	if not ((dfdps is None or dfdpdxs is None) and (dfdp is None or dfdpdx is None)):
+		rt = np.empty((len(y), len(p0)))
+		def jac(p):
+			sdfdx = dfdx(x, *p)
+			rad = dy2 + sdfdx**2 * dx2
+			srad = np.sqrt(rad)
+			res = (y - f(x, *p)) * dx2 * sdfdx / srad
+			if not (dfdps is None or dfdpdxs is None):
+				for i in range(len(p)):
+					rt[:,i] = - (dfdps[i](x, *p) * srad + dfdpdxs[i](x, *p) * res) / rad
+			else:
+				rt[:] = - (dfdp(x, *p) * srad.reshape(-1,1) + dfdpdx(x, *p) * res.reshape(-1,1)) / rad.reshape(-1,1)
+			return rt
+	else:
+		jac = None
+	kw.update(_Nonedict(jac=jac))
+	result = optimize.least_squares(fun, p0, **kw)
+	par = result.x
+	_, s, VT = linalg.svd(result.jac, full_matrices=False)
+	threshold = np.finfo(float).eps * max(result.jac.shape) * s[0]
+	s = s[s > threshold]
+	VT = VT[:s.size]
+	cov = np.dot(VT.T / s**2, VT)
+	return par, cov, result
 
-class FitOutput:
+def _fit_curve_ml(f, x, y, dx, dy, p0, dfdx=None, dfdps=None, dfdp=None, bounds=None, **kw):
+	idy = 1 / dy
+	idx = 1 / dx
+	def fun(px):
+		xstar = px[-len(x):]
+		return np.concatenate(((y - f(xstar, *px[:len(p0)])) * idy, (x - xstar) * idx))
+	if not (dfdx is None) and not (dfdps is None and dfdp is None):
+		jacm = np.zeros((len(y) + len(x), len(p0) + len(x)))
+		def jac(px):
+			p = px[:len(p0)]
+			xstar = px[-len(x):]
+			if not dfdps is None:
+				for i in range(len(p0)):
+					jacm[:len(y), i] = -dfdps[i](xstar, *p) * idy
+			else:
+				jacm[:len(y), :len(p0)] = -dfdp(xstar, *p) * idy
+			np.fill_diagonal(jacm[:len(y), -len(x):], -dfdx(xstar, *p) * idy)
+			np.fill_diagonal(jacm[-len(x):, -len(x):], -idx)
+			return jacm
+	else:
+		jac = None
+	px_scale = np.concatenate((np.ones(len(p0)), dx))
+	if not (bounds is None):
+		bnds = np.empty((2, len(p0) + len(x)))
+		bnds[:,:len(p0)] = np.asarray(bounds).reshape(2,-1)
+		bnds[:,-len(x):] = [[-np.inf], [np.inf]]
+	else:
+		bnds = None
+	kw.update(_Nonedict(jac=jac, bounds=bnds))
+	result = optimize.least_squares(fun, np.concatenate((p0, x)), x_scale=px_scale, **kw)
+	par = result.x
+	_, s, VT = linalg.svd(result.jac, full_matrices=False)
+	threshold = np.finfo(float).eps * max(result.jac.shape) * s[0]
+	s = s[s > threshold]
+	VT = VT[:s.size]
+	cov = np.dot(VT.T / s**2, VT)
+	return par, cov, result
+
+def _asarray(a):
+	A = np.asarray(a)
+	return a if len(A.shape) == 0 else A
+
+class FitCurveOutput:
+	"""
+	Object that holds the output of fit_curve.
 	
-	def __init__(self, par=None, cov=None, chisq=None, delta_x=None, delta_y=None):
-		self.par = par
-		self.cov = cov
+	Parameters
+	----------
+	par, cov, px, pxcov, datax, datay, fitx, fity, chisq, deltax, deltay,
+	method, rawoutput :
+		These parameters coincide with members (see their description).
+	nump : positive integer or None
+		Number of parameters. If px or pxcov are given but not one of datax,
+		deltax, datay, deltay, fity, then nump shall be specified.
+	check : bool
+		If True, perform some consistency checks.
+	
+	Members
+	-------
+	par : 1D array
+		Estimate of the parameters.
+	cov : 2D array
+		Covariance matrix of the estimate.
+	px : 1D array
+		Estimate of parameters, including x (for fits with uncertainties
+		along x). The format is:
+		[p0, ..., pn, x1, ..., xm]
+	pxcov : 2D array
+		Covariance matrix of px.
+	datax :
+		x data. For fits with uncertainties along x, it is a 1D array.
+	datay : 1D array
+		y data.
+	fitx : 1D array
+		Fitted xs (for fits with uncertainties along x).
+	fity : 1D array
+		Fitted ys, i.e. model_function(fitted x, fitted parameters).
+	deltax : 1D array
+		fitx - datax
+	deltay : 1D array
+		fity - datay
+	chisq : non-negative number
+		A chisquare statistics, that is a statistics (i.e. function of
+		data) that has a chisquare distribution under the assumption that
+		the model is true.
+	chisq_dof : positive integer
+		Degrees of freedom of chisq.
+	chisq_pvalue : non-negative number
+		Survival function at chisq, i.e. integral of the chisquare
+		distribution with chisq_dof degrees of freedom from chisq to
+		infinity.
+	method : string
+		Fitting algorithm used to generate this result, see fit_curve.
+	rawoutput : object
+		Object returned by fitting function of lower level than fit_curve,
+		if any (tipically a minimizer), see fit_curve.
+	"""
+	
+	def __init__(self, par=None, cov=None, px=None, pxcov=None, nump=None, datax=None, datay=None, fitx=None, fity=None, deltax=None, deltay=None, chisq=None, method=None, rawoutput=None, check=True):
+		if not (px is None and pxcov is None):
+			A = np.array([datax, deltax, datay, deltay, fity], dtype=object)
+			Anone = np.array([a is None for a in A], dtype=bool)
+			if nump is None and not all(Anone):
+				nump = -len(A[~Anone][0])
+			else:
+				raise ValueError("You should specify nump")
+		
+		if not (px is None):
+			self.px = np.asarray(px)
+			self.par = self.px[:nump]
+			self.fitx = self.px[nump:]
+			if check:
+				assert par is None
+				assert fitx is None
+		else:
+			self.par = _asarray(par)
+			self.fitx = _asarray(fitx)
+			
+		if not (pxcov is None):
+			self.pxcov = np.asarray(pxcov)
+			self.cov = self.pxcov[:nump,:nump]
+			if check:
+				assert cov is None
+		else:
+			self.cov = _asarray(cov)
+		
+		if hasattr(self, 'px') and hasattr(self, 'pxcov'):
+			self.upx = uncertainties.correlated_values(self.px, self.pxcov)
+		if not (self.par is None) and not (self.cov is None):
+			self.upar = uncertainties.correlated_values(self.par, self.cov)
+		
+		if deltax is None and not (datax is None) and not (self.fitx is None):
+			self.datax = np.asarray(datax)
+			self.deltax = self.fitx - self.datax
+		elif not (deltax is None) and datax is None and not (self.fitx is None):
+			self.deltax = np.asarray(deltax)
+			self.datax = self.fitx - self.deltax
+		elif not (deltax is None) and not (datax is None) and self.fitx is None:
+			self.datax = np.asarray(datax)
+			self.deltax = np.asarray(deltax)
+			self.fitx = self.datax + self.deltax
+		else:
+			self.datax = _asarray(datax)
+			self.deltax = _asarray(deltax)
+		if check and np.sum([a is None for a in [self.fitx, self.datax, self.deltax]]) == 0:
+			assert np.allclose(self.fitx, self.datax + self.deltax)
+			
+		if deltay is None and not (datay is None) and not (fity is None):
+			self.datay = np.asarray(datay)
+			self.fity = np.asarray(fity)
+			self.deltay = self.fity - self.datay
+		elif not (deltay is None) and datay is None and not (fity is None):
+			self.deltay = np.asarray(deltay)
+			self.fity = np.asarray(fity)
+			self.datay = self.fity - self.deltay
+		elif not (deltay is None) and not (datay is None) and fity is None:
+			self.datay = np.asarray(datay)
+			self.deltay = np.asarray(deltay)
+			self.fity = self.datay + self.deltay
+		else:
+			self.datay = _asarray(datay)
+			self.deltay = _asarray(deltay)
+			self.fity = _asarray(fity)
+		if check and np.sum([a is None for a in [self.fity, self.datay, self.deltay]]) == 0:
+			assert np.allclose(self.fity, self.datay + self.deltay)
+		
 		self.chisq = chisq
 		if not (chisq is None):
-			self.chisq_dof = len(delta_x) - len(par)
-			self.chisq_pvalue = stats.chi2.sf(self.chisq, self.chisq_dof)
-		self.delta_y = delta_y
-		self.delta_x = delta_x
+			A = np.array([self.datax, self.fitx, self.deltax, self.datay, self.fity, self.deltay], dtype=object)
+			Alen = np.array([hasattr(a, '__len__') for a in A], dtype=bool)
+			if any(Alen) and not (self.par is None):
+				self.chisq_dof = len(A[Alen][0]) - len(self.par)
+				self.chisq_pvalue = stats.chi2.sf(self.chisq, self.chisq_dof)
+		
+		self.rawoutput = rawoutput
+		
+		self.method = method
 
-class FitModel:
+class CurveModel:
+	"""
+	Object to specify a curve model for fit_curve, in the form:
+	y = f(x, *par).
+	
+	Parameters
+	----------
+	f : function
+		A function with signature f(x, *par). Returns the y coordinates
+		corresponding to the x coordinates given in the array x for a curve
+		parametrized by the arguments *par.
+	symb : bool
+		If True, derivatives of f respect to x and *par are obtained as
+		needed with sympy. In this case, f must accept sympy variables as
+		arguments.
+	dfdx : function, optional
+		A function with the same signature as f. Returns the derivative of
+		f respect to x.
+	dfdp : function, optional
+		A function with the same signature as f. Returns the derivatives of
+		f respect to *par, in the form of a 2D array where the first index
+		runs along the datapoints and the second along the parameters.
+	dfdpdx : function, optional
+		A function with the same signature as f. Returns the cross
+		derivatives of f respect to x and *par, in the form of a 2D array
+		where the first index runs along the datapoints and the second
+		along the parameters.
+	
+	Methods
+	-------
+	latex
+	f
+	f_odrpack
+	dfdx
+	dfdx_odrpack
+	dfdps
+	dfdp
+	dfdp_odrpack
+	dfdp_curve_fit
+	dfdpdx
+	"""
 
-	def __init__(self, f, sym=True, dfdx=None, dfdp=None, dfdpdx=None, invf=None, implicit=False):
-		"""if sym=True, use sympy to obtain derivatives from f
-		or f is a scipy.odr.Model or a FitModel to copy"""
-		if sym:
+	def __init__(self, f, symb=False, dfdx=None, dfdp=None, dfdpdx=None):
+		if symb:
 			args = inspect.getargspec(f).args
 			xsym = sympy.symbols('x', real=True)
 			psym = [sympy.symbols('p%s' % num2sub(i), real=True) for i in range(len(args) - 1)]
@@ -164,28 +364,63 @@ class FitModel:
 			self._dfdpdxs = [sympy.lambdify(syms, f(*syms).diff(xsym).diff(p), "numpy") for p in psym]
 			self._f = sympy.lambdify(syms, f(*syms), "numpy")
 			self._f_sym = f
-			self._repr = 'FitModel(y = {})'.format(f(*syms))
-			self._sym = True
+			self._repr = 'CurveModel(y = %s)' % (str(f(*syms)).replace('**', '^').replace('*', '·'))
+			self._symb = True
 		else:
 			self._dfdx = dfdx
 			self._dfdp = dfdp
 			self._dfdpdx = dfdpdx
+			self._dfdps = None
+			self._dfdpdxs = None
 			self._f = f
-			self._repr = 'FitModel(y = {})'.format(f)
-			self._sym = False
+			self._repr = 'CurveModel(y = {})'.format(f)
+			self._symb = False
 	
 	def __repr__(self):
 		return self._repr
+	
+	def latex(self):
+		"""
+		Returns
+		-------
+		s : string
+			LaTeX representation of the object.
+		"""
+		if self._symb:
+			args = inspect.getargspec(self._f_sym).args
+			xsym = sympy.symbols('x', real=True)
+			psym = [sympy.symbols('p_{%d}' % i, real=True) for i in range(len(args) - 1)]
+			syms = [xsym] + psym
+			return sympy.latex(self._f_sym(*syms))
+		else:
+			return '\\mathtt{%s}' % format(self._f)
 		
-	# def implicit(self):
-	# 	"""return True if the model is implicit (no y)"""
-	# 	pass
-	#
 	def f(self):
-		"""return function"""
+		"""
+		Returns
+		-------
+		f : function
+			Model function. If the object was initialized with symb=False,
+			it is the f given at initialization; if symb=True, it is a
+			"numpyfication" of the symbolic function.
+		"""
 		return self._f
 
 	def f_odrpack(self, length):
+		"""
+		Wraps the model function to use the format of scipy.odr.
+		
+		Parameters
+		----------
+		length : positive integer
+			Number of datapoints the function will be used with.
+		
+		Returns
+		-------
+		fcn : function
+			Model function with signature fcn(B, x), where B corresponds to
+			*par.
+		"""
 		rt = np.empty(length)
 		def f_p(B, x):
 			rt[:] = self._f(x, *B)
@@ -193,82 +428,382 @@ class FitModel:
 		return f_p
 
 	def dfdx(self):
-		"""return dfdx function"""
+		"""
+		Returns
+		-------
+		dfdx : function
+			Derivative of model function respect to x.
+		"""
 		return self._dfdx
 
 	def dfdx_odrpack(self, length):
-		"""return dfdx function with return format of scipy.odr's jacd"""
-		rt = np.empty(length)
-		def f_p(B, x):
-			rt[:] = self._dfdx(x, *B)
-			return rt
-		return f_p
+		"""
+		Wraps the derivative of model function respect to x to use the
+		format of scipy.odr.
+		
+		Parameters
+		----------
+		length : positive integer
+			Number of datapoints the function will be used with.
+		
+		Returns
+		-------
+		jacd : function
+			Derivative of model function respect to x with signature
+			jacd(B, x), where B corresponds to *par.
+		"""
+		if self._dfdx is None:
+			return None
+		else:
+			rt = np.empty(length)
+			def f_p(B, x):
+				rt[:] = self._dfdx(x, *B)
+				return rt
+			return f_p
 
 	def dfdps(self):
-		"""return list of dfdp functions, one for each parameter"""
+		"""
+		Returns
+		-------
+		dfdps : list of functions or None
+			List of derivatives of model function respect to parameters. It
+			is available only if the object was initialized with symb=True.
+		"""
 		return self._dfdps
+	
+	def dfdp(self, length=None):
+		"""
+		Returns derivative of model function respect to parameters.
+		
+		Parameters
+		----------
+		length : positive integer or None
+			Number of datapoints the function will be used with. If the
+			model was initialized with symb=False it is not necessary.
+		
+		Returns
+		-------
+		dfdp : function or None
+			Derivative of model function respect to parameters. Returns a
+			2D array where the first index runs along the datapoints and
+			the second along the parameters. If symb=False and dfdp was not
+			given at initialization, it is None.
+		"""
+		if self._symb:
+			rt = np.empty((length, len(self._dfdps)))
+			def f_p(*args):
+				for i in range(len(self._dfdps)):
+					rt[:,i] = self._dfdps[i](*args)
+				return rt
+			return f_p
+		else:
+			return self._dfdp
 
-	def dfdp_odrpack(self, length):
-		"""return dfdp function with return format of scipy.odr's jacb"""
-		rt = np.empty((len(self._dfdps), length))
-		def f_p(B, x):
-			for i in range(len(self._dfdps)):
-				rt[i] = self._dfdps[i](x, *B)
-			return rt
-		return f_p
+	def dfdp_odrpack(self, length=None):
+		"""
+		Wraps the derivative of model function respect to parameters to use
+		the format of scipy.odr.
+		
+		Parameters
+		----------
+		length : positive integer or None
+			Number of datapoints the function will be used with. If the
+			model was initialized with symb=False it is not necessary.
+		
+		Returns
+		-------
+		jacb : function
+			Derivative of model function respect to parameters, with
+			signature jacb(B, x), where B corresponds to *par. Returns a 2D
+			array where the first index runs along the parameters and the
+			second along the datapoints. If symb=False and dfdp was not
+			given at initialization, it is None.
+		"""
+		if self._symb:
+			rt = np.empty((len(self._dfdps), length))
+			def f_p(B, x):
+				for i in range(len(self._dfdps)):
+					rt[i] = self._dfdps[i](x, *B)
+				return rt
+			return f_p
+		elif not (self._dfdp is None):
+			def f_p(B, x):
+				return self._dfdp(x, *B).T
+			return f_p
+		else:
+			return None
 
-	def dfdp_curve_fit(self, length):
-		rt = np.empty((len(self._dfdps), length))
-		def f_p(*args):
-			for i in range(len(self._dfdps)):
-				rt[i] = self._dfdps[i](*args)
-			return rt.T
-		return f_p
+	def dfdp_curve_fit(self, length=None):
+		"""
+		Wraps the derivative of model function respect to parameters to use
+		the format of scipy.optimize.curve_fit.
+		
+		Parameters
+		----------
+		length : positive integer or None
+			Number of datapoints the function will be used with. If the
+			model was initialized with symb=False it is not necessary.
+		
+		Returns
+		-------
+		jacb : function
+			Derivative of model function respect to parameters. Returns a
+			2D array where the first index runs along the datapoints and
+			the second along the parameters. If symb=False and dfdp was not
+			given at initialization, it is None.
+		"""
+		if self._symb:
+			rt = np.empty((len(self._dfdps), length))
+			def f_p(*args):
+				for i in range(len(self._dfdps)):
+					rt[i] = self._dfdps[i](*args)
+				return rt.T
+			return f_p
+		else:
+			return self._dfdp
 
 	def dfdpdxs(self):
+		"""
+		Returns
+		-------
+		dfdpdxs : list of functions or None
+			List of derivatives of model function respect to x and
+			parameters. It is available only if the object was initialized
+			with symb=True.
+		"""
 		return self._dfdpdxs
-
-def fit_generic(f, x, y, dx=None, dy=None, p0=None, pfix=None, absolute_sigma=True, method='auto', full_output=False, print_info=0, **kw):
-	"""f may be either callable or FitModel"""
-	print_info = int(print_info)
 	
-	if print_info > 0:
-		print('################ fit_generic ################')
+	def dfdpdx(self, length=None):
+		"""
+		Returns derivative of model function respect to x and parameters.
+		
+		Parameters
+		----------
+		length : positive integer or None
+			Number of datapoints the function will be used with. If the
+			model was initialized with symb=False it is not necessary.
+		
+		Returns
+		-------
+		dfdp : function or None
+			Derivative of model function respect to parameters. Returns a
+			2D array where the first index runs along the datapoints and
+			the second along the parameters. If symb=False and dfdpdx was
+			not given at initialization, it is None.
+		"""
+		if self._symb:
+			rt = np.empty((length, len(self._dfdpdxs)))
+			def f_p(*args):
+				for i in range(len(self._dfdpdxs)):
+					rt[:,i] = self._dfdpdxs[i](*args)
+				return rt
+			return f_p
+		else:
+			return self._dfdpdx
+
+def _apply_pfree(f, pfree, p0):
+	if not (f is None) and not all(pfree):
+		n_par = np.copy(p0)
+		def F(x, *par):
+			n_par[pfree] = par
+			return f(x, *n_par)
+		return F
+	else:
+		return f
+
+def _apply_pfree_par_cov(par, cov, pfree, p0):
+	if not all(pfree):
+		n_par = np.empty(len(p0), dtype=par.dtype)
+		n_par[pfree] = par
+		n_par[~pfree] = p0
+		n_cov = np.zeros([len(p0)] * 2, dtype=cov.dtype)
+		n_cov[np.outer(pfree, pfree)] = cov
+		return n_par, n_cov
+	else:
+		return par, cov
+
+def fit_curve(f, x, y, dx=None, dy=None, p0=None, pfix=None, bounds=None, absolute_sigma=True, method='auto', print_info=0, full_output=True, check=True, **kw):
+	"""
+	Fit a curve in the form:
+	y = f(x, *par)
+	finding a "best estimate" for *par.
+	
+	Parameters
+	----------
+	f : callable or CurveModel
+		If callable: a function with signature f(x, *par), which is used to
+		initialize a CurveModel. If CurveModel: it is used directly. See
+		CurveModel for details.
+	x : 1D array
+		x data.
+	y : 1D array
+		y data.
+	dx : 1D array or None
+		Uncertainties of x data.
+	dy : 1D array or None
+		Uncertainties of y data.
+	p0 : 1D array
+		Initial estimate of *par. Must be specified.
+	pfix : None or 1D array either of integers or bools
+		Specify which parameters to held fixed to the initial value given
+		in p0. If None: all parameters free; if array of integers: the
+		integers specify indexes of parameters to fix; if array of bools:
+		must have the same shape as *par, a True will mean the
+		corresponding parameter is fixed, a False that it is free. Returned
+		uncertainties on fixed parameters will be zero.
+	bounds : None or 2D array
+		Specify bounds inside which parameters are to be searched, in the
+		form:
+		[[min p0, min p1, ...], [max p0, max p1, ...]]
+		+-infinity can be used. None means +-infinity for all parameters.
+	absolute_sigma : bool
+		If False, multiply estimate of covariance matrix of estimate of
+		*par by a factor such that it is as if the uncertainties dx and/or
+		dy where scaled by a common factor to get a chisquare statistics
+		matching its degrees of freedom.
+	method : string, one of 'auto', 'odrpack', 'linodr', 'ml', 'wleastsq',
+	'leastsq', 'ev'
+		Fitting algorithm to use. If 'auto', choose automatically. See
+		below for a description of each algorithm.
+	print_info : integer
+		Regulate diagnostics printed by the function. If less than or equal
+		to 0, print nothing. Positive values mean an increasing amount of
+		information; you can safely pass huge values to set the maximum
+		level possible.
+	full_output : bool
+		If False, return less information.
+	check : bool
+		If False, avoid some consistency checks.
+	
+	Keyword arguments
+	-----------------
+	Keyword arguments are passed to the lower-level fitting routine, which
+		depends on the method used. See description of methods below.
+	
+	Fitting methods
+	---------------
+	All the methods perform a maximum-likelihood fit assuming normal (i.e.
+	gaussian) uncertainties.
+	'auto' :
+		Choose automatically an appropriate method, based on the values of
+		dx, dy, bounds given.
+	'odrpack' :
+		Use ODRPACK through the wrapper scipy.odr. It supports
+		uncertainties on both x and y or only on y, and is stable and fast,
+		but it does not compute an estimate of the covariance between
+		datapoints and parameters in the first case. Bounds are not
+		supported. Keyword arguments are passed to scipy.odr.ODR.
+	'linodr' :
+		Simplifies the computation using a formula that is exact only if
+		the model is a straight line; it will be reasonable if at each
+		datapoint the radius of curvature is greater enough than the
+		uncertainties. the approximation works better if greater
+		uncertainties are on y (greater uncertainty on y means that at a
+		datapoint the ratio dy/dx is greater than the derivative of the
+		curve). It supports uncertainties on at least one of x and y.
+		Individual uncertainties may be zero, provided on each datapoint at
+		least one of dx and dy is not None or zero. It may become unstable
+		if the given CurveModel does not provide a dfdx, case in which a
+		single step forward derivative estimation is used. The step can be
+		specified with the keyword argument 'diff_step'. Keyword arguments
+		(including 'diff_step') are passed to scipy.optimize.least_squares.
+	'ml' :
+		Supports uncertainties only on both x and y and provides an
+		estimate of the covariance between datapoints and parameters.
+		Keyword arguments are passed to scipy.optimize.least_squares.
+	'leastsq' :
+		Ignore given uncertainties, put unitary uncertainties on y and
+		apply absolute_sigma=False independently of the value given.
+		Keyword arguments are passed to scipy.optimize.curve_fit.
+	'wleastsq' :
+		Supports no uncertainties or only on y. In the first case behave as
+		'leastsq', but do not impose absolute_sigma. Keyword arguments are
+		passed to scipy.optimize.curve_fit.
+	'ev' :
+		Supports uncertainties on x and y or only on y. Works well under
+		the same assumptions of linodr, but tipically worse; the same
+		considerations on dfdx apply. The algorithm is to repeat the
+		procedure of 'wleastsq' many times, using the estimated parameters
+		at an iteration to propagate the uncertainties on x to
+		uncertainties on y for the next iteration. The keyword argument
+		'max_cycles' set a limit on the number of iterations; an exception
+		is raised if the limit is surpassed; 'conv_diff' set the relative
+		difference between successive estimates (both values and
+		covariance) that stops the cycle; 'diff_step' is used as in
+		'linodr'. Other keyword arguments are passed to
+		scipy.optimize.curve_fit. The output object has a member 'cycles'
+		which is the number of cycles done.
+	
+	Returns
+	-------
+	out : FitCurveOutput
+		Object containing at least the members par and cov, which are the
+		estimate of *par and its estimated covariance matrix. If
+		full_output=False, these may be the sole members. See
+		FitCurveOutput for details.
+	
+	See also
+	--------
+	scipy.optimize.curve_fit
+	"""
+	
+	if print_info >= 1:
+		print('################ fit_curve ################')
 		print()
 	
-	# MODEL
+	##### MODEL #####
 
-	if isinstance(f, FitModel):
+	if isinstance(f, CurveModel):
 		model = f
-		if print_info > 0:
+		if print_info >= 1:
 			print('Model given: {}'.format(model))
 			print()
 	else:
-		model = FitModel(f)
-		if print_info > 0:
+		model = CurveModel(f, symb=False)
+		if print_info >= 1:
 			print('Model created from f: {}'.format(model))
 			print()
 	
-	# METHOD
+	if p0 is None:
+		raise ValueError("p0 must be specified")
+	p0 = np.atleast_1d(p0)
+	if not (pfix is None):
+		pfix = np.asarray(pfix)
+		if np.issubdtype('bool', pfix.dtype):
+			pfree = ~pfix
+		elif np.issubdtype('int', pfix.dtype) or np.issubdtype('uint', pfix.dtype):
+			pfree = np.ones(len(p0), dtype=bool)
+			pfree[pfix] = False
+	else:
+		pfree = np.ones(len(p0), dtype=bool)
+	
+	if not (bounds is None):
+		bounds = np.asarray(bounds).reshape(2,-1)[:,pfree]
+	else:
+		bounds = np.array([[-np.inf] * len(p0), [np.inf] * len(p0)])[:,pfree]
+
+	##### METHOD #####
 	
 	if method == 'auto':
-		dxn = dx is None
-		dyn = dy is None
-		if dxn and dyn:
+		if (dy is None) and not (dx is None):
+			method = 'linodr' # only linodr supports errors only along x
+		elif dy is None:
 			method = 'leastsq'
-		elif dxn:
+		elif bounds is None or (all(bounds[0] == -np.inf) and all(bounds[1] == np.inf)):
+			method = 'odrpack' # generally good method but does not support bounds
+		elif dx is None:
 			method = 'wleastsq'
 		else:
-			method = 'odrpack'
-		if print_info > 0:
+			method = 'ml' # much slower than odrpack and linodr, but supports bounds and is more correct than linodr
+		if print_info >= 1:
 			print('Method chosen automatically: "%s"' % method)
 			print()
-	elif print_info > 0:
+	elif print_info >= 1:
 		print('Method: "%s"' % method)
 		print()
 	
-	# FIT
-
+	##### ODRPACK #####
+	
 	if method == 'odrpack':
 		fcn = model.f_odrpack(len(x))
 		fjacb = model.dfdp_odrpack(len(x))
@@ -276,28 +811,70 @@ def fit_generic(f, x, y, dx=None, dy=None, p0=None, pfix=None, absolute_sigma=Tr
 		
 		M = odr.Model(fcn, fjacb=fjacb, fjacd=fjacd)
 		data = odr.RealData(x, y, sx=dx, sy=dy)
-		ODR = odr.ODR(data, M, beta0=p0)
-		ODR.set_iprint(init=print_info > 1, iter=print_info > 2, final=print_info > 1)
-		output = ODR.run(**kw)
+		ODR = odr.ODR(data, M, beta0=p0, ifixb=pfree, **kw)
+		if dx is None:
+			ODR.set_job(fit_type=2)
+		ip_init = max(0, min(print_info - 1, 2))
+		ip_final = ip_init
+		ip_iter = max(0, min(print_info - 2, 2))
+		ODR.set_iprint(init=ip_init, iter=ip_iter, final=ip_final, iter_step=10)
+		output = ODR.run()
 		par = output.beta
 		cov = output.cov_beta
 		
 		if full_output or not absolute_sigma:
-			chisq = np.sum(((output.eps / dy)**2 + (output.delta / dx)**2))
+			if not (dx is None) and not (dy is None):
+				chisq = np.sum((output.eps / np.asarray(dy))**2 + (output.delta / np.asarray(dx))**2)
+			elif dx is None and not (dy is None):
+				chisq = np.sum((output.eps / np.asarray(dy))**2)
+			elif dx is None and dy is None:
+				chisq = np.sum(output.eps ** 2)
 		if not absolute_sigma:
 			cov *= chisq / (len(x) - len(par))
 		if full_output:
-			out = FitOutput(par=par, cov=cov, chisq=chisq, delta_x=output.delta, delta_y=output.eps)
-		if print_info > 0:
-			output.pprint()
+			if dx is None:
+				out = FitCurveOutput(par=par, cov=cov, chisq=chisq, deltay=output.eps, datax=x, datay=y, fity=output.y, rawoutput=output, method=method, check=False)
+			else:
+				out = FitCurveOutput(par=par, cov=cov, chisq=chisq, deltax=output.delta, deltay=output.eps, datax=x, datay=y, fitx=output.xplus, fity=output.y, rawoutput=output, method=method, check=False)
+			# (!) check=False because ODRPACK may return slightly inconsistent fity, deltay; the problem is in ODRPACK itself, not in the wrapper. Anyway, inconsistencies are reasonable, so we just look away.
+		else:
+			out = FitCurveOutput(par=par, cov=cov, check=check)
+		if print_info >= 1:
+			if print_info > 1:
+				print()
+			else:
+				print(output.stopreason)
+			print('Result:')
+			print(format_par_cov(par, cov))
+
+	##### LINEARIZED ODR #####
 
 	elif method == 'linodr':
-		f = model.f()
-		dfdps = model.dfdps()
-		dfdx = model.dfdx()
-		dfdpdxs = model.dfdpdxs()
+		f = _apply_pfree(model.f(), pfree, p0)
+		dfdx = _apply_pfree(model.dfdx(), pfree, p0)
+		dfdps = _apply_pfree(model.dfdps(), pfree, p0)
+		dfdpdxs = _apply_pfree(model.dfdpdxs(), pfree, p0)
+		dfdp = _apply_pfree(model.dfdp(len(x)), pfree, p0)
+		dfdpdx = _apply_pfree(model.dfdpdx(len(x)), pfree, p0)
 		
-		par, cov = _fit_generic_odr(f, dfdx, dfdps, dfdpdxs, x, y, dx, dy, p0, **kw)
+		if dfdx is None:
+			diff_step = kw.get('diff_step', np.finfo('float64').eps * 65536)
+			def dfdx(x, *p):
+				h = x * diff_step + diff_step
+				return (f(x + h, *p) - f(x, *p)) / h
+		
+		x = _asarray(x)
+		y = np.asarray(y)
+		dx = _asarray(dx)
+		dy = _asarray(dy)
+		if dx is None:
+			dx = 0
+		if dy is None:
+			dy = 0
+			
+		verbosity = max(0, min(print_info - 1, 2))
+		
+		par, cov, output = _fit_curve_odr(f, x, y, dx, dy, p0[pfree], dfdx=dfdx, dfdps=dfdps, dfdpdxs=dfdpdxs, dfdp=dfdp, dfdpdx=dfdpdx, verbose=verbosity, bounds=bounds, **kw)
 		
 		if full_output or not absolute_sigma:
 			deriv = dfdx(x, *par)
@@ -307,67 +884,501 @@ def fit_generic(f, x, y, dx=None, dy=None, p0=None, pfix=None, absolute_sigma=Tr
 			cov *= chisq / (len(x) - len(par))
 		if full_output:
 			fact = (y - f(x, *par)) / err2
-			delta_x = fact * deriv * dx**2
-			delta_y = -fact * dy**2
-			out = FitOutput(par=par, cov=cov, chisq=chisq, delta_x=delta_x, delta_y=delta_y)
-
+			deltax = fact * deriv * dx**2
+			deltay = -fact * dy**2
+			par, cov = _apply_pfree_par_cov(par, cov, pfree, p0)
+			out = FitCurveOutput(par=par, cov=cov, chisq=chisq, deltax=deltax, deltay=deltay, datax=x, datay=y, method=method, rawoutput=output, check=check)
+		else:
+			par, cov = _apply_pfree_par_cov(par, cov, pfree, p0)
+			out = FitCurveOutput(par=par, cov=cov, check=check)
+		
+		if print_info >= 1:
+			if print_info > 1:
+				print()
+			else:
+				print(output.message)
+			print('Result:')
+			print(format_par_cov(par, cov))
+	
+	##### FULL-FEATURE MAXIMUM LIKELIHOOD #####
+	
+	elif method == 'ml':
+		f = _apply_pfree(model.f(), pfree, p0)
+		dfdx = _apply_pfree(model.dfdx(), pfree, p0)
+		dfdps = _apply_pfree(model.dfdps(), pfree, p0)
+		dfdp = _apply_pfree(model.dfdp(len(x)), pfree, p0)
+		
+		x = np.asarray(x)
+		y = np.asarray(y)
+		dx = np.asarray(dx)
+		dy = np.asarray(dy)
+		
+		verbosity = max(0, min(print_info - 1, 2))
+		
+		px, pxcov, output = _fit_curve_ml(f, x, y, dx, dy, p0[pfree], dfdx=dfdx, dfdps=dfdps, dfdp=dfdp, verbose=verbosity, bounds=bounds, **kw)
+		
+		if full_output or not absolute_sigma:
+			par = px[:len(p0[pfree])]
+			xstar = px[-len(x):]
+			chisq = np.sum(((y - f(xstar, *par)) / dy)**2) + np.sum(((xstar - x) / dx) ** 2)
+		if not absolute_sigma:
+			pxcov *= chisq / (len(y) - len(par))
+		if full_output:
+			px, pxcov = _apply_pfree_par_cov(px, pxcov, np.concatenate((pfree, np.ones(len(x), dtype=bool))), p0)
+			out = FitCurveOutput(px=px, pxcov=pxcov, datax=x, datay=y, chisq=chisq, method=method, rawoutput=output, check=check)
+		else:
+			px, pxcov = _apply_pfree_par_cov(px, pxcov, np.concatenate((pfree, np.ones(len(x), dtype=bool))), p0)
+			out = FitCurveOutput(px=px, pxcov=pxcov, nump=len(p0), check=check)
+		
+		if print_info >= 1:
+			if print_info > 1:
+				print()
+			else:
+				print(output.message)
+			print('Result:')
+			print(format_par_cov(px[:len(p0)], pxcov[:len(p0),:len(p0)]))
+	
+	##### EFFECTIVE VARIANCE #####
+	
 	elif method == 'ev':
-		# TODO jac
-		f = model.f()
-		dfdx = model.dfdx()
+		f = _apply_pfree(model.f(), pfree, p0)
+		dfdx = _apply_pfree(model.dfdx(), pfree, p0)
+		jac = _apply_pfree(model.dfdp_curve_fit(len(x)), pfree, p0)
 		conv_diff = kw.pop('conv_diff', 1e-7)
 		max_cycles = kw.pop('max_cycles', 5)
 		
-		par, cov = optimize.curve_fit(f, x, y, p0=p0, absolute_sigma=absolute_sigma, **kw)
-		par, cov, cycles = _fit_generic_ev(f, dfdx, x, y, dx, dy, par, cov, absolute_sigma=absolute_sigma, conv_diff=conv_diff, max_cycles=max_cycles, **kw)
+		if dfdx is None:
+			diff_step = kw.get('diff_step', np.finfo('float64').eps * 65536)
+			def dfdx(x, *p):
+				h = x * diff_step + diff_step
+				return (f(x + h, *p) - f(x, *p)) / h
+		
+		x = _asarray(x)
+		y = np.asarray(y)
+		dx = _asarray(dx)
+		dy = np.asarray(dy)
+		if dx is None:
+			dx = 0
+		
+		par, cov = optimize.curve_fit(f, x, y, p0=p0[pfree], absolute_sigma=absolute_sigma, jac=jac, bounds=bounds, **kw)
+		par, cov, cycles = _fit_curve_ev(f, dfdx, x, y, dx, dy, par, cov, absolute_sigma=absolute_sigma, conv_diff=conv_diff, max_cycles=max_cycles, jac=jac, bounds=bounds, **kw)
 		
 		if cycles == -1:
 			raise RuntimeError('Maximum number (%d) of fit cycles reached' % max_cycles)
 	
 		if full_output:
-			# compute delta_xy as in linodr.
-			# doubt: should we compute it only along y?
 			deriv = dfdx(x, *par)
 			err2 = dy ** 2   +   deriv ** 2  *  dx ** 2
 			chisq = np.sum((y - f(x, *par))**2 / err2)
 			fact = (y - f(x, *par)) / err2
-			delta_x = fact * deriv * dx**2
-			delta_y = -fact * dy**2
-			out = FitOutput(par=par, cov=cov, chisq=chisq, delta_x=delta_x, delta_y=delta_y)
-
+			deltax = fact * deriv * dx**2
+			deltay = -fact * dy**2
+			par, cov = _apply_pfree_par_cov(par, cov, pfree, p0)
+			out = FitCurveOutput(par=par, cov=cov, datax=x, datay=y, chisq=chisq, method=method, check=check, deltax=deltax, deltay=deltay)
+			out.cycles = cycles
+		else:
+			par, cov = _apply_pfree_par_cov(par, cov, pfree, p0)
+			out = FitCurveOutput(par=par, cov=cov, check=check)
+	
+		if print_info >= 1:
+			print('Cycles: %d' % cycles)
+			print('Result:')
+			print(format_par_cov(par, cov))
+	
+	##### WEIGHTED LEAST SQUARES #####
+	
 	elif method == 'wleastsq':
-		f = model.f()
-		jac = model.dfdp_curve_fit(len(x))
+		f = _apply_pfree(model.f(), pfree, p0)
+		jac = _apply_pfree(model.dfdp_curve_fit(len(x)), pfree, p0)
 		
-		par, cov = optimize.curve_fit(f, x, y, sigma=dy, p0=p0, absolute_sigma=absolute_sigma, jac=jac, **kw)
+		par, cov = optimize.curve_fit(f, x, y, sigma=dy, p0=p0[pfree], absolute_sigma=absolute_sigma, jac=jac, bounds=bounds, **kw)
 		
 		if full_output:
-			delta_x = np.zeros(len(x))
-			delta_y = y - f(x, *par)
-			chisq = np.sum((delta_y / dy) ** 2)
-			out = FitOutput(par=par, cov=cov, chisq=chisq, delta_x=delta_x, delta_y=delta_y)
+			x = _asarray(x)
+			y = np.asarray(y)
+			dy = np.asarray(dy)
+			deltay = y - f(x, *par)
+			chisq = np.sum((deltay / dy) ** 2)
+			par, cov = _apply_pfree_par_cov(par, cov, pfree, p0)
+			out = FitCurveOutput(par=par, cov=cov, chisq=chisq, deltay=deltay, datax=x, datay=y, method=method, check=check)
+		else:
+			par, cov = _apply_pfree_par_cov(par, cov, pfree, p0)
+			out = FitCurveOutput(par=par, cov=cov, check=check)
+	
+		if print_info >= 1:
+			print('Result:')
+			print(format_par_cov(par, cov))
+	
+	##### LEAST SQUARES #####
 	
 	elif method == 'leastsq':
-		f = model.f()
-		jac = model.dfdp_curve_fit(len(x))
+		f = _apply_pfree(model.f(), pfree, p0)
+		jac = _apply_pfree(model.dfdp_curve_fit(len(x)), pfree, p0)
 		
-		par, cov = optimize.curve_fit(f, x, y, p0=p0, absolute_sigma=False, jac=jac, **kw)
+		par, cov = optimize.curve_fit(f, x, y, p0=p0[pfree], absolute_sigma=False, jac=jac, bounds=bounds, **kw)
 
 		if full_output:
-			delta_x = np.zeros(len(x))
-			delta_y = y - f(x, *par)
-			chisq = np.sum((delta_y / dy) ** 2)
-			out = FitOutput(par=par, cov=cov, chisq=chisq, delta_x=delta_x, delta_y=delta_y)
+			x = _asarray(x)
+			y = np.asarray(y)
+			deltay = y - f(x, *par)
+			chisq = np.sum(deltay ** 2)
+			par, cov = _apply_pfree_par_cov(par, cov, pfree, p0)
+			out = FitCurveOutput(par=par, cov=cov, chisq=chisq, deltay=deltay, datax=x, datay=y, method=method, check=check)
+		else:
+			par, cov = _apply_pfree_par_cov(par, cov, pfree, p0)
+			out = FitCurveOutput(par=par, cov=cov, check=check)
 
+		if print_info >= 1:
+			print('Result:')
+			print(format_par_cov(par, cov))
+	
 	else:
 		raise KeyError(method)
 	
 	# RETURN
 
-	if full_output:
-		return par, cov, out
+	if print_info >= 1:
+		print()
+		print('############## END fit_curve ##############')
+	
+	return out
+
+class FitCurveBootstrapOutput:
+	
+	def __init__(self):
+		pass
+
+def fit_curve_bootstrap(f, xmean, dxs=None, dys=None, p0s=None, mcn=1000, method='auto', plot=dict(), eta=False, **kw):
+	"""
+	Perform a bootstrap, i.e. given a curve model and datapoints with
+	uncertainties, generates random displacement to the data with normal
+	distribution and standard deviations equal to the uncertainties many
+	times, and each time fit the randomly displaced data. Results from fits
+	are averaged and optionally graphicated as histograms and scatter
+	plots. This is tipically used to verify if the fit works well.
+	
+	The average is a weighted average, weights are inverses of the
+	covariance matrices estimated by the fit.
+	
+	The arguments are not a single set of uncertainties and parameters:
+	dxs, dys and p0s are arrays of arrays and the bootstrap will be
+	repeated for each possible combination. This is because this function
+	was originally written to study how the fit behaves augmenting
+	uncertainties on x and to verify simmetries of parameters; a plot of
+	results vs. parameter value or average uncertainty on x or y can be
+	generated.
+	
+	Parameters
+	----------
+	f : callable of CurveModel
+		As the first argument of fit_curve.
+	xmean : 1D array
+		Central x data. Central y data will be generated with f(xmean,
+		*par).
+	dxs : 2D array
+		Uncertainties on x. The second index runs along datapoints, the
+		first along "datasets".
+	dys : 2D array
+		Uncertainties on y. The second index runs along datapoints, the
+		first along datasets. The bootstrap will be repeated for all
+		combinations of datasets in dxs and dys.
+	p0s : list of arrays
+		Values of parameters, in the format:
+		[[values for p0], [values for p1], ...]
+		The bootstrap will be repeated for all combinations of parameters
+		values.
+	mcn : positive integer
+		"Monte Carlo number": the number of times the fit will be repeated
+		for each combination of datasets and parameters.
+	method : string
+		Fitting method; see fit_curve.
+	plot : dictionary
+		Argument regulating which plots to draw. The keywords read from the
+		dictionary are 'single', 'vsp0', 'vsds', which shall be bools and
+		respectively mean: draw a summary plot for each bootstrap; draw a
+		plot of results vs. parameter value; draw a plot of results vs.
+		uncertainties.
+	eta : bool
+		If True, every 5 seconds print an estimate of the remaining time.
+	
+	Keyword arguments
+	-----------------
+	Keyword arguments are passed to fit_curve.
+	
+	Returns
+	-------
+	out : object
+		An object with the following members defined:
+		fp : array with shape (len(dxs), len(dys), len(p0s[0]),
+		len(p0s[1]), ..., len(p0s))
+		cp : array with shape (len(dxs), len(dys), len(p0s[0]),
+		len(p0s[1]), ..., len(p0s), len(p0s))
+			Weighted average of fits results for each bootstrap. fp
+			contains the estimated values and cp the estimated covariance
+			matrices.
+		plotout : dictionary
+			Dictionary with the same keywords as those read from the plot
+			argument; 'single' contains a list of matplotlib figures, one
+			for each bootstrap; 'vsp0' and 'vsds' contain a matplotlib
+			figure each. Figures have meaningful titles.
+	"""
+
+	n = len(xmean) # number of points
+	
+	# model
+	if isinstance(f, CurveModel):
+		model = f
 	else:
-		return par, cov
+		model = CurveModel(f, symb=False)
+	f = model.f()
+	fstr = str(model)
+	flatex = model.latex()
+
+	# initialize output arrays
+	p0shape = [len(p0) for p0 in p0s]
+	fp = np.empty([len(dxs), len(dys)] + p0shape + [len(p0s)]) # fitted parameters (mean over MC)
+	cp = np.empty([len(dxs), len(dys)] + p0shape + 2 * [len(p0s)]) # fitted parameters mean covariance matrices
+	chisq = np.empty(mcn) # chisquares from 1 MC run
+	pars = np.empty((mcn, len(p0s))) # parameters from 1 MC run
+	covs = np.empty((mcn, len(p0s), len(p0s))) # covariance matrices from 1 MC run
+	times = np.empty(mcn) # execution times from 1 MC run
+
+	def plot_text(string, loc=2, ax=None, **kw):
+		locs = [
+			[],
+			[.95, .95, 'right', 'top'],
+			[.05, .95, 'left', 'top']
+		]
+		loc = locs[loc]
+		ax.text(loc[0], loc[1], string, horizontalalignment=loc[2], verticalalignment=loc[3], transform=ax.transAxes, **kw)
+	
+	if eta:		
+		etaobj = Eta()
+	plots_single = []
+	for ll in range(len(dys)):
+		dy = dys[ll]
+		for l in range(len(dxs)):
+			dx = dxs[l]
+			for K in np.ndindex(*p0shape):
+				p0 = [p0s[i][K[i]] for i in range(len(K))]
+			
+				# generate mean data
+				ymean = f(xmean, *p0)
+			
+				# run fits
+				for i in range(mcn):
+					
+					if eta:
+						# compute progress
+						progress = l + len(dxs) * ll
+						for j in range(len(K)):
+							progress *= p0shape[j]
+							progress += K[j]
+						progress *= mcn
+						progress += i
+						progress /= len(dxs) * len(dys) * np.prod(p0shape) * mcn
+						etaobj.etaprint(progress)
+				
+					# generate data
+					deltax = stats.norm.rvs(size=n)
+					x = xmean + dx * deltax
+					deltay = stats.norm.rvs(size=n)
+					y = ymean + dy * deltay
+				
+					# fit
+					start = time.time()
+					out = fit_curve(model, x, y, dx, dy, p0=p0, method=method, **_Nonedict(max_cycles=10 if method == 'ev' else None), **kw)
+					end = time.time()
+				
+					# save results
+					if plot.get('single', False):
+						times[i] = end - start
+						chisq[i] = out.chisq
+					pars[i] = out.par
+					covs[i] = out.cov
+			
+				# save results
+				icovs = np.empty(covs.shape)
+				I = np.eye(len(p0))
+				for i in range(len(icovs)):
+					icovs[i] = linalg.solve(covs[i], I, assume_a='pos')
+				pc = linalg.solve(icovs.sum(axis=0), I, assume_a='pos')
+				wpar = np.empty(pars.shape)
+				for i in range(len(wpar)):
+					wpar[i] = icovs[i].dot(pars[i])
+				pm = pc.dot(wpar.sum(axis=0))
+				pm = pm[:len(p0)]
+				pc = pc[:len(p0), :len(p0)]
+				ps = np.sqrt(np.diag(pc))
+
+				fp[(l, ll) + K] = pm
+				cp[(l, ll) + K] = pc
+			
+				if plot.get('single', False):
+					from matplotlib import pyplot as plt
+				
+					prho = pc / np.outer(ps, ps)
+
+					pdist = (pm - np.array(p0)) / ps
+					pdistc = (np.outer(pm - np.array(p0), pm - np.array(p0)) - pc) / np.sqrt(pc**2 + np.outer(ps, ps)**2)
+					chidist = (chisq.mean() - (n-len(p0))) / chisq.std(ddof=1) * np.sqrt(len(chisq))
+				
+					pvalue = stats.kstest(chisq, 'chi2', (n-len(p0),))[1]
+							
+					maxscatter = 1000
+					histkw = dict(
+						bins=int(np.sqrt(min(mcn, 1000))),
+						color=(.9,.9,.9),
+						edgecolor=(.7, .7, .7)
+					)
+					if len(p0) == 1:
+						rows = 2
+						cols = 2
+					elif len(p0) == 2:
+						rows = 3
+						cols = 3
+					else:
+						rows = 1 + len(p0)
+						cols = len(p0)
+				
+					fig = plt.figure(figsize=(4*cols, 2.3*rows))
+					fig.clf()
+					fig.set_tight_layout(True)
+					fig.canvas.set_window_title('%s, method “%s”' % (fstr, method))
+				
+					# histogram of parameter; diagonal
+					for i in range(len(p0)):					
+						ax = fig.add_subplot(rows, cols, 1 + i * (1 + cols))
+						ax.set_title("$(p_{%d}'-{p}_{%d})/\sigma_{%d}$" % (i, i, i))
+						S = (pars[:,i] - p0[i]) / np.sqrt(covs[:,i,i])
+						ax.hist(S, **histkw)
+						plot_text("$p_%d = $%g\n$\\bar{p}_{%d}-p_{%d} = $%.2g $\\bar{\sigma}_{%d}$" % (i, p0[i], i, i, pdist[i], i), ax=ax)
+					
+					# histogram of covariance; lower triangle
+					for i in range(len(p0)):
+						for j in range(i):
+							ax = fig.add_subplot(rows, cols, 1 + i * cols + j)
+							ax.set_title("$((p_{%d}'-p_{%d})\cdot(p_{%d}'-p_{%d})-\sigma_{%d%d})/\sqrt{\sigma_{%d%d}^2+\sigma_{%d}^2\sigma_{%d}^2}$" % (i, i, j, j, i, j, i, j, i, j))
+							C = ((pars[:,i] - p0[i]) * (pars[:,j] - p0[j]) - covs[:,i,j]) / np.sqrt(covs[:,i,j]**2 + covs[:,i,i]*covs[:,j,j])
+							ax.hist(C, **histkw)
+							plot_text("$\\bar{\\rho}_{%d%d} = $%.2g\n$(\\bar{p}_{%d}-p_{%d})\cdot(\\bar{p}_{%d}-p_{%d})-\\bar{\sigma}_{%d%d} = $%.2g $\sqrt{\\bar{\sigma}_{%d%d}^2+\\bar{\sigma}_{%d}^2\\bar{\sigma}_{%d}^2}$" % (i, j, prho[i,j], i, i, j, j, i, j, pdistc[i,j], i, j, i, j), ax=ax)
+				
+					# scatter plot of pairs of parameters; upper triangle
+					for i in range(len(p0)):
+						for j in range(i + 1, len(p0)):
+							ax = fig.add_subplot(rows, cols, 1 + i * cols + j)
+							ax.set_title("$(p_{%d}'-p_{%d})/\sigma_{%d}$, $(p_{%d}'-p_{%d})/\sigma_{%d}$" % (i, i, i, j, j, j))
+							X = (pars[:, i] - p0[i]) / np.sqrt(covs[:,i,i])
+							Y = (pars[:, j] - p0[j]) / np.sqrt(covs[:,j,j])
+							if len(X) > maxscatter:
+								X = X[::int(ceil(len(X) / maxscatter))]
+								Y = Y[::int(ceil(len(Y) / maxscatter))]
+							ax.plot(X, Y, '.k', markersize=3, alpha=0.35)
+							ax.grid()
+				
+					# histogram of chisquare; last row column 1
+					ax = fig.add_subplot(rows, cols, 1 + cols * (rows - 1))
+					ax.set_title('$\chi^2$')
+					plot_text('K.S. test p-value = %.2g %%\n$\mathrm{dof}=n-{\#}p = $%d\n$N\cdot(\\bar{\chi}^2 - \mathrm{dof}) = $%.2g $\sqrt{2\cdot\mathrm{dof}}$' % (100*pvalue, n-len(p0), chidist), loc=1, ax=ax)
+					ax.hist(chisq, **histkw)
+
+					# histogram of execution time; last row column 2
+					ax = fig.add_subplot(rows, cols, 2 + cols * (rows - 1))
+					ax.set_title('time')
+					plot_text('Average time = %ss' % num2si(times.mean(), format='%.3g'), loc=1, ax=ax)
+					ax.hist(times, **histkw)
+					ax.ticklabel_format(style='sci', scilimits=(-2,2))
+
+					# example data; last row column 3 (or first row last column)
+					ax = fig.add_subplot(rows, cols, (3 + cols * (rows - 1)) if len(p0) >= 2 else cols)
+					ax.set_title('Example fit')
+					fx = np.linspace(min(xmean), max(xmean), 1000)
+					ax.plot(fx, f(fx, *p0), '-', color='lightgray', linewidth=5, label='$y=%s$' % flatex, zorder=1)
+					ax.errorbar(x, y, dy, dx, fmt=',k', capsize=0, label='Data', zorder=2)
+					ax.plot(fx, f(fx, *pars[-1,:len(p0)]), 'r-', linewidth=1, label='Fit', zorder=3, alpha=1)
+					# plot_text('$y=%s$\n$y=%s$' % (flatex, sympy.latex(fsym(xsym, *p0))), fontsize=20, ax=ax)
+					ax.ticklabel_format(style='sci', axis='both', scilimits=(-3,3))
+					ax.legend(loc=0, fontsize='small')
+				
+					# save figure
+					plots_single.append(fig)
+
+	if plot.get('vsp0', False):
+		from matplotlib import pyplot as plt
+		fig = plt.figure(figsize=(10,7))
+		fig.clf()
+		fig.set_tight_layout(True)
+		fig.canvas.set_window_title('%s, method “%s”, parameter biases' % (fstr, method))
+		for i in range(len(p0s)): # p_i = fitted
+			for j in range(len(p0s)): # p_j = true
+				ax = fig.add_subplot(len(p0s), len(p0s), 1 + i * len(p0s) + j)
+				K = [0] * len(p0s)
+				K[j] = Ellipsis
+				K = tuple(K)
+				ax.errorbar(p0s[j], fp[(0, 0) + K + (i,)] - (np.asarray(p0s[i]) if i == j else p0s[i][0]), np.sqrt(cp[(0, 0) + K + (i, i)]), fmt=',')
+				ax.set_xlabel('True $p_{%d}$' % j)
+				ax.set_ylabel('$p_{%d}\'-p_{%d}$' % (i, i))
+				pstr = ''
+				for k in range(len(p0s)):
+					if k != j:
+						pstr += '$p_{%d}$ = %.2g\n' % (k, p0s[k][0])
+				plot_text(pstr, ax=ax)
+				ax.ticklabel_format(style='sci', axis='both', scilimits=(-3,3))
+				ax.grid()
+				
+		plot_vsp0 = fig
+	else:
+		plot_vsp0 = None
+
+	if plot.get('vsds', False):
+		from matplotlib import pyplot as plt
+	
+		fig = plt.figure(figsize=(8, 3 * len(p0s)))
+		fig.clf()
+		fig.set_tight_layout(True)
+		fig.canvas.set_window_title('%s, method “%s”, parameters vs. errors' % (fstr, method))
+	
+		ds = [
+			[dxs, dys, 'x', 'y', (Ellipsis, 0)],
+			[dys, dxs, 'y', 'x', (0, Ellipsis)]
+		]
+		for i in range(len(p0s)):
+			for j in range(2):
+				ax = fig.add_subplot(len(p0s), 2, 2*i + j + 1)
+				if i == 0:
+					pstr = ''
+					for k in range(len(p0s)):
+						pstr += '$p_{%d}$ = %.2g\n' % (k, p0s[k][0])
+					pstr += '$\sqrt{\sum\Delta %s^2/n}=$%.2g' % (ds[j][3], np.sqrt((ds[j][1][0]**2).sum() / n))
+					plot_text(pstr, ax=ax)
+				if i == len(p0s) - 1:
+					ax.set_xlabel('$\sqrt{\sum\Delta %s^2/n}$' % ds[j][2])
+				if j == 0:
+					ax.set_ylabel('$p_{%d}\'-p_{%d}$' % (i, i))
+				sel = ds[j][4] + tuple([0] * len(p0s)) + (i,)
+				Y = fp[sel] - np.asarray(p0s[i])
+				DY = np.sqrt(cp[sel + (i,)])
+				ax.errorbar(np.sqrt((ds[j][0]**2).sum(axis=-1) / n), Y, DY, fmt=',')
+				pvalue = stats.chi2.sf(sum((Y / DY)**2), len(Y))
+				plot_text('p-value = %.2g %%' % (pvalue * 100), loc=1, ax=ax)
+		
+		plot_vsds = fig
+	else:
+		plot_vsds = None
+	
+	out = FitCurveBootstrapOutput()
+	out.fp = fp
+	out.cp = cp
+	plotout = dict()
+	if len(plots_single) > 0:
+		plotout['single'] = plots_single
+	if not (plot_vsp0 is None):
+		plotout['vsp0'] = plot_vsp0
+	if not (plot_vsds is None):
+		plotout['vsds'] = plot_vsds
+	out.plot = plotout
+	
+	return out
 
 def _fit_affine_odr(x, y, dx, dy):
 	dy2 = dy**2
@@ -612,21 +1623,21 @@ def fit_linear(x, y, dx=None, dy=None, offset=True, absolute_sigma=True, method=
 
 def fit_const_yerr(y, sigmay):
 	"""
-		fit y = a
+	fit y = a
 
-		Parameters
-		----------
-		y : M-length array
-			dependent data
-		sigmay : M-length array
-			standard deviation of y
+	Parameters
+	----------
+	y : M-length array
+		dependent data
+	sigmay : M-length array
+		standard deviation of y
 
-		Returns
-		-------
-		a : float
-			optimal value for a
-		vara : float
-			variance of a
+	Returns
+	-------
+	a : float
+		optimal value for a
+	vara : float
+		variance of a
 	"""
 	y = np.asarray(y)
 	sigmay = np.asarray(sigmay)
@@ -637,7 +1648,7 @@ def fit_const_yerr(y, sigmay):
 	vara = 1 / s1
 	return a, vara
 
-def fit_oversampling(data, digit=1, print_info=False, plot_axes=None):
+def fit_oversampling(data, digit=1, print_info=0, plot_axes=None):
 	"""
 	Given discretized samples, find the maximum likelihood estimate
 	of the average and standard deviation of a normal distribution.
@@ -651,8 +1662,8 @@ def fit_oversampling(data, digit=1, print_info=False, plot_axes=None):
 	digit : number
 		The unit of discretization. Data is divided by digit before
 		computing, then results are multiplied by digit.
-	print_info : boolean
-		If True, print verbose information about the fit.
+	print_info : integer
+		
 	plot_axes : Axes3DSubplot or None
 		If a 3D subplot is given, plot the likelihood around the estimate.
 	
@@ -663,10 +1674,10 @@ def fit_oversampling(data, digit=1, print_info=False, plot_axes=None):
 	cov : 2D array
 		Covariance matrix of the estimate.
 	"""
-	# TODO
-	# usare monte carlo per fare un fit bayesiano, se no qui non ci si salva
-	if print_info:
-		print('########################## FIT_OVERSAMPLING ##########################')
+	import numdifftools as numdiff
+	
+	if print_info >= 1:
+		print('############### fit_oversampling ###############')
 		print()
 	
 	data = np.asarray(data) / digit
@@ -678,19 +1689,20 @@ def fit_oversampling(data, digit=1, print_info=False, plot_axes=None):
 	
 	data -= p0[0]
 	data /= p0[1]
-	hdigit = digit / p0[1] / 2
+	hdigit = 1 / p0[1] / 2
 	
-	c = Counter(data)
-	points = np.array(list(c.keys()), dtype='float64')
-	counts = np.array(list(c.values()), dtype='uint32')
+	points, counts = np.unique(data, return_counts=True)
 	
-	if print_info:
+	if print_info >= 1:
 		print('Number of data points: %d' % n)
 		print('Number of unique points: %d' % len(points))
 		print('Discretization unit: %.3g' % digit)
-		print('Sample mean: %.3g' % p0[0])
-		print('Sample standard deviation: %.3g' % (p0[1] if len(counts) > 1 else 0))
+		print('Sample mean: %.3g' % (p0[0] * digit))
+		print('Sample standard deviation: %.3g' % (p0[1] * digit if len(counts) > 1 else 0))
 		print()
+	
+	if print_info == 1:
+		print('Minimizing...')
 	
 	lp = np.empty(len(points))
 	
@@ -712,30 +1724,28 @@ def fit_oversampling(data, digit=1, print_info=False, plot_axes=None):
 				
 		return -np.sum(counts * lp)# + np.log(sigma) # jeffreys' prior
 		
-	result = optimize.minimize(minusloglikelihood, (0, 1), method='L-BFGS-B', options=dict(disp=print_info), bounds=((-hdigit, hdigit), (0.1, None)))
+	result = optimize.minimize(minusloglikelihood, (0, 1), method='L-BFGS-B', options=dict(disp=print_info >= 2), bounds=((-hdigit, hdigit), (0.1, None)))
 	
-	if print_info:
+	if print_info >= 2:
 		print('###### MINIMIZATION FINISHED ######')
 		print()
 	
 	par = result.x
-	cov = numdiff.Hessian(minusloglikelihood, method='forward')(par)
+	hess = numdiff.Hessian(minusloglikelihood, method='forward')(par)
 	try:
-		cov = linalg.inv(cov)
+		cov = linalg.inv(hess)
 	except linalg.LinAlgError:
-		if print_info:
+		if print_info >= 1:
 			print('Hessian is not invertible, computing pseudo-inverse')
 			print()
-		jac = numdiff.Jacobian(minusloglikelihood, method='forward')(par)
-		_, s, VT = linalg.svd(jac, full_matrices=False)
-		threshold = np.finfo(float).eps * max(jac.shape) * s[0]
-		s = s[s > threshold]
-		VT = VT[:s.size]
-		cov = np.dot(VT.T / s**2, VT)
+		W, V = linalg.eigh(hess)
+		cov = np.zeros(hess.shape)
+		np.fill_diagonal(cov, [(1 / w if w != 0 else 0) for w in W])
+		cov = V.dot(cov).dot(V.T)
 	
 	if not (plot_axes is None):
-		if print_info:
-			print('Plotting likelihood')
+		if print_info >= 1:
+			print('Plotting likelihood...')
 			print()
 		plot_axes.cla()
 		factor = special.gammaln(1 + n) - np.sum(special.gammaln(1 + counts))
@@ -760,12 +1770,17 @@ def fit_oversampling(data, digit=1, print_info=False, plot_axes=None):
 	cov *= p0[1] ** 2
 	cov *= digit ** 2
 	
-	if print_info:
+	if print_info >= 2:
 		print('###### SUMMARY ######')
-		print('Sample mean: %.3g' % p0[0])
-		print('Sample standard deviation: %.3g' % (p0[1] if len(counts) > 1 else 0))
+		print('Sample mean: %.3g' % (p0[0] * digit))
+		print('Sample standard deviation: %.3g' % (p0[1] * digit if len(counts) > 1 else 0))
+	if print_info >= 1:
 		print('Estimated mean, standard deviation (with correlation):')
 		print(format_par_cov(par, cov))
+		
+	if print_info >= 1:
+		print()
+		print('############# END fit_oversampling #############')
 		
 	return par, cov
 
@@ -933,6 +1948,13 @@ _util_mm_esr_data = dict(
 )
 
 def util_mm_list():
+	"""
+	Returns
+	-------
+	l : list
+		List of tuples, one for each metertype understood by util_mm_er, containing:
+		(metertype, type, description)
+	"""
 	l = []
 	for meter in _util_mm_esr_data:
 		l += [(meter, _util_mm_esr_data[meter]['type'], _util_mm_esr_data[meter]['desc'])]
@@ -954,8 +1976,10 @@ def util_mm_er(x, scale, metertype='lab3', unit='volt', sqerr=False):
 	unit : string
 		one of 'volt', 'volt_ac', 'ampere' 'ampere_ac', 'ohm', 'farad'
 		the unit of measure of x
-	sqerr : bool
-		If True, sum errors squaring.
+	sqerr : bool or callable
+		If False, sum errors. If True, sum squares of errors. If callable,
+		two errors are summed calling sqerr(err1, err2). For digital multimeters,
+		the first argument passed to sqerr is the percentual error.
 
 	Returns
 	-------
@@ -971,7 +1995,7 @@ def util_mm_er(x, scale, metertype='lab3', unit='volt', sqerr=False):
 
 	x = abs(x)
 
-	errsum = (lambda x, y: math.sqrt(x**2 + y**2)) if sqerr else (lambda x, y: x + y)
+	errsum = sqerr if hasattr(sqerr, '__call__') else (lambda x, y: math.sqrt(x**2 + y**2)) if sqerr else (lambda x, y: x + y)
 
 	meter = _util_mm_esr_data[metertype]
 	info = meter[unit]
@@ -990,7 +2014,7 @@ def util_mm_er(x, scale, metertype='lab3', unit='volt', sqerr=False):
 		elif unit == 'ampere' or unit == 'ampere_ac':
 			r = info['cdt'] / s
 	elif typ == 'analog':
-		e = s * errsum(0.5 / info['relres'][idx], info['valg'][idx] / 100.0)
+		e = s * errsum(info['valg'][idx] / 100.0, 0.5 / info['relres'][idx])
 		if unit == 'volt' or unit == 'volt_ac':
 			r = 20000 * s
 		elif unit == 'ampere' or unit == 'ampere_ac':
@@ -1005,7 +2029,7 @@ def util_mm_er(x, scale, metertype='lab3', unit='volt', sqerr=False):
 
 def util_mm_esr(x, metertype='lab3', unit='volt', sqerr=False):
 	"""
-	determines the fullscale used to measure x with a multimeter,
+	Determines the fullscale used to measure x with a multimeter,
 	supposing the lowest possible fullscale was used, and returns the
 	uncertainty, the fullscale and the internal resistance.
 
@@ -1364,8 +2388,8 @@ def format_par_cov(par, cov):
 	
 	Examples
 	--------
-	>>> par, cov = curve_fit(f, x, y)
-	>>> print(lab.format_par_cov(par, cov))
+	>>> out = fit_curve(f, x, y, ...)
+	>>> print(format_par_cov(out.par, out.cov))
 	"""
 	pars = xe(par, np.sqrt(np.diag(cov)))
 	corr = fit_norm_cov(cov) * 100
@@ -1548,9 +2572,9 @@ def sanitizefilename(name, windows=True):
 	filename : string
 		The sanitized file name.
 	"""
-	name = name.replace('/', '∕').replace('\0', '')
+	name = name.replace('/', '∕').replace('\0', '').replace(':', '﹕')
 	if windows:
-		name = name.replace('\\', '⧵').replace(':', '﹕')
+		name = name.replace('\\', '⧵')
 	return name
 
 def nextfilename(base, ext, idxfmt='%02d', prepath=None, start=1, sanitize=True):
@@ -1600,18 +2624,17 @@ def fit_generic_xyerr(f, dfdx, x, y, sigmax, sigmay, p0=None, print_info=False, 
 	"""
 	THIS FUNCTION IS DEPRECATED
 	"""
-	model = FitModel(f, dfdx=dfdx, sym=False)
-	return fit_generic(model, x, y, dx=sigmax, dy=sigmay, p0=p0, absolute_sigma=absolute_sigma, print_info=print_info, method='ev', conv_diff=conv_diff, max_cycles=max_cycles, **kw)
+	model = CurveModel(f, dfdx=dfdx, symb=False)
+	return fit_curve(model, x, y, dx=sigmax, dy=sigmay, p0=p0, absolute_sigma=absolute_sigma, print_info=print_info, method='ev', conv_diff=conv_diff, max_cycles=max_cycles, **kw)
 
 def fit_generic_xyerr2(f, x, y, sigmax, sigmay, p0=None, print_info=False, absolute_sigma=True):
 	"""
 	THIS FUNCTION IS DEPRECATED
 	"""
-	model = FitModel(f, sym=False)
-	return fit_generic(model, x, y, dx=sigmax, dy=sigmay, p0=p0, absolute_sigma=absolute_sigma, print_info=print_info, method='odrpack')
+	model = CurveModel(f, symb=False)
+	return fit_curve(model, x, y, dx=sigmax, dy=sigmay, p0=p0, absolute_sigma=absolute_sigma, print_info=print_info, method='odrpack')
 
 curve_fit_patched = optimize.curve_fit
-curve_fit_patched.__doc__ = '\nTHIS FUNCTION IS DEPRECATED\n'
 
 def etastart():
 	"""

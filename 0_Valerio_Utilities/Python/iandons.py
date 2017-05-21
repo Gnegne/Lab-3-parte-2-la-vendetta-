@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import inspect
 import re
+import lab
 from lab import *
 
 # *********************** UTILITIES *************************
@@ -203,6 +204,15 @@ def createline(type='linear', name=""):
 		func.__name__ = name
 	return func
 
+def createwave(type='real', name=""):
+	if type == 'real':
+		def func(t, w, A, p, q):
+			return q + A * np.cos(w*t + p)
+		func.deriv = lambda t, w, A, p, q: -w  * A * np.sin(w*t + p)
+	if name:
+		func.__name__ = name
+	return func
+
 # *********************** OBJECTS *************************
 
 
@@ -263,7 +273,7 @@ class DataHolder(object):
 			dy = self.y.err[mask]
 			p0 = getattr(f, 'pars', None)
 			df = getattr(f, 'deriv', _nullfunc)
-			pars, pcov = fit_generic(f, x, y, dx, dy, p0=p0, **kwargs)
+			pars, pcov, _ = lab._fit_curve_ev(f, df, x, y, dx, dy, p0, 1e3, **kwargs)
 			f.pars = pars
 			f.cov = pcov
 			f.sigmas = np.sqrt(np.diag(pcov))
@@ -377,6 +387,7 @@ class DataHolder(object):
 		if legend:
 			main_ax.legend(loc='best')
 
+		maxres = 0
 		for fun in resid:
 			mask = getattr(fun, 'mask', np.ones(len(x), dtype=bool))
 			resdkw = dict(marker='o', markeredgecolor='k', markeredgewidth=.5)
@@ -391,6 +402,9 @@ class DataHolder(object):
 				variance = self.y.err**2 + self.x.err**2 * df(self.x.val, *fun.pars)**2
 				fun.resd = res = delta / np.sqrt(variance)
 			resd_ax.plot(x[mask], res, **resdkw)
+			maxres = max(maxres, np.amax(np.abs(res)))
+		if resid:
+			resd_ax.set_ylim(-maxres*1.05, maxres*1.05)
 
 
 # *********************** OSCILLOSCOPE *************************
