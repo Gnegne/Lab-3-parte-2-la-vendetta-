@@ -390,7 +390,7 @@ class DataHolder(object):
 		maxres = 0
 		for fun in resid:
 			mask = getattr(fun, 'mask', np.ones(len(x), dtype=bool))
-			resdkw = dict(marker='o', markeredgecolor='k', markeredgewidth=.5)
+			resdkw = dict(marker='o', markeredgecolor='k', markeredgewidth=.5, markersize=5)
 			if hasattr(fun, 'linekw'):
 				resdkw.update(fun.linekw)
 			resdkw.update(ls='none')
@@ -404,7 +404,7 @@ class DataHolder(object):
 			resd_ax.plot(x[mask], res, **resdkw)
 			maxres = max(maxres, np.amax(np.abs(res)))
 		if resid:
-			resd_ax.set_ylim(-maxres*1.05, maxres*1.05)
+			resd_ax.set_ylim(-maxres*1.1, maxres*1.1)
 
 
 # *********************** OSCILLOSCOPE *************************
