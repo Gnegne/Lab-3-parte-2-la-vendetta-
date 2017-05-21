@@ -23,10 +23,10 @@ dr2 = mme(r2, 'ohm')
 dc1 = mme(c1, 'farad')
 dc2 = mme(c2, 'farad') 
 
-print(r1, dr1,'//')
-print(r2, dr2,'//')
-print(c1, dc1,'//')
-print(c2, dc2,'//')
+#print(r1, dr1,'//')
+#print(r2, dr2,'//')
+#print(c1, dc1,'//')
+#print(c2, dc2,'//')
 
 
 ##partitore
@@ -37,9 +37,9 @@ dR2 = mme(R2, 'ohm')
 Av = R1/(R1 +R2)
 dAv = (dR1/(R1 +R2))**2 + (R1*dR1/((R1 +R2)**2))**2 + (R1*dR2/((R1 +R2)**2))**2 
 dAv = np.sqrt(dAv)
-print('partitore',Av, dAv,'//')
-print(R1, dR1,'//')
-print(R2, dR2,'//')
+#print('partitore',Av, dAv,'//')
+#print(R1, dR1,'//')
+#print(R2, dR2,'//')
 
 ##prea-amp
 R1 = 971
@@ -54,12 +54,12 @@ dR1 = mme(R1, 'ohm')
 dR2 = mme(R2, 'ohm')
 dR3 = mme(R3, 'ohm')
 
-print('/pre-amp/')
-print(R1, dR1)
-print(R2, dR2)
-print(R3, dR3)
-print(Vp,dVp,'tensione')
-print(Vref,dVref,'tensione')
+#print('/pre-amp/')
+#print(R1, dR1)
+#print(R2, dR2)
+#print(R3, dR3)
+#print(Vp,dVp,'tensione')
+#print(Vref,dVref,'tensione')
 
 y = Vref/Vp
 dy = (dVref/Vp )**2  +  (Vref*dVp/(Vp**2) )**2
@@ -67,7 +67,7 @@ dy = np.sqrt(dy)
 xx = y/Av
 dxx =  (dy/Av )**2  +  (dAv*y/(Av**2) )**2
 dxx = np.sqrt(dxx)
-print(xx, dxx)
+#print(xx, dxx)
 
 ##preamp-b
 
@@ -78,9 +78,9 @@ dVx = mme(Vx,'volt','oscil')
 g = Vo/Vx
 dg = (dVo/Vx )**2  +  (Vo*dVx/(Vx**2) )**2
 dg = np.sqrt(dg)
-print(Vx, dVx)
-print(Vo, dVo)
-print(g, dg)
+#print(Vx, dVx)
+#print(Vo, dVo)
+#print(g, dg)
 
 ##banda
 
@@ -90,11 +90,22 @@ R3 = 46.4e3
 dR1 = mme(R1, 'ohm')
 dR2 = mme(R2, 'ohm')
 dR3 = mme(R3, 'ohm')
+filename = "dati_passabanda.txt"
+rawdata = np.loadtxt(os.path.join(folder, 'Data', filename)).T
+f = rawdata[0]
+df = f
+vin = rawdata[1]
+vo = rawdata[2]
+dvin = mme(vin,'volt','oscil')
+dvo = mme(Vo,'volt','oscil')
 print('banda resist:')
-print(R1, dR1)
-print(R2, dR2)
-print(R3, dR3)
+#print(R1, dR1)
+#print(R2, dR2)
+#print(R3, dR3)
+a = np.array((f, vin, dvin, vo, dvo)) * np.array([[-1e3], [1], [1], [1], [1]])
+print(maketab(*a, errors='all', precision=7))
 
+print(f)
 ##post
 R1p = 972
 R3p = 3.87e3
@@ -104,8 +115,8 @@ R2p = 33.1e3
 dR1p = mme(R1p, 'ohm')
 dR2p = mme(R2p, 'ohm')
 dR3p = mme(R3p, 'ohm')
-print('post resist:')
-print(R1p, dR1p)
-print(R2p, dR2p)
-print(R3p, dR3p)
+#print('post resist:')
+#print(R1p, dR1p)
+#print(R2p, dR2p)
+#print(R3p, dR3p)
 #(((((((((((
