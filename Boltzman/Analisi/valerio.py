@@ -43,8 +43,12 @@ bandpass.pars = [1e3, 6e3, 10]
 
 w = DataHolder(f, g, df, dg)
 w.x.type = 'log'
+<<<<<<< HEAD
 w.fit_generic(bandpass)
 w.draw(bandpass, resid=True)
+=======
+#w.draw()
+>>>>>>> 853ec9dd963da0a5968350c086321daea26c56c9
 
 # *** amplificazioni ***
 amplis = [[], [], []]
@@ -106,7 +110,7 @@ noiso.pars = [1, 1e3, 1e3]
 
 kb = DataHolder(r, n, dr, dn)
 kb.fit_generic(noiso)
-kb.draw(noiso, resid=True)
+#kb.draw(noiso, resid=True)
 
 print(fit_norm_cov(noiso.cov))
 Vn, Rt, Rn = noiso.pars
