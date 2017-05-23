@@ -27,7 +27,7 @@ dg = np.sqrt(mme(rawdata[1], 'volt', 'oscil')**2 / rawdata[1]**2 + mme(rawdata[2
 
 w = DataHolder(f, g, df, dg)
 w.x.type = 'log'
-w.draw()
+#w.draw()
 
 # *** amplificazioni ***
 amplis = [[], [], []]
@@ -116,7 +116,7 @@ noiso.mask = (r > 4e3)
 
 kb = DataHolder(r, n, dr, dn)
 kb.fit_generic(noiso)
-kb.draw(noiso, resid=True)
+#kb.draw(noiso, resid=True)
 
 print(fit_norm_cov(noiso.cov))
 Vn, Rt, Rn = noiso.pars

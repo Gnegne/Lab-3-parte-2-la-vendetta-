@@ -39,13 +39,14 @@ def XYfun(a):
 
 unit = [("freq", "osc"),("volt_ar_nc", "osc"),("volt_ar_nc", "osc")]
 
-titolo = "Fit boltzmann"
-Xlab = "R [kohm]"
-Ylab = "V"
+titolo = "Fit passa banda"
+Xlab = "Frequenza [Hz]"
+Ylab = "Guadagno"
 
-par0 = fit(dir, file, unit, f, p0, titolo, Xlab, Ylab, XYfun, Xscale="log", residuals=True)
+par0 = fit(dir, file, unit, f, p0, titolo, Xlab, Ylab, XYfun, Xscale="log", residuals=True, xlimp=[1,1], capsize=0.8)
 
 amp3_ = par0[0]*par0[2]/par0[1]
+
 #########################################
 
 #RUMORE#
@@ -59,15 +60,15 @@ def f(x, a, b, c):
 p0=[0.05,3e3,30e3]
 
 def XYfun(a):
-    return a[0]*1000, a[1], a[2]
+    return a[0]*1000, a[1], a[2]*1.5
 
 unit = [("ohm", "dig"),("volt", "dig"),("volt", "dig")]
 
 titolo = "Fit boltzmann"
-Xlab = "R [kohm]"
-Ylab = "V"
+Xlab = "Resistenza [k$\Omega$]"
+Ylab = "Tensione [V]"
 
-par1 = fit(dir, file, unit, f, p0, titolo, Xlab, Ylab, XYfun, yerr=True, kx=1e-3, residuals=True)
+par1 = fit(dir, file, unit, f, p0, titolo, Xlab, Ylab, XYfun, yerr=True, kx=1e-3, ky=1e3, residuals=True, out=True, capsize=0.8, xlimp=[1,5])
 
 A = amp0_*amp1_*amp2_*amp3_/np.sqrt(2)
 T = 300

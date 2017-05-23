@@ -291,7 +291,7 @@ _util_mm_esr_data = dict(
         ),
         freq = dict(
             scales = [1e9], 
-            perc = [0.1]*11,
+            perc = [0.5]*11,
             div = [0]*11
         ),
         fix = dict(
@@ -672,7 +672,7 @@ def _XYfunction(a): # default for the x-y columns from the file entries
 def load_data(directory,file_):
     # load the data matrix from the data file 
     
-    data = loadtxt(directory + "data/" + file_ + ".txt", unpack = True)    
+    data = loadtxt(directory + "data\\" + file_ + ".txt", unpack = True)    
     if type(data[0]) is np.float64:    # check if the first column is a column 
         data=array(transpose(matrix(data)))
 
@@ -724,12 +724,12 @@ def _preplot(directory, file_, X, Y, dX, dY, title_="", fig="^^",
     if Yscale=="log":
         yscale("log")
     grid(b=True)
-    errorbar(X,Y,dY,dX, fmt=",",ecolor="black",capsize=0.1, color="black")
+    errorbar(X,Y,dY,dX, fmt=",",ecolor="black",capsize=0.8, color="black")
     savefig(directory+"Figs-Tabs/fast_plot_"+fig+".pdf")
     savefig(directory+"Figs-Tabs/fast_plot_"+fig+".png")
     show()
     
-def _outlier_(directory, file_, units, X, XYfun):
+def _outlier_(directory, file_, units, X, XYfun, xerr, yerr):
     # mark the outlier on the data plot, read them from a specific file
 
     data_ol = load_data(directory,file_+"_ol")
@@ -747,26 +747,26 @@ def _residuals(fig, gne, gs, ax1, f, par, out, X, dX, Xlab, Xscale, Y, dY, kx, X
 
     #subplot(212)
     ax2 = gne.add_subplot(gs[3,:], sharex=ax1)
-    rc('ytick', labelsize=12)
+    #rc('ytick', labelsize=12)
     #title("Scarti normalizzati")
     xlabel(Xlab) #
-    ylabel("Scarti")
+    ylabel("Norm. res.")
     if Xscale=="log":
         xscale("log")
     grid(b=True)
     df = (f(X+dX/1e6,*par)-f(X,*par)) /(dX/1e6)
     plot(X*kx, (Y-f(X,*par))/sqrt(dY**2+(df*dX)**2), ".", color="black")
     
-    #if out ==True:
-    #   df_ol = (f(X_ol+dX_ol/1e6,*par)-f(X_ol,*par)) /(dX_ol/1e6)
-    #   plot(kx*X_ol, (Y_ol-f(X_ol,*par))/sqrt(dY_ol**2+(df_ol*dX_ol)**2), "x", color="green")
+    if out ==True:
+       df_ol = (f(X_ol+dX_ol/1e6,*par)-f(X_ol,*par)) / (dX_ol/1e6)
+       plot(kx*X_ol, (Y_ol-f(X_ol,*par))/sqrt(dY_ol**2+(df_ol*dX_ol)**2), "x", color="green")
     
     show()
     
 def plot_fit(directory, file_, title_, units, f, par, X, Y, dX, dY, kx, ky,
              out=False, fig="^^", residuals=False,
-             xlimp=[100,100], XYfun=_XYfunction,
-             Xscale="linear", Yscale="linear", Xlab="", Ylab=""):
+             xlimp=[0,0], XYfun=_XYfunction,
+             Xscale="linear", Yscale="linear", Xlab="", Ylab="", xerr=False, yerr=False,capsize=0.1):
     """
         Parameters
         ----------    
@@ -799,33 +799,33 @@ def plot_fit(directory, file_, title_, units, f, par, X, Y, dX, dY, kx, ky,
     xlima = array(xlimp)/100
 
     if out ==True:
-        X_ol, Y_ol, dX_ol, dY_ol, smin, smax = _outlier_(directory, file_, units, X, XYfun)
-        
+        X_ol, Y_ol, dX_ol, dY_ol, smin, smax = _outlier_(directory, file_, units, X, XYfun, xerr, yerr)
     else:
         smin = min(X)
         smax = max(X)
         
     if Xscale=="log":
-        l=logspace(log10(smin)*xlima[0],log10(smax*xlima[1]),1000)
+        l=logspace(log10(smin)-log10(smax-smin)*xlima[0],log10(smax)+log10(smax-smin)*xlima[1],1000)
     else:
-        l=linspace(smin*xlima[0],smax*xlima[1],1000)
+        l=linspace(smin-(smax-smin)*xlima[0],smax+(smax-smin)*xlima[1],1000)
     grid(b=True)
-    graph_fit = plot(l*kx,f(l,*par)*ky,"red",label="fit")
+    graph_fit = plot(l*kx,f(l,*par)*ky,'#2A8B9E',label="fit")
     
-    graph_data = errorbar(X*kx,Y*ky,dY*ky,dX*kx, fmt=",",ecolor="black",capsize=0.1, color="black",label="data")
+    graph_data = errorbar(X*kx,Y*ky,dY*ky,dX*kx, fmt=",",ecolor="black",capsize=capsize, color="black",label="data")
     
     if out==True:
-        outlier = errorbar(X_ol*kx,Y_ol*ky,dY_ol*ky,dX_ol*kx, fmt="gx",ecolor="black",capsize=0.1, color="black",label="outlier")
+        outlier = errorbar(X_ol*kx,Y_ol*ky,dY_ol*ky,dX_ol*kx, fmt="gx",ecolor="black",capsize=0.5, color="black",label="outlier")
         legend([graph_data, outlier], ["data","outlier"],loc="best")
     else:
         legend([graph_data],["data"], loc="best")
     if residuals==True:
         if out==True:
             _residuals(fig, gne, gs, ax1, f, par, out, X, dX, Xlab, Xscale, Y, dY, kx, X_ol, Y_ol, dY_ol, dX_ol)
-        _residuals(fig, gne, gs, ax1, f, par, out, X, dX, Xlab, Xscale, Y, dY, kx)
+        else:
+            _residuals(fig, gne, gs, ax1, f, par, out, X, dX, Xlab, Xscale, Y, dY, kx)
     
     savefig(directory+"Figs-Tabs/fit_"+fig+".pdf")
-    savefig(directory+"Figs-Tabs/fit_"+fig+".png")
+    #savefig(directory+"Figs-Tabs/fit_"+fig+".png")
     show()
 
 def chi2_calc(f, par, X, Y, dY, dX, cov):
@@ -929,8 +929,8 @@ def latex_table(directory, file_, data, data_err, tab, out, data_ol=[], data_err
 def fit(directory, file_, units, f, p0, 
         title_="", Xlab="", Ylab="", XYfun=_XYfunction, 
         preplot=False, Xscale="linear", Yscale="linear", 
-        xlimp = array([97.,103.]), residuals=False, 
-        table=False, tab=[""], fig="^^", out=False, kx =1, ky = 1, xerr=False, yerr=False, fixpar=False):
+        xlimp = array([1,1]), residuals=False, 
+        table=False, tab=[""], fig="^^", out=False, kx =1, ky = 1, xerr=False, yerr=False, fixpar=False, capsize=0.8):
     
     """
         Interface for the fit functions of lab library.
@@ -975,7 +975,7 @@ def fit(directory, file_, units, f, p0,
         plot_fit(directory, file_, title_, units, f, p0,
              X, Y, dX, dY, kx, ky,
              out, "fix", residuals, xlimp, XYfun,
-             Xscale, Yscale, Xlab, Ylab)
+             Xscale, Yscale, Xlab, Ylab, xerr, yerr, capsize)
     
     #Fit
     par, cov = fit_generic_xyerr2(f,X,Y,dX,dY,p0)
@@ -984,7 +984,7 @@ def fit(directory, file_, units, f, p0,
     plot_fit(directory, file_, title_, units, f, par,
              X, Y, dX, dY, kx, ky,
              out, fig, residuals, xlimp, XYfun,
-             Xscale, Yscale, Xlab, Ylab)
+             Xscale, Yscale, Xlab, Ylab, xerr, yerr, capsize)
 
     #Calcolo chi, errori e normalizzo la matrice di cov
     chi, sigma, normcov, p = chi2_calc(f, par, X, Y, dY, dX, cov)
