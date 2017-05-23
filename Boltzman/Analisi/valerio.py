@@ -8,7 +8,7 @@ from lab import *
 from iandons import *
 
 # ******* mpl setup
-mpl.rcParams['errorbar.capsize'] = 1
+mpl.rcParams['errorbar.capsize'] = 0
 mpl.rcParams['xtick.direction'] = 'in'
 mpl.rcParams['ytick.direction'] = 'in'
 mpl.rcParams['xtick.top'] = True
@@ -19,82 +19,73 @@ mpl.rcParams['lines.linewidth'] = 1.0
 filename = "dati_passabanda.txt"
 rawdata = np.loadtxt(os.path.join(folder, 'Data', filename)).T
 
-f = rawdata[0]
+f = rawdata[0] * 1e3
 df = f / 1e3
 g = rawdata[2] / rawdata[1]
 g = 20*np.log10(g)
 dg = np.sqrt(mme(rawdata[1], 'volt', 'oscil')**2 / rawdata[1]**2 + mme(rawdata[2], 'volt', 'oscil')**2 / rawdata[2]**2)*20*np.log10(np.e)
 
+
+def bandgain(w, a, w0, l):
+	return a * w / np.sqrt((w**2 - w0**2)**2 + w**2 * w0**2 / l**2)
+
+
+def bandpass(w, a, w0, l):
+	return np.log10(bandgain(w, a, w0, l)) * 20
+
+
+def _dband(w, a, w0, l):
+	return -a * (w - w0**2/w) * (1 + w0**2/w**2) / ((w**2 - w0**2)**2/w**2 + w0**2 / l**2)**(3/2)
+
+
+bandpass.deriv = lambda w, a, w0, l: 20 * np.log10(np.e) * _dband(w, a, w0, l) / bandgain(w, a, w0, l)
+bandpass.pars = [1e3, 6e3, 10]
+
 w = DataHolder(f, g, df, dg)
 w.x.type = 'log'
-w.draw()
+w.fit_generic(bandpass)
+w.draw(bandpass, resid=True)
 
 # *** amplificazioni ***
 amplis = [[], [], []]
 errs = [[], [], []]
-# preamp primo stadio
-freqs = [1e3] * 3
-idx = ['', 1, 2]
+freq = 1e3
+idx = [
+	['', 1, 2],
+	['', 1, 2],
+	[1, 2, 3]
+]
+names = ['preamp', 'preampb', 'postampo']
 parter = .987/1031
+perror = mme(987, 'ohm')**2/987**2 + mme(1031e3, 'ohm')**2/1031e3**2
 
-for freq, i in zip(freqs, idx):
-	f = createwave()
-	f.pars = [freq*2*np.pi, 1, 0, 0]
-	h = createwave()
-	h.pars = [freq*2*np.pi, 1, 0, 0]
-	filo = 'preamp{}.csv'.format(i)
-	a, b = data_from_oscill(os.path.join(folder, 'Data', filo))
-	a.fit_generic(f, verbose=False)
-	b.fit_generic(h, verbose=False)
-	G = np.abs(h.pars[1]/f.pars[1]/parter)
-	e = f.cov[1, 1]/f.pars[1]**2 + h.cov[1, 1]/h.pars[1]**2
-	e = G * np.sqrt(e)
-	amplis[0].append(G)
-	errs[0].append(e)
-
-# preamp secondo stadio
-freqs = [1e3] * 3
-idx = ['', 1, 2]
-
-for freq, i in zip(freqs, idx):
-	f = createwave()
-	f.pars = [freq*2*np.pi, 1, 0, 0]
-	h = createwave()
-	h.pars = [freq*2*np.pi, 1, 0, 0]
-	filo = 'preampb{}.csv'.format(i)
-	a, b = data_from_oscill(os.path.join(folder, 'Data', filo))
-	a.fit_generic(f, verbose=False)
-	b.fit_generic(h, verbose=False)
-	G = np.abs(f.pars[1]/h.pars[1])
-	e = f.cov[1, 1]/f.pars[1]**2 + h.cov[1, 1]/h.pars[1]**2
-	e = G * np.sqrt(e)
-	amplis[1].append(G)
-	errs[1].append(e)
-
-# postamp
-freqs = [1e3] * 3
-idx = [1, 2, 3]
-
-for freq, i in zip(freqs, idx):
-	f = createwave()
-	f.pars = [freq*2*np.pi, 1, 0, 0]
-	h = createwave()
-	h.pars = [freq*2*np.pi, 1, 0, 0]
-	filo = 'postampo{}.csv'.format(i)
-	a, b = data_from_oscill(os.path.join(folder, 'Data', filo))
-	a.fit_generic(f, verbose=False)
-	b.fit_generic(h, verbose=False)
-	G = np.abs(h.pars[1]/f.pars[1])
-	e = f.cov[1, 1]/f.pars[1]**2 + h.cov[1, 1]/h.pars[1]**2
-	e = G * np.sqrt(e)
-	amplis[2].append(G)
-	errs[2].append(e)
+for j in range(3):
+	name = names[j]
+	for i in idx[j]:
+		f = createwave(pars=[freq*2*np.pi, 1, 0, 0])
+		h = createwave(pars=[freq*2*np.pi, 1, 0, 0])
+		filo = '{}{}.csv'.format(name, i)
+		a, b = data_from_oscill(os.path.join(folder, 'Data', filo))
+		a.fit_generic(f, verbose=False)
+		b.fit_generic(h, verbose=False)
+		if j == 0:
+			G = np.abs(h.pars[1]/f.pars[1]/parter)
+			e = f.cov[1, 1]/f.pars[1]**2 + h.cov[1, 1]/h.pars[1]**2 + perror
+		elif j == 1:
+			G = np.abs(f.pars[1]/h.pars[1])
+			e = f.cov[1, 1]/f.pars[1]**2 + h.cov[1, 1]/h.pars[1]**2
+		else:
+			G = np.abs(h.pars[1]/f.pars[1])
+			e = f.cov[1, 1]/f.pars[1]**2 + h.cov[1, 1]/h.pars[1]**2
+		e = G * np.sqrt(e)
+		amplis[j].append(G)
+		errs[j].append(e)
 
 amplis = np.array(amplis)
 errs = np.array(errs)
 print('Preamp stadio a:', *xe(amplis[0], errs[0]))
 print('Preamp stadio b:', *xe(amplis[1], errs[1]))
-print('Postamp:', *xe(amplis[2], errs[2]))
+print('Postamp:', *xe(amplis[2], errs[2]), '\n')
 
 # rumore
 filename = "dati_rummore.txt"
@@ -111,8 +102,7 @@ def noiso(R, Vn, Rt, Rn):
 
 
 noiso.deriv = lambda R, Vn, Rt, Rn: Vn/(2 * np.sqrt(1 + R/Rt + (R/Rn)**2)) * (1/Rt + 2*R/Rn**2)
-noiso.pars = [0.05, 9e3, 17e3]
-noiso.mask = (r > 4e3)
+noiso.pars = [1, 1e3, 1e3]
 
 kb = DataHolder(r, n, dr, dn)
 kb.fit_generic(noiso)
@@ -121,9 +111,9 @@ kb.draw(noiso, resid=True)
 print(fit_norm_cov(noiso.cov))
 Vn, Rt, Rn = noiso.pars
 
-Atot = 1e7
+Atot = 1e5
 band = 1e3
-boltzmann = Vn**2 / (4 * Rt * 300 * Atot * band)
+boltzmann = Vn**2 / (4 * Rt * 300 * Atot**2 * band)
 print(boltzmann)
 
 plt.show()
