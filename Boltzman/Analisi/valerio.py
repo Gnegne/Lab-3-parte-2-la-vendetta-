@@ -8,7 +8,7 @@ from lab import *
 from iandons import *
 
 # ******* mpl setup
-mpl.rcParams['errorbar.capsize'] = 3
+mpl.rcParams['errorbar.capsize'] = 1
 mpl.rcParams['xtick.direction'] = 'in'
 mpl.rcParams['ytick.direction'] = 'in'
 mpl.rcParams['xtick.top'] = True
@@ -111,7 +111,7 @@ def noiso(R, Vn, Rt, Rn):
 
 
 noiso.deriv = lambda R, Vn, Rt, Rn: Vn/(2 * np.sqrt(1 + R/Rt + (R/Rn)**2)) * (1/Rt + 2*R/Rn**2)
-noiso.pars = [1, 1e3, 1e3]
+noiso.pars = [0.05, 9e3, 17e3]
 noiso.mask = (r > 4e3)
 
 kb = DataHolder(r, n, dr, dn)

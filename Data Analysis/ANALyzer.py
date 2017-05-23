@@ -177,7 +177,7 @@ _util_mm_esr_data = dict(
         type = 'digital',
         volt = dict(
             scales = [0.2, 2, 20, 200, 1000],
-            perc = [0.5*3] * 4 + [0.8],
+            perc = [0.5] * 4 + [0.8],
             digit = [1, 1, 1, 1, 2]
         ),
         volt_ac = dict(
@@ -291,7 +291,7 @@ _util_mm_esr_data = dict(
         ),
         freq = dict(
             scales = [1e9], 
-            perc = [1]*11,
+            perc = [0.1]*11,
             div = [0]*11
         ),
         fix = dict(
@@ -678,7 +678,7 @@ def load_data(directory,file_):
 
     return data
 
-def errors(data, units, XYfun):
+def errors(data, units, XYfun, xerr, yerr):
     # performs the error calculation, using mme
 
     # calculate data error with mme
@@ -694,8 +694,18 @@ def errors(data, units, XYfun):
     
     X=unumpy.nominal_values(X_err)
     Y=unumpy.nominal_values(Y_err)
-    dX=unumpy.std_devs(X_err)
-    dY=unumpy.std_devs(Y_err)
+    if (xerr==True and yerr==False):
+        dX = XYfun(data)[2]
+        dY=unumpy.std_devs(Y_err)
+    elif (xerr==False and yerr==True):
+        dX=unumpy.std_devs(X_err)
+        dY = XYfun(data)[2]
+    elif (xerr==True and yerr==True):
+        dX = XYfun(data)[2]
+        dY = XYfun(data)[3]
+    else:
+        dX=unumpy.std_devs(X_err)
+        dY=unumpy.std_devs(Y_err)
 
     return X, Y, dX, dY, data_err
 
@@ -723,7 +733,7 @@ def _outlier_(directory, file_, units, X, XYfun):
     # mark the outlier on the data plot, read them from a specific file
 
     data_ol = load_data(directory,file_+"_ol")
-    X_ol, Y_ol, dX_ol, dY_ol, data_ol_err = errors(data_ol, units, XYfun)
+    X_ol, Y_ol, dX_ol, dY_ol, data_ol_err = errors(data_ol, units, XYfun, xerr, yerr)
 
     smin=min(min(X_ol),min(X))
     smax=max(max(X_ol),max(X))
@@ -920,7 +930,7 @@ def fit(directory, file_, units, f, p0,
         title_="", Xlab="", Ylab="", XYfun=_XYfunction, 
         preplot=False, Xscale="linear", Yscale="linear", 
         xlimp = array([97.,103.]), residuals=False, 
-        table=False, tab=[""], fig="^^", out=False, kx =1, ky = 1):
+        table=False, tab=[""], fig="^^", out=False, kx =1, ky = 1, xerr=False, yerr=False, fixpar=False):
     
     """
         Interface for the fit functions of lab library.
@@ -951,7 +961,7 @@ def fit(directory, file_, units, f, p0,
         
     """
     data = load_data(directory,file_)
-    X, Y, dX, dY, data_err = errors(data, units, XYfun)
+    X, Y, dX, dY, data_err = errors(data, units, XYfun, xerr, yerr)
 
     # define a default for the figure name
     if fig=="^^":
@@ -960,6 +970,12 @@ def fit(directory, file_, units, f, p0,
     # print a fast plot of the data    
     if preplot==True :
         _preplot(directory, file_, title_, fig, X, Y, dX, dY, Xscale, Yscale, Xlab, Ylab)
+        
+    if fixpar==True :
+        plot_fit(directory, file_, title_, units, f, p0,
+             X, Y, dX, dY, kx, ky,
+             out, "fix", residuals, xlimp, XYfun,
+             Xscale, Yscale, Xlab, Ylab)
     
     #Fit
     par, cov = fit_generic_xyerr2(f,X,Y,dX,dY,p0)
@@ -978,7 +994,7 @@ def fit(directory, file_, units, f, p0,
 
     if out ==True:
         data_ol = load_data(directory,file_+"_ol")
-        X_ol, Y_ol, dX_ol, dY_ol, data_err_ol = errors(data_ol, units, XYfun)
+        X_ol, Y_ol, dX_ol, dY_ol, data_err_ol = errors(data_ol, units, XYfun, xerr, yerr)
     else:
         data_ol=[]
         data_err_ol=[]
@@ -1025,7 +1041,7 @@ def fit_nox(directory, file_, units, f, p0,
         
     """
     data = load_data(directory,file_)
-    X, Y, dX, dY, data_err = errors(data, units, XYfun)
+    X, Y, dX, dY, data_err = errors(data, units, XYfun, xerr, yerr)
 
     # define a default for the figure name
     if fig=="^^":
@@ -1052,7 +1068,7 @@ def fit_nox(directory, file_, units, f, p0,
 
     if out ==True:
         data_ol = load_data(directory,file_+"_ol")
-        X_ol, Y_ol, dX_ol, dY_ol, data_err_ol = errors(data_ol, units, XYfun)
+        X_ol, Y_ol, dX_ol, dY_ol, data_err_ol = errors(data_ol, units, XYfun, xerr, yerr)
     else:
         data_ol=[]
         data_err_ol=[]
@@ -1091,7 +1107,7 @@ def fast_plot(directory, file_, units, XYfun=_XYfunction, title_="",
 
     """    
     data = load_data(directory,file_)
-    X, Y, dX, dY, data_err = errors(data, units, XYfun)
+    X, Y, dX, dY, data_err = errors(data, units, XYfun, xerr, yerr)
 
     # define a default for the figure name
     if fig=="^^":
