@@ -5,6 +5,7 @@ from ANALyzer import *
 from uncertainties import *
 from uncertainties import unumpy as un
 import numpy as np
+from valerio import amplis, errs
 
 #########################################
 
@@ -31,7 +32,7 @@ file="dati_passabanda"
 
 def f(x, a, b, c):
     return a*x*np.sqrt(1/((x**2-b**2)**2+(x**2*b**2/c**2)))
-    
+
 p0=[1e3,6200,10]
 
 def XYfun(a):
@@ -56,7 +57,7 @@ file="dati_rummore"
 
 def f(x, a, b, c):
     return a * np.sqrt(1 + x/b+(x**2/c**2))
-    
+
 p0=[0.05,3e3,30e3]
 
 def XYfun(a):
@@ -77,10 +78,3 @@ df = par0[1]/par0[2]*np.pi/2
 K = par1[0]**2/(par1[1]*4*T*(A**2)*df)
 
 print(K)
-
-
-
-
-
-
-
