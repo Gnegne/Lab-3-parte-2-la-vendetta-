@@ -17,13 +17,13 @@
 			\end{tabular}
 		\end{minipage}
 	\end{figure}
+
 	Essendo il guadagno atteso in $out$ $\sim 51 \cdot 14.5 \sim 740$, per effettuare
 	la verifica evitando che l'uscita degli OpAmp saturi senza dover inviare segnali molto piccoli e dunque relativamente molto rumorosi
 	si è scelto di valutare separatamente l'amplificazione delle due sezioni; è
 	inoltre stato montato un partitore di tensione (impiegando le resistenze $R_{T1}=\SI{0.987(9)}{\kilo\ohm}$ e $R_{T2}=\SI{1031(9)}{\kilo\ohm}$) per valutare più agevolmente l'amplificazione della prima sezione.
 
 	Si è proceduto pertanto ad inviare in ingresso al partitore un onda sinusoidale di varie ampiezze, misurando l'ampiezza dell'onda in uscita all'INA114.
-
 
 	Il guadagno ottenuto $Av_{1}= 55 \pm 1$ risulta compatibile con le attese $\sim 51$.
 
@@ -37,11 +37,11 @@
 	\begin{figure}[h]
 		\centering
 		\subfloat[Prima sezione, INA114.]{
-			\includegraphics[scale=0.75]{preamp1.png}
+			\includegraphics[scale=0.5]{preamp1.png}
 		}
 		\qquad
 		\subfloat[Seconda sezione, AD708.]{
-			\includegraphics[scale=0.75]{preampb.png}
+			\includegraphics[scale=0.5]{preampb.png}
 		}
 		\caption{Acquisizioni esemplificative di segnali in ingresso (ch. 1) e in uscita (ch. 2).}
 		\label{fig:preampo}

@@ -57,8 +57,13 @@ file="dati_rummore"
 
 def f(x, a, b, c):
     return a * np.sqrt(1 + x/b+(x**2/c**2))
+<<<<<<< HEAD
 
 p0=[0.05,3e3,30e3]
+=======
+
+p0=[1,10e3,10e3]
+>>>>>>> af6ffaa0ee81544302562073e22c1f1ff3293e78
 
 def XYfun(a):
     return a[0]*1000, a[1], a[2]*1.5
@@ -68,13 +73,22 @@ unit = [("ohm", "dig"),("volt", "dig"),("volt", "dig")]
 titolo = "Fit boltzmann"
 Xlab = "Resistenza [k$\Omega$]"
 Ylab = "Tensione [V]"
+tab = [R"Resistenza [$\si{\ohm}$]",R"Tensione RMS [\si{\volt}]","Errore"]
 
-par1 = fit(dir, file, unit, f, p0, titolo, Xlab, Ylab, XYfun, yerr=True, kx=1e-3, ky=1e3, residuals=True, out=True, capsize=0.8, xlimp=[1,5])
+par1 = fit(dir, file, unit, f, p0, titolo, Xlab, Ylab, XYfun, yerr=True, kx=1e-3, ky=1e3, residuals=True, out=True, capsize=0.8, xlimp=[1,5], table=True, tab=tab)
 
-A = amp0_*amp1_*amp2_*amp3_/np.sqrt(2)
-T = 300
-df = par0[1]/par0[2]*np.pi/2
+A = amp0_*amp1_*amp2_*amp3_ #/np.sqrt(2)
+T = ufloat(300, 3)
+df = par0[1]/par0[2]#*np.pi/2
 
 K = par1[0]**2/(par1[1]*4*T*(A**2)*df)
 
-print(K)
+print("k_B =",K)
+
+##########################################
+
+#RMS#
+
+V00 = umme(68e-3,"volt_ar_nc","osc")
+V01 = umme(23.3e-3,"volt_ar_nc","osc")
+print(V01/V00)
