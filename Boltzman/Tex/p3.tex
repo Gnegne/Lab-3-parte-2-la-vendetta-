@@ -16,7 +16,7 @@ Si è realizzato il convertitore RMS in \fig{RMS}, facendo uso dell'integrato AD
 			\end{tabular}
 		\end{minipage}
 	\end{figure}
-	
+
 Si è quindi verificato (vedi \fig{RMS_test}) che il circuito si comportasse come atteso, ovvero che producesse a partire da un segnale AC con ampiezza picco-picco $V_{pp}$ in ingresso, un segnale DC di ampiezza $\frac{V_{pp}}{2\cdot \sqrt{2}}$.
 
 	\begin{figure}[H]
@@ -31,35 +31,35 @@ Il rapporto tra i segnali misurato è di $0.343 \pm 0.008$ a fronte di un valore
 \section{Misure di rumore}
 Si è quindi proceduto alla misura del rumore al variare della resistenza. Il range di resistenze utilizzate varia tra $\SI{1}{\kilo\ohm}$, appena sufficiente a distinguere una differenza rispetto alla resistenza nulla, e $\SI{100}{\kilo\ohm}$, valore oltre il quale il circuito raggiunge il valore di saturazione (l'OpAmp del post-amplificatore risulta infatti saturato)\footnote{Al variare delle resistenze il valore di saturazione in output viene raggiunto molto prima di quanto atteso e in maniera discontinua rispetto alla legge di andamento attesa. Si sospetta che l'effetto sia dovuto ad effetti di induzione sulla resistenza.}.
 
-In \tab{data} sono riportati i dati raccolti. Poiché nella lettura dei valori di tensione l'ultima cifra non era stabile, si è proceduto a stimare l'errore osservando l'intervallo di variabilità delle letture.
+I dati raccolti sono riportati in \tab{data}. Poiché nella lettura dei valori di tensione l'ultima cifra non era stabile, si è proceduto a stimare l'errore osservando l'intervallo di variabilità delle letture.
 
-\begin{table}[H]
+\begin{table}
 	\centering
-\begin{tabular}{c c}
-	\toprule
-	Resistenza [$\si{\kilo\ohm}$] & Tensione RMS [\si{\milli\volt}]\\
-	\midrule
-	1.0 $\pm$ 0.3 & 65 $\pm$ 3\\
-	2.1 $\pm$ 0.3 & 69 $\pm$ 4\\
-	3.2 $\pm$ 0.3 & 72 $\pm$ 4\\
-	4.7 $\pm$ 0.3 & 83 $\pm$ 4\\
-	6.7 $\pm$ 0.3 & 86 $\pm$ 6\\
-	9.9 $\pm$ 0.3 & 98 $\pm$ 4\\
-	15.0 $\pm$ 0.3 & 110$\pm$ 6\\
-	18.1 $\pm$ 0.3 & 143 $\pm$ 8\\
-	26.6 $\pm$ 0.4 & 137 $\pm$ 8\\
-	32.6 $\pm$ 0.4 & 187 $\pm$ 8\\
-	46.3 $\pm$ 0.5 & 210 $\pm$ 15\\
-	57.3 $\pm$ 0.5 & 245 $\pm$ 15\\
-	67.1 $\pm$ 0.6 & 300 $\pm$ 20\\
-	80.2 $\pm$ 0.7 & 420 $\pm$ 25\\
-	\bottomrule
-\end{tabular}
-\caption{Dati raccolti}
-\label{tab:data}
+	\begin{tabular}{c c}
+		\toprule
+		Resistenza [$\si{\kilo\ohm}$] & Tensione RMS [\si{\milli\volt}]\\
+		\midrule
+		1.0 $\pm$ 0.3 & 65 $\pm$ 3\\
+		2.1 $\pm$ 0.3 & 69 $\pm$ 4\\
+		3.2 $\pm$ 0.3 & 72 $\pm$ 4\\
+		4.7 $\pm$ 0.3 & 83 $\pm$ 4\\
+		6.7 $\pm$ 0.3 & 86 $\pm$ 6\\
+		9.9 $\pm$ 0.3 & 98 $\pm$ 4\\
+		15.0 $\pm$ 0.3 & 110$\pm$ 6\\
+		18.1 $\pm$ 0.3 & 143 $\pm$ 8\\
+		26.6 $\pm$ 0.4 & 137 $\pm$ 8\\
+		32.6 $\pm$ 0.4 & 187 $\pm$ 8\\
+		46.3 $\pm$ 0.5 & 210 $\pm$ 15\\
+		57.3 $\pm$ 0.5 & 245 $\pm$ 15\\
+		67.1 $\pm$ 0.6 & 300 $\pm$ 20\\
+		80.2 $\pm$ 0.7 & 420 $\pm$ 25\\
+		\bottomrule
+	\end{tabular}
+	\caption{Dati raccolti sul rumore delle resistenze.}
+	\label{tab:data}
 \end{table}
 
-Si è proceduto a fittare le misure eseguite con una legge del tipo 
+Si è proceduto a fittare le misure eseguite con una legge del tipo
 $$V_{RMS} = V_{0n} \cdot \sqrt{1+\frac{R}{R_T} + \frac{R^2}{R_n^2}}$$
 dove $R$ è la resistenza in ingresso, $V_{0n}$ è il rumore in uscita a resistenza nulla, $R_T$ è la resistenza equivalente del rumore serie dell’amplificatore riferito all’ingresso e $R_n$ è il rapporto tra il rumore parallelo ed il rumore serie dell’amplificatore,
 riferiti all’ingresso.
@@ -78,7 +78,7 @@ Il grafico dei dati e del fit è riportato in \fig{fit_rumore}.
 		\caption{Grafico dei dati e del fit delle misure di rumore}
 		\label{fig:fit_rumore}
 	\end{figure}
-	
+
 A partire dalle relazioni che legano i parametri fittati alla costante di Boltzamnn è possibile ricavarne una stima:
 $$ k_B = \frac{V_{0n}}{4R_T T A_0^2 \Delta f}$$
 \begin{itemize}

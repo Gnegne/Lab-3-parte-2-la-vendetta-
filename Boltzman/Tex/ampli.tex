@@ -1,9 +1,7 @@
 \section{Pre-amplificatore}
-	Per realizzare il pre-amplificatore è stato realizzato il circuito in 
-	\figurename{ \ref{fig:ampli}} impiegando le corrispondenti componenti
-	circuitali.
-	
-		\begin{figure}[h]
+	Il pre-amplificatore è realizzato dal circuito in \fig{pre}.
+
+	\begin{figure}[h]
 		\begin{minipage}{0.75\textwidth}
 			\centering
 			\includegraphics[width=\textwidth]{ampli.png}
@@ -18,43 +16,32 @@
 			\end{tabular}
 		\end{minipage}
 	\end{figure}
-	Essendo il un guadagno atteso in $out$ $\sim 51 \cdot 14.5 \sim 740$ per effettuare
-	la verifica, evitando che l'uscita dell'op-amp saturi è stato montato un partitore impiegando le resistenze $R_{T1}=$\SI{0.987(9)}{\kilo\ohm} $R_{T2}=$\SI{1031(9)}{\kilo\ohm}
-	ottenendo pertanto un guadagno  $Av_{T}=0.00096 \pm 0.00001$.
-	
-	Si è proceduto pertanto ad inviare in ingresso al partitore un onda sinusoidale di 
-	$V_{pp}=$\SI{21.0 (2)}{\volt}, ottenendo all'uscita $Ref$ un onda sinusoidale di ampiezza
-	picco-picco $V_{ref}=$\SI{1.10 (1)}{\volt} (\figurename{ \ref{fig:preamp1}}).
-	
-		
-	Il guadagno ottenuto $Av_{1}= 55 \pm 1$ risulta compatibile con le attese $\sim 51$.
-	
+
+	Essendo il guadagno atteso in $out$ $\sim 51 \cdot 14.5 \sim 740$, per effettuare
+	la verifica evitando che l'uscita degli OpAmp saturi senza dover inviare segnali molto piccoli e dunque relativamente molto rumorosi
+	si è scelto di valutare separatamente l'amplificazione delle due sezioni; è
+	inoltre stato montato un partitore di tensione (impiegando le resistenze $R_{T1}=\SI{0.987(9)}{\kilo\ohm}$ e $R_{T2}=\SI{1031(9)}{\kilo\ohm}$) per valutare più agevolmente l'amplificazione della prima sezione.
+
+	Si è proceduto pertanto ad inviare in ingresso al partitore un onda sinusoidale di varie ampiezze, misurando l'ampiezza dell'onda in uscita all'INA114.
+
+	Il guadagno ottenuto $A_{1} = \num{54.8(4)}$ si discosta dall'atteso $1 + \longfrac[2pt]{\SI{50}{\kohm}}{R_1} = 52.5$, ma il datasheet dell'OpAmp non riporta l'errore sul parametro di \SI{50}{\kohm} indicato, dunque non possiamo dire se rientri o meno nell'incertezza.
+
 	Effettuata questa prima verifica si è proceduto a verificare il guadagno della seconda
-	parte del circuito montato, $Av_{2}= \frac{V_{out}}{V_{ref}}$.
-	Essendo i due circuiti indipendenti è stato optato per non impiegare $V_{ref}$ data dall'uscita 
-	del precedente op-amp
-	ma un segnale sinusoidale generato esternamente, ottenendo i segnali riportati in
-	\figurename{ \ref{fig:preamp2}}.
-	Si ottengono per $V_{ref}=$\SI{0.374 (2)}{\volt} si ottiene un segnale in uscita
-	$V_{out}=$\SI{5.68 (4)}{\volt} e pertanto un guadagno $Av_{2})=15.2 \pm 0.1$.
-	Tale guadagno risulta compatibile coi valori attesi $\sim 14.5$.
-	
-	Il fatto che i guadagni misurati risultino maggiori di quelli previsti è stato imputato al 
-	diverso valore dei resistori dai loro valori nominali.
-	
-		\begin{figure}[h]
-		\begin{minipage}{0.45\textwidth}
-			\centering
-			\includegraphics[scale=0.75]{preamp1.png}
-			\caption{Acquisizione segnali in ingresso al partitore ch.1 e in $ref$ ch.2.}
-			\label{fig:preamp1}
-		\end{minipage}
-		\begin{minipage}{0.45\textwidth}
-			\centering
-			\includegraphics[scale=0.75]{preampb.png}
-			\caption{Acquisizione segnali in ingresso ch.1 e in $out$ ch.2.}
-			\label{fig:preamp2}
-		\end{minipage}
+	parte del circuito montato.
+	Essendo i due circuiti indipendenti si sono di nuovo inviati direttamente alla resistenza $R_2$ segnali sinusoidali generati esternamente anzichè collegarvi l'output del precedente OpAmp.
+
+	Si è misurato un guadagno $A_2=\num{15.50(1)}$, compatibile col valore atteso $\longfrac[2pt]{R_3}{R_2} = \num{15.33(18)}$.
+
+
+	\begin{figure}[h]
+		\centering
+		\subfloat[Prima sezione, INA114.]{
+			\includegraphics[scale=0.6]{preamp1.png}
+		}
+		\qquad
+		\subfloat[Seconda sezione, AD708.]{
+			\includegraphics[scale=0.6]{preampb.png}
+		}
+		\caption{Acquisizioni esemplificative di segnali in ingresso (ch. 1) e in uscita (ch. 2).}
+		\label{fig:preampo}
 	\end{figure}
-	
-	

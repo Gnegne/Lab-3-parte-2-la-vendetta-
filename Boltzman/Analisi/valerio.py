@@ -8,7 +8,7 @@ from lab import *
 from iandons import *
 
 # ******* mpl setup
-mpl.rcParams['errorbar.capsize'] = 0
+mpl.rcParams['errorbar.capsize'] = 0.5
 mpl.rcParams['xtick.direction'] = 'in'
 mpl.rcParams['ytick.direction'] = 'in'
 mpl.rcParams['xtick.top'] = True
@@ -20,29 +20,38 @@ filename = "dati_passabanda.txt"
 rawdata = np.loadtxt(os.path.join(folder, 'Data', filename)).T
 
 f = rawdata[0] * 1e3
-df = f / 1e3
+df = f * 3e-3
 g = rawdata[2] / rawdata[1]
 g = 20*np.log10(g)
-dg = np.sqrt(mme(rawdata[1], 'volt', 'oscil')**2 / rawdata[1]**2 + mme(rawdata[2], 'volt', 'oscil')**2 / rawdata[2]**2)*20*np.log10(np.e)
+dg = np.sqrt(mme(rawdata[1], 'volt', 'oscil')**2 / rawdata[1]**2 + mme(rawdata[2], 'volt', 'oscil')**2 / rawdata[2]**2)
+dg = dg * 20 * np.log10(np.e) * 2.5
+# dg = dg * g
 
 
-def bandgain(w, a, w0, l):
+def bandgain(f, a, w0, l):
+	w = np.pi * 2 * f
 	return a * w / np.sqrt((w**2 - w0**2)**2 + w**2 * w0**2 / l**2)
 
 
-def bandpass(w, a, w0, l):
-	return np.log10(bandgain(w, a, w0, l)) * 20
+def bandpass(f, a, w0, l):
+	return np.log10(bandgain(f, a, w0, l)) * 20
 
 
-def _dband(w, a, w0, l):
-	return -a * (w - w0**2/w) * (1 + w0**2/w**2) / ((w**2 - w0**2)**2/w**2 + w0**2 / l**2)**(3/2)
+def _dband(f, a, w0, l):
+	w = np.pi * 2 * f
+	return -a * 2 *np.pi * (w - w0**2/w) * (1 + w0**2/w**2) / ((w**2 - w0**2)**2/w**2 + w0**2 / l**2)**(3/2)
 
 
-bandpass.deriv = lambda w, a, w0, l: 20 * np.log10(np.e) * _dband(w, a, w0, l) / bandgain(w, a, w0, l)
-bandpass.pars = [1e3, 6e3, 10]
+bandpass.deriv = lambda f, a, w0, l: 20 * np.log10(np.e) * _dband(f, a, w0, l) / bandgain(f, a, w0, l)
+bandpass.pars = [10e3, 36e3, 10]
+bandgain.derv = _dband
+bandgain.pars = [10e3, 36e3, 10]
+# bandpass.mask = f < 15000
 
 w = DataHolder(f, g, df, dg)
 w.x.type = 'log'
+w.x.label = 'Frequenza [Hz]'
+w.y.label = 'Guadagno [dB]'
 w.fit_generic(bandpass)
 w.draw(bandpass, resid=True)
 
@@ -89,11 +98,11 @@ print('Postamp:', *xe(amplis[2], errs[2]), '\n')
 
 # rumore
 filename = "dati_rummore.txt"
-rawdata = np.loadtxt(os.path.join(folder, 'Data', filename)).T
+rawdata2 = np.loadtxt(os.path.join(folder, 'Data', filename)).T
 
-r = rawdata[0] * 1e3
-n = rawdata[1]
-dn = rawdata[2]
+r = rawdata2[0] * 1e3
+n = rawdata2[1]
+dn = rawdata2[2]
 dr = mme(r, 'ohm')
 
 
@@ -116,4 +125,5 @@ band = 1e3
 boltzmann = Vn**2 / (4 * Rt * 300 * Atot**2 * band)
 print(boltzmann)
 
-plt.show()
+if __name__ == "__main__":
+	plt.show()

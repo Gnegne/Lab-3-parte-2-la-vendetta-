@@ -1,6 +1,9 @@
 import sys, os
 folder = os.path.realpath('..')
 sys.path.append(os.path.join(os.path.realpath('..\..'), 'Data Analysis'))
+from valerio import amplis, errs
+import matplotlib.pyplot as plt
+plt.close('all')
 from ANALyzer import *
 from uncertainties import *
 from uncertainties import unumpy as un
@@ -31,7 +34,7 @@ file="dati_passabanda"
 
 def f(x, a, b, c):
     return a*x*np.sqrt(1/((x**2-b**2)**2+(x**2*b**2/c**2)))
-    
+
 p0=[1e3,6200,10]
 
 def XYfun(a):
@@ -56,8 +59,8 @@ file="dati_rummore"
 
 def f(x, a, b, c):
     return a * np.sqrt(1 + x/b+(x**2/c**2))
-    
-p0=[1,10e3,10e3]
+
+p0=[0.05,3e3,30e3]
 
 def XYfun(a):
     return a[0]*1000, a[1], a[2]*1.5
@@ -68,6 +71,7 @@ titolo = "Fit boltzmann"
 Xlab = "Resistenza [k$\Omega$]"
 Ylab = "Tensione [V]"
 tab = ["Resistenza [$\si{\ohm}$]","Tensione RMS [\si{\volt}]","Errore"]
+
 
 par1 = fit(dir, file, unit, f, p0, titolo, Xlab, Ylab, XYfun, yerr=True, kx=1e-3, ky=1e3, residuals=True, out=True, capsize=0.8, xlimp=[1,5], table=True, tab=tab)
 
@@ -86,10 +90,5 @@ print("k_B =",K)
 V00 = umme(68e-3,"volt_ar_nc","osc")
 V01 = umme(23.3e-3,"volt_ar_nc","osc")
 print(V01/V00)
-
-
-
-
-
-
-
+print(amp2_)
+print(1 + umme(33.1e3,'ohm','dig')/umme(972,'ohm','dig'))

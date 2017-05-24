@@ -1,5 +1,5 @@
 \begin{tabular}{c|c|c} 
-Resistenza [$\si{\ohm}$] & Tensione RMS [\si{olt}] & Errore\\
+Resistenza [$\si{\ohm}$] & Tensione RMS [\si{\volt}] & Errore\\
 \hline
 1.0 $\pm$ 0.3 & 0.0650 $\pm$ 0.0003 & 0.00200 $\pm$ 0.00010\\
 2.1 $\pm$ 0.3 & 0.0690 $\pm$ 0.0004 & 0.00300 $\pm$ 0.00010\\
