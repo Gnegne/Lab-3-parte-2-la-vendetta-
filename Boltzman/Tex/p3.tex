@@ -31,7 +31,33 @@ Il rapporto tra i segnali misurato è di $0.343 \pm 0.008$ a fronte di un valore
 \section{Misure di rumore}
 Si è quindi proceduto alla misura del rumore al variare della resistenza. Il range di resistenze utilizzate varia tra $\SI{1}{\kilo\ohm}$, appena sufficiente a distinguere una differenza rispetto alla resistenza nulla, e $\SI{100}{\kilo\ohm}$, valore oltre il quale il circuito raggiunge il valore di saturazione (l'OpAmp del post-amplificatore risulta infatti saturato)\footnote{Al variare delle resistenze il valore di saturazione in output viene raggiunto molto prima di quanto atteso e in maniera discontinua rispetto alla legge di andamento attesa. Si sospetta che l'effetto sia dovuto ad effetti di induzione sulla resistenza.}.
 
-I dati raccolti sono riportati in \tab{data} in Appendice. Poiché nella lettura dei valori di tensione l'ultima cifra non era stabile, si è proceduto a stimare l'errore osservando l'intervallo di variabilità delle letture.
+I dati raccolti sono riportati in \tab{data}. Poiché nella lettura dei valori di tensione l'ultima cifra non era stabile, si è proceduto a stimare l'errore osservando l'intervallo di variabilità delle letture.
+
+\begin{table}
+	\centering
+	\begin{tabular}{c c}
+		\toprule
+		Resistenza [$\si{\kilo\ohm}$] & Tensione RMS [\si{\milli\volt}]\\
+		\midrule
+		1.0 $\pm$ 0.3 & 65 $\pm$ 3\\
+		2.1 $\pm$ 0.3 & 69 $\pm$ 4\\
+		3.2 $\pm$ 0.3 & 72 $\pm$ 4\\
+		4.7 $\pm$ 0.3 & 83 $\pm$ 4\\
+		6.7 $\pm$ 0.3 & 86 $\pm$ 6\\
+		9.9 $\pm$ 0.3 & 98 $\pm$ 4\\
+		15.0 $\pm$ 0.3 & 110$\pm$ 6\\
+		18.1 $\pm$ 0.3 & 143 $\pm$ 8\\
+		26.6 $\pm$ 0.4 & 137 $\pm$ 8\\
+		32.6 $\pm$ 0.4 & 187 $\pm$ 8\\
+		46.3 $\pm$ 0.5 & 210 $\pm$ 15\\
+		57.3 $\pm$ 0.5 & 245 $\pm$ 15\\
+		67.1 $\pm$ 0.6 & 300 $\pm$ 20\\
+		80.2 $\pm$ 0.7 & 420 $\pm$ 25\\
+		\bottomrule
+	\end{tabular}
+	\caption{Dati raccolti sul rumore delle resistenze.}
+	\label{tab:data}
+\end{table}
 
 Si è proceduto a fittare le misure eseguite con una legge del tipo
 $$V_{RMS} = V_{0n} \cdot \sqrt{1+\frac{R}{R_T} + \frac{R^2}{R_n^2}}$$
