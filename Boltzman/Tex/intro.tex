@@ -1,24 +1,24 @@
 \begin{abstract}
-	In tale esperienza si è proceduto ad effettuare una misura della costante  Boltzmann.
-	Per effettuare tali misure si è proceduto a misurare il rumore termico prodotto da 
-	alcune resistenze di prova, di vari valori.
-	Dai dati ottenuti si è ottenuto $k_{sper}=$\SI{e-21}{ }
-	a fronte di un $k_{att}=$\SI{e-21}{ }.
+	L'obiettivo dell'esperienza è la misura della costante  Boltzmann tramite la misura del rumore termico prodotto da resistenze di vari valori. Per effettuare questa misura sarà necessario amplificare notevolmente il rumore generato dalla resistenza e filtrarlo su una banda di frequenze in modo da poter ricavare $k_B$ a partire dalla formula di Nyquist del rumore termico.
 \end{abstract}
-\section{Note preliminari e setup}
-	Essendo l'apparato impiegato sensibile ad eventuali rumori si è proceduto a realizzare i collegamenti più corti e schiacciati possibile per minimizzare gli effetti di induzione;.
-	Effettuando un montaggio a blocchi e verificando singolarmente il funzionamento circuitali 
-	delle vari circuiti che costituiscono l'apparato di misura impiegato.
-	
-	Si è proceduto inoltre  a alimentare le componentistiche impiegando le medesime linee 
-	di distribuzione, tensioni $V_{+}=$\SI{5.00(4)}{\volt} e $V_{-}=$\SI{-5.01(4)}{\volt}.
-	Per ridurre ulteriormente il rumore introdotto dalle tensioni di alimentazione 
-	si è proceduto a montare il circuito in \figurename{ \ref{fig:prel}}.
+
+\section{Strumentazione}
+La strumentazione usata è quella presente sul banco di lavoro, più:
+	\begin{itemize}
+		\item un INA114 (precision instrumentation amplifier);
+		\item due IC AD708 (ultra low offset dual op-amp);
+		\item un AD736 (true rms-to-dc converter).
+	\end{itemize} 
+
+Essendo il circuito realizzato molto sensibile ad eventuali rumori nell'effettuare i collegamenti su breadboard si è cercato di minimizzare gli effetti di induzione e 	si è montato il circuito in \figurename{ \ref{fig:prel}}.
+Si è proceduto inoltre  a alimentare tutti i componenti con le medesime linee 
+	di distribuzione (tensioni $V_{+}=$\SI{5.00(4)}{\volt} e $V_{-}=$\SI{-5.01(4)}{\volt}).
+
 	\begin{figure}[h]
-		\begin{minipage}{0.75\textwidth}
+		\begin{minipage}{0.65\textwidth}
 			\centering
-			\includegraphics[width=\textwidth]{prelim.png}
-			\caption{Circuito di filtro alimentazioni.}
+			\includegraphics[width=0.6\textwidth]{prelim.png}
+			\caption{Circuito di filtro per l'alimentazione.}
 			\label{fig:prel}
 		\end{minipage}
 		\begin{minipage}{0.19\textwidth}
@@ -30,15 +30,8 @@
 			\end{tabular}
 		\end{minipage}
 	\end{figure}
-\section{Strumentazione}
-	Per questa esperienza sono state impiegate le seguenti strumentazioni,in aggiunta a quelle 
-	usualmente in dotazione sul banco di lavoro.
-	\begin{itemize}
-		\item 1 INA114: Precision instrumentation amplifier
-		\item 2 IC AD708: ultra low offset dual op-amp
-		\item 1 AD736: true rms-to-dc converter
-		\item un set di resistori e capacitori coi reofori tagliati; impiegati nelle realizzazioni circuitali. 
-	\end{itemize} 
+
+	
 \section{Metodo di misura}	 
 	Per effettuare le misure è stato realizzato l'apparato in \figurename{ \ref{fig:completo}}
 	verificandone per ciascuno dei blocchi in figura l'operatività.

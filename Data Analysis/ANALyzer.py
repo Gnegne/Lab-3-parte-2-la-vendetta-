@@ -805,11 +805,11 @@ def plot_fit(directory, file_, title_, units, f, par, X, Y, dX, dY, kx, ky,
         smax = max(X)
         
     if Xscale=="log":
-        l=logspace(log10(smin)-log10(smax-smin)*xlima[0],log10(smax)+log10(smax-smin)*xlima[1],1000)
+        l=logspace(log10(smin)-log10(smax-smin)*xlima[0],log10(smax)+log10(smax-smin)*xlima[1],10000)
     else:
-        l=linspace(smin-(smax-smin)*xlima[0],smax+(smax-smin)*xlima[1],1000)
+        l=linspace(smin-(smax-smin)*xlima[0],smax+(smax-smin)*xlima[1],10000)
     grid(b=True)
-    graph_fit = plot(l*kx,f(l,*par)*ky,'#2A8B9E',label="fit")
+    graph_fit = plot(l*kx,f(l,*par)*ky,label="fit")
     
     graph_data = errorbar(X*kx,Y*ky,dY*ky,dX*kx, fmt=",",ecolor="black",capsize=capsize, color="black",label="data")
     
