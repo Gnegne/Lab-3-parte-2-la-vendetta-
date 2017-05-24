@@ -1,6 +1,5 @@
 \section{Pre-amplificatore}
-	Il pre-amplificatore è realizzato dal circuito in
-	\figurename{ \ref{fig:ampli}}.
+	Il pre-amplificatore è realizzato dal circuito in \fig{pre}.
 
 		\begin{figure}[h]
 		\begin{minipage}{0.75\textwidth}
@@ -25,13 +24,13 @@
 
 	Si è proceduto pertanto ad inviare in ingresso al partitore un onda sinusoidale di varie ampiezze, misurando l'ampiezza dell'onda in uscita all'INA114.
 
-	Il guadagno ottenuto $Av_{1}= 55 \pm 1$ risulta compatibile con le attese $\sim 51$.
+	Il guadagno ottenuto $A_{1} = \num{54.8(4)}$ si discosta dall'atteso $1 + \longfrac[2pt]{\SI{50}{\kohm}}{R_1} = 52.5$, ma il datasheet dell'OpAmp non riporta l'errore sul parametro di \SI{50}{\kohm} indicato, dunque non possiamo dire se rientri o meno nell'incertezza.
 
 	Effettuata questa prima verifica si è proceduto a verificare il guadagno della seconda
 	parte del circuito montato.
 	Essendo i due circuiti indipendenti si sono di nuovo inviati direttamente alla resistenza $R_2$ segnali sinusoidali generati esternamente anzichè collegarvi l'output del precedente OpAmp.
 
-	Si è misurato un guadagno $Av_2=\num{15.50(1)}$, compatibile col valore atteso $\longfrac{R_3}{R_2} = \num{15.33(18)}$.
+	Si è misurato un guadagno $A_2=\num{15.50(1)}$, compatibile col valore atteso $\longfrac[2pt]{R_3}{R_2} = \num{15.33(18)}$.
 
 
 	\begin{figure}[h]
