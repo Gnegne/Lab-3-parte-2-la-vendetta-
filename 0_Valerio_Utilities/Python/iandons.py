@@ -163,7 +163,7 @@ _nullfunc = np.vectorize(lambda *args: 0)
 _const = np.vectorize(lambda x, q: q)
 
 
-def createline(type='linear', name=""):
+def createline(type='linear', name="", pars=[]):
 	"""
 	Factory of linear(-like) functions.
 
@@ -200,15 +200,19 @@ def createline(type='linear', name=""):
 			return _h(x, q)
 		flatline.deriv = _nullfunc
 		func = flatline
+	if pars:
+		func.pars = pars
 	if name:
 		func.__name__ = name
 	return func
 
-def createwave(type='real', name=""):
+def createwave(type='real', name="", pars=[]):
 	if type == 'real':
 		def func(t, w, A, p, q):
 			return q + A * np.cos(w*t + p)
 		func.deriv = lambda t, w, A, p, q: -w  * A * np.sin(w*t + p)
+	if pars:
+		func.pars = pars
 	if name:
 		func.__name__ = name
 	return func
