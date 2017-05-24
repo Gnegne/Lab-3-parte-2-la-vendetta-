@@ -67,7 +67,7 @@ unit = [("ohm", "dig"),("volt", "dig"),("volt", "dig")]
 titolo = "Fit boltzmann"
 Xlab = "Resistenza [k$\Omega$]"
 Ylab = "Tensione [V]"
-tab = ["Resistenza [$\si{\ohm}$]","Tensione RMS [\si{\volt}],"Errore"]
+tab = ["Resistenza [$\si{\ohm}$]","Tensione RMS [\si{\volt}]","Errore"]
 
 par1 = fit(dir, file, unit, f, p0, titolo, Xlab, Ylab, XYfun, yerr=True, kx=1e-3, ky=1e3, residuals=True, out=True, capsize=0.8, xlimp=[1,5], table=True, tab=tab)
 
